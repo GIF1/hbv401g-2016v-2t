@@ -15,43 +15,50 @@ public class FlightBooking extends Booking {
 	private String flightNr;
 
 	public static void testInput(Flight fightSearchResult) {
-	Flight flight = fightSearchResult;
-	if(flight==null) throw new IllegalArgumentException("Error: Search result class contains no value. ");
-	String depTime = flight.get_depTime();
+		Flight flight = fightSearchResult;
+		if(flight==null) throw new IllegalArgumentException("Error: Search result class contains no value. ");
+		
+		String flightNumber = flight.get_flightNr();
+		if(flightNumber==null) throw new IllegalArgumentException("Error: Flight number is missing.");
+		else if (!flightNumber.matches("^([A-Z][A-Z]|[A-Z][0-9]|[0-9][A-Z])[A-Z]?[0-9]{1,4}[A-Z]?$")) {
+			throw new IllegalArgumentException("Error: Flight number has incorrect format.");
+		}
+		
+		String depTime = flight.get_depTime();
+		if(depTime==null) throw new IllegalArgumentException("Error: Departure time is missing.");
+		else if(depTime.length()!=19) throw new IllegalArgumentException("Error: Departure time of wrong length");
+		// Note: It is still possible to set invalid departure time. 31st of febuary for example. Refine regexp
+		else if(!depTime.matches("^2[01][0-9][0-9]-(0[1-9]|1[0-2])-([0-2][0-9]|3[01]) ([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+			throw new IllegalArgumentException("Error: Departure time on uncorrect format. ");
+		}
 	
-	if(depTime==null) throw new IllegalArgumentException("Error: Departure time is missing.");
-	else if(depTime.length()!=19) throw new IllegalArgumentException("Error: Departure time of wrong length");
-	// Note: It is still possible to set invalid departure time. 31st of febuary for example. Refine regexp
-	else if(!depTime.matches("^2[01][0-9][0-9]-(0[1-9]|1[0-2])-([0-2][0-9]|3[01]) ([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) throw new IllegalArgumentException("Error: Departure time on uncorrect format. ");
-
-
-	String depLoc = flight.get_depLoc();
-	if(depLoc==null) throw new IllegalArgumentException("Error: Departure location is missing.");
-	else if(depLoc.length()<3 || depLoc.length()>100) throw new IllegalArgumentException("Error: Departure location of wrong length");
-	else if(!depLoc.matches("^[A-Z].*") && !depLoc.matches("^[a-z].*")) throw new IllegalArgumentException("Error: Departure location does not start with a letter");
-
-	String arrivLoc = flight.get_arrivLoc();
-	if(arrivLoc==null) throw new IllegalArgumentException("Error: Arrival location is missing.");
-	else if(arrivLoc.length()<3 || arrivLoc.length()>100) throw new IllegalArgumentException("Error: Arrival location of wrong length");
-	else if(!arrivLoc.matches("^[A-Z].*") && !arrivLoc.matches("^[a-z].*")) throw new IllegalArgumentException("Error: Arrival location does not start with a letter");
-
-	int flightprice = flight.get_price();
-	if(flightprice < 0 || flightprice > 100000000) throw new IllegalArgumentException("Error: Unrealistic price setting");
+		String depLoc = flight.get_depLoc();
+		if(depLoc==null) throw new IllegalArgumentException("Error: Departure location is missing.");
+		else if(depLoc.length()<3 || depLoc.length()>100) throw new IllegalArgumentException("Error: Departure location of wrong length");
+		else if(!depLoc.matches("^[A-Z].*") && !depLoc.matches("^[a-z].*")) throw new IllegalArgumentException("Error: Departure location does not start with a letter");
+	
+		String arrivLoc = flight.get_arrivLoc();
+		if(arrivLoc==null) throw new IllegalArgumentException("Error: Arrival location is missing.");
+		else if(arrivLoc.length()<3 || arrivLoc.length()>100) throw new IllegalArgumentException("Error: Arrival location of wrong length");
+		else if(!arrivLoc.matches("^[A-Z].*") && !arrivLoc.matches("^[a-z].*")) throw new IllegalArgumentException("Error: Arrival location does not start with a letter");
+	
+		int flightprice = flight.get_price();
+		if(flightprice < 0 || flightprice > 100000000) throw new IllegalArgumentException("Error: Unrealistic price setting");
 	}
 
 	// Constructor:
 	public FlightBooking(Flight fightSearchResult, String seat, String buyer){
-		customer = buyer;		
-		flight = fightSearchResult;	
-		seatNr = seat;
-		luggage = 0;
-		flightMeal = false;
-		departureTime = flight.get_depTime();
-		departureLoc = flight.get_depLoc();
-		arrivalLoc = flight.get_arrivLoc();
-		price = flight.get_price();
-		dealerInfo = flight.get_dealerInfo();
-		flightNr = flight.get_flightNr();
+		this.customer = buyer;		
+		this.flight = fightSearchResult;	
+		this.seatNr = seat;
+		this.luggage = 0;
+		this.flightMeal = false;
+		this.departureTime = flight.get_depTime();
+		this.departureLoc = flight.get_depLoc();
+		this.arrivalLoc = flight.get_arrivLoc();
+		this.price = flight.get_price();
+		this.dealerInfo = flight.get_dealerInfo();
+		this.flightNr = flight.get_flightNr();
 	}
 
 	// Notkun: seatNr = setSeat(seat)

@@ -10,13 +10,13 @@ public class Flight {
 	private String arrivalLoc;
 	private ArrayList<String> dealerInfo = new ArrayList<String>();
 
-	public Flight(String flightnr, String depTime, String depLoc, String arrivLoc, int price_kr, ArrayList<String> sellerInfo) {
-		this.flightNr = flightnr;
-		this.departureTime = depTime;
-		this.departureLoc = depLoc;
-		this.arrivalLoc = arrivLoc;
-		this.price = price_kr;
-		this.dealerInfo = sellerInfo;
+	public Flight(String flightNr, String departureTime, String departureLoc, String arrivalLoc, int price, ArrayList<String> dealerInfo) {
+		this.flightNr = flightNr;
+		this.departureTime = departureTime;
+		this.departureLoc = departureLoc;
+		this.arrivalLoc = arrivalLoc;
+		this.price = price;
+		this.dealerInfo = dealerInfo;
 	}
 
 	// Get methods for all the attributes

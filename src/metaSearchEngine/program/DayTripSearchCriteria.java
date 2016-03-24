@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cluster2T;
+package metaSearchEngine.program;
 
 /**
  * @author Gunnar Atli
