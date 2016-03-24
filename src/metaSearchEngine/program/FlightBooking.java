@@ -1,5 +1,7 @@
 package metaSearchEngine.program;
 
+import java.util.ArrayList;
+
 import metaSearchEngine.mockobjects.Flight;
 
 public class FlightBooking extends Booking {
@@ -33,17 +35,36 @@ public class FlightBooking extends Booking {
 		}
 	
 		String depLoc = flight.get_depLoc();
-		if(depLoc==null) throw new IllegalArgumentException("Error: Departure location is missing.");
-		else if(depLoc.length()<3 || depLoc.length()>100) throw new IllegalArgumentException("Error: Departure location of wrong length");
-		else if(!depLoc.matches("^[A-Z].*") && !depLoc.matches("^[a-z].*")) throw new IllegalArgumentException("Error: Departure location does not start with a letter");
+		if(depLoc==null) {
+			throw new IllegalArgumentException("Error: Departure location is missing.");
+		}
+		else if(depLoc.length()<3 || depLoc.length()>100) {
+			throw new IllegalArgumentException("Error: Departure location of wrong length");
+		}
+		else if(!depLoc.matches("^[A-Z].*") && !depLoc.matches("^[a-z].*")) {
+			throw new IllegalArgumentException("Error: Departure location does not start with a letter");
+		}
 	
 		String arrivLoc = flight.get_arrivLoc();
-		if(arrivLoc==null) throw new IllegalArgumentException("Error: Arrival location is missing.");
-		else if(arrivLoc.length()<3 || arrivLoc.length()>100) throw new IllegalArgumentException("Error: Arrival location of wrong length");
-		else if(!arrivLoc.matches("^[A-Z].*") && !arrivLoc.matches("^[a-z].*")) throw new IllegalArgumentException("Error: Arrival location does not start with a letter");
+		if(arrivLoc==null) {
+			throw new IllegalArgumentException("Error: Arrival location is missing.");
+		}
+		else if(arrivLoc.length()<3 || arrivLoc.length()>100) {
+			throw new IllegalArgumentException("Error: Arrival location of wrong length");
+		}
+		else if(!arrivLoc.matches("^[A-Z].*") && !arrivLoc.matches("^[a-z].*")) {
+			throw new IllegalArgumentException("Error: Arrival location does not start with a letter");
+		}
 	
 		int flightprice = flight.get_price();
 		if(flightprice < 0 || flightprice > 100000000) throw new IllegalArgumentException("Error: Unrealistic price setting");
+		
+		ArrayList<String> dealer_info = flight.get_dealerInfo();
+		if(dealer_info.size() < 4) {
+			throw new IllegalArgumentException("Error: Dealer info is missing ");
+		} else if (dealer_info.size() > 4) {
+			throw new IllegalArgumentException("Error: Dealer info is missing ");
+		}
 	}
 
 	// Constructor:

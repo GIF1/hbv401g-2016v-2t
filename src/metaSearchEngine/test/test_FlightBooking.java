@@ -131,6 +131,7 @@ public class test_FlightBooking {
 		Flight mittflug1 = new Flight("AAV321", "", "Akureyri", "Reykjavík", 12000, wow_info);
 		FlightBooking.testInput(mittflug1);
 	}
+	
 	@Test(expected=IllegalArgumentException.class)
 	public void wrongYear1() {
 		Flight mittflug1 = new Flight("AAV321", "3016-03-22 23:30:00", "Akureyri", "Reykjavík", 12000, wow_info);
@@ -191,7 +192,6 @@ public class test_FlightBooking {
 		FlightBooking.testInput(mittflug1);
 	}
 
-
 	@Test
 	public void correctTime() {
 		Flight mittflug1 = new Flight("AAV321", "2016-03-22 23:30:00", "Akureyri", "Reykjavík", 12000, wow_info);
@@ -199,8 +199,6 @@ public class test_FlightBooking {
 	}
 
 	// Test arrival location format:
-
-
 	@Test(expected=IllegalArgumentException.class)
 	public void emptiLoc() {
 		Flight mittflug1 = new Flight("AAV321", "2016-03-22 23:30:00", "", "Reykjavík", 12000, wow_info);
@@ -231,12 +229,7 @@ public class test_FlightBooking {
 		FlightBooking.testInput(mittflug1);
 	}
 
-
-				
-
 	// Test arrival location in the same way as departure location
-
-
 	@Test(expected=IllegalArgumentException.class)
 	public void emptiLoc2() {
 		Flight mittflug1 = new Flight("AAV321", "2016-03-22 23:30:00", "Akureyri", "", 12000, wow_info);
@@ -286,5 +279,13 @@ public class test_FlightBooking {
 		FlightBooking.testInput(mittflug1);
 	}
 
+	// Test trip dealer info
+	@Test
+	public void emptyDealerInfo() {
+		ArrayList<String> dealer_info = new ArrayList<String>();
+		//wow_info.add("Vsknr. 109354");
+		Flight mittflug = new Flight("AAV321", "2016-03-22 23:30:00", "Akureyri", "Reykjavík", 10000, dealer_info);
+		FlightBooking.testInput(mittflug);
+	}
 
 }
