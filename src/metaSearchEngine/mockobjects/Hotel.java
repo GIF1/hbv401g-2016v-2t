@@ -2,11 +2,11 @@ package metaSearchEngine.mockobjects;
 
 import java.util.*;
 
-public class Hotel_mockobject {
+public class Hotel {
 
 	private int numRoomSingleAvail;
 
-	public Hotel_mockobject(String flightnr, String depTime, String depLoc, String arrivLoc, int price_kr, ArrayList<String> sellerInfo) {
+	public Hotel(String flightnr, String depTime, String depLoc, String arrivLoc, int price_kr, ArrayList<String> sellerInfo) {
 		flightNr = flightnr;
 		departureTime = depTime;
 		departureLoc = depLoc;

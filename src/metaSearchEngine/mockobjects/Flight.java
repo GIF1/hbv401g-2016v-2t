@@ -2,7 +2,7 @@ package metaSearchEngine.mockobjects;
 
 import java.util.*;
 
-public class Flight_mockobject {
+public class Flight {
 	private final String flightNr;
 	private String departureTime;
 	private String departureLoc;
@@ -10,7 +10,7 @@ public class Flight_mockobject {
 	private String arrivalLoc;
 	private ArrayList<String> dealerInfo = new ArrayList<String>();
 
-	public Flight_mockobject(String flightnr, String depTime, String depLoc, String arrivLoc, int price_kr, ArrayList<String> sellerInfo) {
+	public Flight(String flightnr, String depTime, String depLoc, String arrivLoc, int price_kr, ArrayList<String> sellerInfo) {
 		this.flightNr = flightnr;
 		this.departureTime = depTime;
 		this.departureLoc = depLoc;

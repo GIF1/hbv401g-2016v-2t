@@ -1,11 +1,11 @@
 package metaSearchEngine.program;
 
-import metaSearchEngine.mockobjects.Flight_mockobject;
+import metaSearchEngine.mockobjects.Flight;
 
 public class FlightBooking extends Booking {
 
 	// Define attributes of the class
-	private Flight_mockobject flight;
+	private Flight flight;
 	private String seatNr;
 	private int luggage;
 	private boolean flightMeal;
@@ -14,8 +14,8 @@ public class FlightBooking extends Booking {
 	private String arrivalLoc;
 	private String flightNr;
 
-	public static void testInput(Flight_mockobject fightSearchResult) {
-	Flight_mockobject flight = fightSearchResult;
+	public static void testInput(Flight fightSearchResult) {
+	Flight flight = fightSearchResult;
 	if(flight==null) throw new IllegalArgumentException("Error: Search result class contains no value. ");
 	String depTime = flight.get_depTime();
 	
@@ -40,7 +40,7 @@ public class FlightBooking extends Booking {
 	}
 
 	// Constructor:
-	public FlightBooking(Flight_mockobject fightSearchResult, String seat, String buyer){
+	public FlightBooking(Flight fightSearchResult, String seat, String buyer){
 		customer = buyer;		
 		flight = fightSearchResult;	
 		seatNr = seat;
