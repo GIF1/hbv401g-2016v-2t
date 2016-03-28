@@ -9,11 +9,11 @@ public class HotelBooking extends Booking {
 	private String roomType;
 	private int nrOfMeals;
 
-	public HotelBooking(Hotel hotelSearchResult){
+	public HotelBooking(Hotel hotelSearchResult, int nights, String type, int meals){
 		this.hotel = hotelSearchResult;
-		this.nrOfNights = 1;
-		this.roomType = "Single";
-		this.nrOfMeals = 0;
+		this.nrOfNights = nights;
+		this.roomType = type;
+		this.nrOfMeals = meals;
 	}
 
 	// Usage: roomType = setRoom(newRoom);
