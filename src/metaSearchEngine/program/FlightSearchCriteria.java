@@ -1,19 +1,19 @@
 /**
  * 
  */
-package cluster2T;
+package metaSearchEngine.program;
 
 /**
  * @author Gunnar Atli
  *
  */
-public class FlightSearchCritera {
+public class FlightSearchCriteria {
 	
 	// Attributes
-	private String departureTime;
+	String departureTime;
 	private String arrivalTime;
-	private String departureLoc;
-	private String arrivalLoc;
+	String departureLoc;
+	String arrivalLoc;
 	private int priceRange;
 	private String flightClass;
 	private int numOfSeatsEconomy;
@@ -22,20 +22,20 @@ public class FlightSearchCritera {
 	private boolean returnFlight;
 	
 	// Methods
-	void setDepartureTime() {
-	
+	void setDepartureTime(String depTime) {
+		this.departureTime = depTime;
 	}
 	
 	void setArrivalTime() {
 		
 	}
 	
-	void setDepartureLoc() {
-		
+	void setDepartureLoc(String depLoc) {
+		this.departureLoc = depLoc;
 	}
 	
-	void setArrivalLoc() {
-		
+	void setArrivalLoc(String arrLoc) {
+		this.arrivalLoc = arrLoc;
 	}
 	
 	void setPriceRange() {

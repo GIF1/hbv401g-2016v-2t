@@ -60,11 +60,26 @@ public class FlightBooking extends Booking {
 		if(flightprice < 0 || flightprice > 100000000) throw new IllegalArgumentException("Error: Unrealistic price setting");
 		
 		ArrayList<String> dealer_info = flight.get_dealerInfo();
+		String[] dealerFields = new String[]{"name", "location", "ID number", "Tax number"};
 		if(dealer_info.size() < 4) {
-			throw new IllegalArgumentException("Error: Dealer info is missing ");
+			throw new IllegalArgumentException("Error: Dealer info is missing some info");
 		} else if (dealer_info.size() > 4) {
-			throw new IllegalArgumentException("Error: Dealer info is missing ");
+			throw new IllegalArgumentException("Error: Dealer info array contains to much info ");
+		} else {
+			for (int i=0; i<dealer_info.size(); i++) {
+				if (dealer_info.get(i).length()==0) {
+					throw new IllegalArgumentException("Error: Dealer " + dealerFields[i] + " is missing");
+				}
+			}
+			if (!dealer_info.get(1).matches("^[\\p{L}]{3,15} [0-9]{2,3} - [0-9]{3,3} [\\p{L}]{3,15}$")) {
+				throw new IllegalArgumentException("Error: The dealers address has incorrect format ");
+			} else if (!dealer_info.get(2).matches("^Kt. [0-9]{6,6}[-]?[0-9]{4,4}")) {
+				throw new IllegalArgumentException("Error: The dealers ID number has incorrect format ");
+			} else if (!dealer_info.get(3).matches("^Vsknr. [0-9]{6,6}")) {
+				throw new IllegalArgumentException("Error: The dealers tax number has incorrect format ");
+			}
 		}
+		
 	}
 
 	// Constructor:
@@ -84,7 +99,7 @@ public class FlightBooking extends Booking {
 
 	// Notkun: seatNr = setSeat(seat)
 	// Fyrir: seatNr is a string on the form [0-9][0-9][A-F]
-	// Eftir: Gildi seatNr hefur verið breytt þ.a það inniheldur nú gildi seat. 
+	// Eftir: Gildi seatNr hefur veriï¿½ breytt ï¿½.a ï¿½aï¿½ inniheldur nï¿½ gildi seat. 
 	public void setSeat(String seat)
 	{
 		if(seat.length() < 2 || seat.length() > 3) throw new IllegalArgumentException("Error: Incorrect format of seatNr");
@@ -92,8 +107,8 @@ public class FlightBooking extends Booking {
 	}
 
 	// Notkun: luggage = setLuggage(luggage)
-	// Fyrir: luggage er heiltala, má vera núll. Engin efri mörk.
-	// Eftir: luggage breytar hefur verið uppfærð í samræmi við inntak. 
+	// Fyrir: luggage er heiltala, mï¿½ vera nï¿½ll. Engin efri mï¿½rk.
+	// Eftir: luggage breytar hefur veriï¿½ uppfï¿½rï¿½ ï¿½ samrï¿½mi viï¿½ inntak. 
 	public void setLuggage(int nr_of_bags) {
 		if(nr_of_bags < 0) throw new IllegalArgumentException("Please select a positive integer for the number of bags requested");
 		else luggage = nr_of_bags;

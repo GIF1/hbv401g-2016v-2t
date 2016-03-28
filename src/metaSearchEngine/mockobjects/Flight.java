@@ -18,6 +18,40 @@ public class Flight {
 		this.price = price;
 		this.dealerInfo = dealerInfo;
 	}
+	
+	public List<List<String>> getResults() {
+		List<List<String>> results = new ArrayList<List<String>>();
+		List<String> resultsRow1 = new ArrayList<String>();
+		List<String> resultsRow2 = new ArrayList<String>();
+		List<String> resultsRow3 = new ArrayList<String>();
+		
+		resultsRow1.add(flightNr);
+		resultsRow1.add(departureLoc);
+		resultsRow1.add(arrivalLoc);
+		resultsRow1.add(departureTime);
+		resultsRow1.add(String.valueOf(price));
+		resultsRow1.add(dealerInfo.get(0));
+		
+		resultsRow2.add("AA123");
+		resultsRow2.add("Ísafjörður");
+		resultsRow2.add("Vestmannaeyjar");
+		resultsRow2.add("2016-03-22 23:30:00");
+		resultsRow2.add("100000");
+		resultsRow2.add("Icelandair");
+		
+		resultsRow3.add("AA123");
+		resultsRow3.add("Ísafjörður");
+		resultsRow3.add("Vestmannaeyjar");
+		resultsRow3.add("2016-03-22 23:30:00");
+		resultsRow3.add("100000");
+		resultsRow3.add("Icelandair");
+		
+		results.add(resultsRow1);
+		results.add(resultsRow2);
+		results.add(resultsRow3);
+		
+		return results;
+	}
 
 	// Get methods for all the attributes
 	public int get_price() {return price; }
