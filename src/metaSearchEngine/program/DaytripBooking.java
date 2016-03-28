@@ -1,5 +1,7 @@
 package metaSearchEngine.program;
 
+import metaSearchEngine.mockobjects.Daytrip;
+
 public class DaytripBooking extends Booking {
 
 	// Declare class attributes:
