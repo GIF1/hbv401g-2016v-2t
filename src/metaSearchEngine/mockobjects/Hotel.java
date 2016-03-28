@@ -1,5 +1,7 @@
 package metaSearchEngine.mockobjects;
 
+import java.util.ArrayList;
+
 public class Hotel {
 
 	private int numRoomSingleAvail;
@@ -9,8 +11,9 @@ public class Hotel {
 	private int priceDouble;
 	private int priceMulti;
 	private String Location;
+	private ArrayList<String> dealerInfo = new ArrayList<String>();
 
-	public Hotel(int numSingle, int numDouble, int numMulti, int priceSingle, int priceDouble, int priceMulti, String Loc) {
+	public Hotel(int numSingle, int numDouble, int numMulti, int priceSingle, int priceDouble, int priceMulti, String Loc, ArrayList<String> dealerInfo) {
 		this.numRoomSingleAvail = numSingle;
 		this.numRoomDoubleAvail = numDouble;
 		this.numRoomMultiAvail = numMulti;
@@ -18,7 +21,7 @@ public class Hotel {
 		this.priceDouble = priceDouble;
 		this.priceMulti = priceMulti;
 		this.Location = Loc;
-		
+		this.dealerInfo = dealerInfo;
 	}
 
 	public int getNumRoomSingleAvail() {return this.numRoomSingleAvail; }
@@ -28,6 +31,7 @@ public class Hotel {
 	public int getPriceDouble() {return this.priceDouble; }
 	public int getPriceMulti() {return this.priceMulti; }
 	public String getLocation() {return this.Location; }
+	public ArrayList<String> getDealerInfo() {return dealerInfo;}
 	
 	void setNumRoomSingleAvail (int numRoomsSingle) { this.numRoomSingleAvail = numRoomsSingle; }
 	void setNumRoomDoubleAvail (int numRoomsDouble) { this.numRoomDoubleAvail = numRoomsDouble; }
@@ -36,4 +40,5 @@ public class Hotel {
 	void setPriceDouble (int priceDouble) { this.priceDouble = priceDouble; }
 	void setPriceMulti (int priceMulti) { this.priceMulti = priceMulti; }
 	void setLocation (String Loc) {this.Location = Loc; }
+	void setDealerInfo(ArrayList<String> dealerInfo) {this.dealerInfo = dealerInfo;}
 }
