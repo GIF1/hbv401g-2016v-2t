@@ -2,7 +2,7 @@ package metaSearchEngine.mockobjects;
 
 import java.util.ArrayList;
 
-public class Hotel {
+public abstract class Hotel {
 
 	private int numRoomSingleAvail;
 	private int numRoomDoubleAvail;
@@ -24,6 +24,7 @@ public class Hotel {
 		this.dealerInfo = dealerInfo;
 	}
 
+	//Getters
 	public int getNumRoomSingleAvail() {return this.numRoomSingleAvail; }
 	public int getNumRoomDoubleAvail() {return this.numRoomDoubleAvail; }
 	public int getNumRoomMultiAvail() {return this.numRoomMultiAvail; }
@@ -33,6 +34,7 @@ public class Hotel {
 	public String getLocation() {return this.Location; }
 	public ArrayList<String> getDealerInfo() {return dealerInfo;}
 	
+	//Setters
 	void setNumRoomSingleAvail (int numRoomsSingle) { this.numRoomSingleAvail = numRoomsSingle; }
 	void setNumRoomDoubleAvail (int numRoomsDouble) { this.numRoomDoubleAvail = numRoomsDouble; }
 	void setNumRoomMultiAvail (int numRoomsMulti) { this.numRoomMultiAvail = numRoomsMulti; }

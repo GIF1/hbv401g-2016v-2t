@@ -2,7 +2,7 @@ package metaSearchEngine.mockobjects;
 
 import java.util.ArrayList;
 
-public class Daytrip {
+public abstract class Daytrip {
 	
 	private String startTime;
 	private String endTime;

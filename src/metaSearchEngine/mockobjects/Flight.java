@@ -2,7 +2,7 @@ package metaSearchEngine.mockobjects;
 
 import java.util.*;
 
-public class Flight {
+public abstract class Flight {
 	private final String flightNr;
 	private String departureTime;
 	private String departureLoc;
