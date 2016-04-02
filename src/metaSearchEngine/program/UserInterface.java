@@ -624,9 +624,9 @@ public class UserInterface extends JFrame implements ActionListener{
 		
 		for (int i = 0; i<flightResults.size(); i++) {
 			Flight flight = flightResults.get(i);
-			System.out.println("Flight nr.\tDep. Location\tArr. Location\tDep. Time\t\t\tPrice\tDealer");
-			System.out.println(flight.get_flightNr() + "\t\t" + flight.get_depLoc() + "\t" + flight.get_arrivLoc()
-			 + "\t" + flight.get_depTime() + "\t" + flight.get_price() + "\t" + flight.get_dealerInfo().get(0));
+			System.out.println("Flight nr.\tDep. Location\tDep. Time\t\t\tArr. Location\tArr. Time\t\t\tPrice\tDealer");
+			System.out.println(flight.get_flightNr() + "\t\t" + flight.get_depLoc() + "\t" + flight.get_depTime() 
+			+ "\t" + flight.get_arrivLoc() + "\t" + flight.get_arrTime() + "\t" + flight.get_price() + "\t" + flight.get_dealerInfo().get(0));
 		}
 		//System.out.println(flightResults.size());
 	}

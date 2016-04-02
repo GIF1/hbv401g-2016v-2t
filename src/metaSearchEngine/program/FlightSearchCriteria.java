@@ -13,50 +13,44 @@ public class FlightSearchCriteria {
 	
 	// Attributes
 	Date departureTime;
-	//private String arrivalTime;
 	String departureLoc;
 	String arrivalLoc;
-	private int[] priceRange;
-	private String seatClass;
-	private int numSeats;
-	//private int numOfSeatsComfort;
-	//private boolean overLay;
-	private boolean returnTrip;
+	int[] priceRange;
+	String seatClass;
+	int numSeats;
+	private boolean overLay;
+	boolean returnTrip;
 	
 	// Methods
-	void setDepartureTime(Date depTime) {
+	public void setDepartureTime(Date depTime) {
 		this.departureTime = depTime;
 	}
 	
-	void setArrivalTime() {
-		
-	}
-	
-	void setDepartureLoc(String depLoc) {
+	public void setDepartureLoc(String depLoc) {
 		this.departureLoc = depLoc;
 	}
 	
-	void setArrivalLoc(String arrLoc) {
+	public void setArrivalLoc(String arrLoc) {
 		this.arrivalLoc = arrLoc;
 	}
 	
-	void setPriceRange(int[] priceRange) {
+	public void setPriceRange(int[] priceRange) {
 		this.priceRange = priceRange;
 	}
 	
-	void setSeatClass(String seatClass) {
+	public void setSeatClass(String seatClass) {
 		this.seatClass = seatClass;
 	}
 	
-	void setNumSeats(int numSeats) {
+	public void setNumSeats(int numSeats) {
 		this.numSeats = numSeats;
 	}
 	
-	void setOverLay() {
+	public void setOverLay() {
 		
 	}
 	
-	void setReturnTrip(boolean returnTrip) {
+	public void setReturnTrip(boolean returnTrip) {
 		this.returnTrip = returnTrip;
 	}
 

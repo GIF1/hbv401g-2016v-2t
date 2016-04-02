@@ -11,4 +11,8 @@ public abstract class Booking {
 
 	// Method getInfo will be implemented in each subclass. 
 	public abstract void getInfo();
+	
+	public String getCustomer() {
+		return customer;
+	}
 }

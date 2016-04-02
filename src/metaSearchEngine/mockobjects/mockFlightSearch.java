@@ -48,11 +48,13 @@ public class mockFlightSearch {
 						criteriaCal.get(Calendar.DAY_OF_MONTH)==flightCal.get(Calendar.DAY_OF_MONTH)) {
 					if (flight.price >= criteria.priceRange[0] && flight.price <= criteria.priceRange[1]) {
 						if (criteria.seatClass == "Economy") {
-							if (criteria.numSeats <= flight.numSeatsEconomy) {
+							if (criteria.numSeats <= flight.seatNrEconomy.length) {
+								flight.set_seatNr(flight.seatNrEconomy);
 								flightResults.add(flight);
 							}
 						} else if (criteria.seatClass == "Comfort") {
-							if (criteria.numSeats <= flight.numSeatsComfort) {
+							if (criteria.numSeats <= flight.seatNrComfort.length) {
+								flight.set_seatNr(flight.seatNrComfort);
 								flightResults.add(flight);
 							}
 						}
@@ -71,35 +73,37 @@ public class mockFlightSearch {
 		wow_info.add("WOW air");
 		wow_info.add("Katrínartún 12 - 105 Reykjavík");
 		wow_info.add("Kt. 451011-0220");
-		wow_info.add("Vsknr. 109354");
 		
 		ArrayList<String> ice_info = new ArrayList<String>();
 		ice_info.add("Icelandair");
 		ice_info.add("Katrínartún 12 - 105 Reykjavík");
 		ice_info.add("Kt. 451011-0220");
-		ice_info.add("Vsknr. 109354");
 		
 		//SimpleDateFormat duration = new SimpleDateFormat("HH:mm");
 		//Date duration1 = duration.parse("02:15");
 		
 		@SuppressWarnings("deprecation")
 		FlightExtend flight1 = new FlightExtend("AA123", new Date(2016-1900,7+1,15,22,30), 
-				"Akureyri", "Reykjavík", 12000, 15, 5, "02:15", wow_info);
+				"Akureyri", new Date(2016-1900,7+1,15,0,30), "Reykjavík", 12000,  
+				new String[]{"13A", "13B", "11A"}, new String[]{"1A"}, wow_info);
 		flights.add(flight1);
 		
 		@SuppressWarnings("deprecation")
 		FlightExtend flight2 = new FlightExtend("AB456", new Date(2016-1900,6+1,10,15,00), 
-				"Egilsstaðir", "Vestmannaeyjar", 500000, 1, 3, "02:15", wow_info);
+				"Egilsstaðir", new Date(2016-1900,6+1,10,18,00), "Vestmannaeyjar", 500000, 
+				new String[]{"13A"}, new String[]{}, wow_info);
 		flights.add(flight2);
 		
 		@SuppressWarnings("deprecation")
 		FlightExtend flight3 = new FlightExtend("AC789", new Date(2016-1900,7+1,22,12,30), 
-				"Reykjavík", "Akureyri", 12000, 10, 0, "02:15", ice_info);
+				"Reykjavík", new Date(2016-1900,7+1,22,13,00), "Akureyri", 12000, 
+				new String[]{}, new String[]{"1A", "2C", "2D"}, ice_info);
 		flights.add(flight3);
 		
 		@SuppressWarnings("deprecation")
 		FlightExtend flight4 = new FlightExtend("AC789", new Date(2016-1900,7+1,15,12,30), 
-				"Akureyri", "Reykjavík", 18000, 10, 0, "02:15", ice_info);
+				"Akureyri", new Date(2016-1900,7+1,15,14,30), "Reykjavík", 18000, 
+				new String[]{"13A", "13B", "11A", "16D"}, new String[]{"1A", "2C", "2D"}, ice_info);
 		flights.add(flight4);
 		
 		return flights;

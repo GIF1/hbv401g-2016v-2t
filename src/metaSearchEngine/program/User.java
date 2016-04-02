@@ -1,3 +1,5 @@
+package metaSearchEngine.program;
+
 import java.util.List;
 
 public class User{
@@ -7,6 +9,15 @@ public class User{
 	static String hobbies[];
 	static String password;
 	static boolean admin;
+	
+	public User(String username, Integer age, String email, String[] hobbies, String password, boolean admin) {
+		this.username = username;
+		this.age = age;
+		this.email = email;
+		this.hobbies = hobbies;
+		this.password = password;
+		this.admin = admin;
+	}
 	
 	// Usage: Used with method getUserInfo in UserInterface class
 	void login() {
@@ -27,6 +38,7 @@ public class User{
 	//		hobbies.
 	// After: The attributes of the class User have been set
 	//		according to user logged in at the moment.
+	/*
 	static void setProfile(List<List<String>> userLoggedIn) {
 		username = userLoggedIn.get(0).get(0);
 		age = Integer.parseInt(userLoggedIn.get(0).get(1));
@@ -35,6 +47,7 @@ public class User{
 		admin = Boolean.parseBoolean(userLoggedIn.get(0).get(4));
 		hobbies = userLoggedIn.get(1).toArray(new String[0]);
 	};
+	*/
 	
 	public void updateUser(User updateParam){
 		username = updateParam.username;
