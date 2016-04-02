@@ -11,10 +11,6 @@ public class FlightBooking extends Booking {
 	private String seatNr;
 	private int luggage;
 	private boolean flightMeal;
-	private String departureTime;
-	private String departureLoc;
-	private String arrivalLoc;
-	private String flightNr;
 
 	public static void testInput(Flight fightSearchResult) {
 		Flight flight = fightSearchResult;
@@ -25,7 +21,7 @@ public class FlightBooking extends Booking {
 		else if (!flightNumber.matches("^([A-Z][A-Z]|[A-Z][0-9]|[0-9][A-Z])[A-Z]?[0-9]{1,4}[A-Z]?$")) {
 			throw new IllegalArgumentException("Error: Flight number has incorrect format.");
 		}
-		
+
 		String depTime = flight.get_depTime();
 		if(depTime==null) throw new IllegalArgumentException("Error: Departure time is missing.");
 		else if(depTime.length()!=19) throw new IllegalArgumentException("Error: Departure time of wrong length");
@@ -85,16 +81,11 @@ public class FlightBooking extends Booking {
 	// Constructor:
 	public FlightBooking(Flight fightSearchResult, String seat, String buyer){
 		this.customer = buyer;		
-		this.flight = fightSearchResult;	
+		this.flight = flightSearchResult;	
 		this.seatNr = seat;
 		this.luggage = 0;
 		this.flightMeal = false;
-		this.departureTime = flight.get_depTime();
-		this.departureLoc = flight.get_depLoc();
-		this.arrivalLoc = flight.get_arrivLoc();
 		this.price = flight.get_price();
-		this.dealerInfo = flight.get_dealerInfo();
-		this.flightNr = flight.get_flightNr();
 	}
 
 	// Notkun: seatNr = setSeat(seat)
