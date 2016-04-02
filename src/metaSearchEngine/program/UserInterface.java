@@ -6,11 +6,19 @@ import java.awt.Component;
 //import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.ParseException;
 //import java.awt.event.*;
+import java.text.SimpleDateFormat;
 
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+
+import org.jdatepicker.impl.*;
+
+import metaSearchEngine.mockobjects.FlightExtend;
 
 import java.util.*;
 
@@ -110,9 +118,20 @@ public class UserInterface extends JFrame implements ActionListener{
 							//System.out.println(depLocText.getText());
 							newFlightSearch.setDepartureLoc(depLocText.getText());
 							newFlightSearch.setArrivalLoc(arrivalText.getText());
-							newFlightSearch.setDepartureTime(depTimeText.getText());
+							/*
+							String depTime = depTimeText.getText();
+							DateFormat format = new SimpleDateFormat("EEE, MMM d, ''yy");
+							try {
+								Date departureTime = format.parse(depTime);
+								newFlightSearch.setDepartureTime(departureTime);
+							} catch (ParseException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}*/
+							//newFlightSearch.setDepartureTime(depTimeText.getText());
 							
-							List<List<String>> flightResults = SearchEngine.flightSearch(newFlightSearch);
+							//List<List<String>> flightResults = SearchEngine.flightSearch(newFlightSearch);
+							List<FlightExtend> flightResults = SearchEngine.flightSearch(newFlightSearch);
 							displayResults(flightResults,source);
 						};
 					});
@@ -318,7 +337,8 @@ public class UserInterface extends JFrame implements ActionListener{
 		
 	}
 	
-	void displayResults(List<List <String>> results, Object source) {
+	void displayResults(List<FlightExtend> flightResults, Object source) {
+		/*
 		String[] colNames;
 
 		if(source == flightButton) {
@@ -326,8 +346,10 @@ public class UserInterface extends JFrame implements ActionListener{
 		} else {
 			colNames = new String[]{"Flight Nr.", "Dep. Location", "Arr. Location", "Dep. Time", "Price", "Company"};
 		}
+		*/
 		
-		DefaultTableModel model = createModel(results, colNames);
+		//DefaultTableModel model = createModel(flightResults, colNames);
+		FlightTableModel model = new FlightTableModel(flightResults);
 		model.addColumn("Booking");
 		
 		JTable table = new JTable(model);
@@ -382,6 +404,7 @@ public class UserInterface extends JFrame implements ActionListener{
 	*/
 	
 	// This method is used to create model from List<List<String>> to use with JTable
+	/*
 	public DefaultTableModel createModel(List<List<String>> list, String[] columnNames) {
 
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
@@ -390,7 +413,99 @@ public class UserInterface extends JFrame implements ActionListener{
         }
 
         return model;
-    }
+    }*/
+	
+	public class FlightTableModel extends DefaultTableModel {
+
+        private List<FlightExtend> flightResults;
+
+        public FlightTableModel(List<FlightExtend> flightResults) {
+            this.flightResults = new ArrayList<>(flightResults);
+        }
+
+        @Override
+        public int getRowCount() {
+            return flightResults.size();
+        }
+
+        @Override
+        public int getColumnCount() {
+            return 6;
+        }
+
+        @Override
+        public String getColumnName(int column) {
+            String name = "??";
+            switch (column) {
+                case 0:
+                    name = "Flight Nr.";
+                    break;
+                case 1:
+                    name = "Dep. Location";
+                    break;
+                case 2:
+                    name = "Arr. Location";
+                    break;
+                case 3:
+                    name = "Dep. Time";
+                    break;
+                case 4:
+                    name = "Price";
+                    break;
+                case 5:
+                    name = "Company";
+                    break;
+            }
+            return name;
+        }
+
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            Class type = String.class;
+            switch (columnIndex) {
+                case 0:
+                case 1:
+                case 2:
+                	break;
+                case 3:
+                    type = Date.class;
+                    break;
+                case 4:
+                	type = Integer.class;
+                	break;
+                case 5:
+                	break;
+            }
+            return type;
+        }
+
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            FlightExtend flight = flightResults.get(rowIndex);
+            Object value = null;
+            switch (columnIndex) {
+                case 0:
+                    value = flight.get_flightNr();
+                    break;
+                case 1:
+                    value = flight.get_depLoc();
+                    break;
+                case 2:
+                    value = flight.get_arrivLoc();
+                    break;
+                case 3:
+                    value = flight.get_depTime();
+                    break;
+                case 4:
+                    value = flight.get_price();
+                    break;
+                case 5:
+                    value = flight.get_dealerInfo().get(0);
+                    break;
+            }
+            return value;
+        }            
+    } 
 	
 	// This class is used to set booking buttons on a column next to
 	// a line in the result table from searching.
@@ -493,10 +608,26 @@ public class UserInterface extends JFrame implements ActionListener{
 	}
 	
 	public static void main (String[] args) {
-		//User user = new User();
-		//user.login();
-		UserInterface gui = new UserInterface();
-		gui.displaySplashScreen();
+		//UserInterface gui = new UserInterface();
+		//gui.displaySplashScreen();
+		FlightSearchCriteria newFlightSearch = new FlightSearchCriteria();
+		newFlightSearch.setDepartureTime(new Date(2016-1900,7+1,15));
+		newFlightSearch.setDepartureLoc("Akureyri");
+		newFlightSearch.setArrivalLoc("Reykjavík");
+		newFlightSearch.setPriceRange(new int[]{10000,20000});
+		newFlightSearch.setReturnTrip(false);
+		newFlightSearch.setNumSeats(1);
+		newFlightSearch.setSeatClass("Economy");
+
+		List<FlightExtend> flightResults = SearchEngine.flightSearch(newFlightSearch);
+		
+		for (int i = 0; i<flightResults.size(); i++) {
+			FlightExtend flight = flightResults.get(i);
+			System.out.println("Flight nr.\tDep. Location\tArr. Location\tDep. Time\t\t\tPrice\tDealer");
+			System.out.println(flight.get_flightNr() + "\t\t" + flight.get_depLoc() + "\t" + flight.get_arrivLoc()
+			 + "\t" + flight.get_depTime() + "\t" + flight.get_price() + "\t" + flight.get_dealerInfo().get(0));
+		}
+		//System.out.println(flightResults.size());
 	}
 
 	@Override

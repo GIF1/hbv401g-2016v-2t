@@ -4,13 +4,13 @@ import java.util.*;
 
 public abstract class Flight {
 	private final String flightNr;
-	private String departureTime;
+	private Date departureTime;
 	private String departureLoc;
 	private int price;
 	private String arrivalLoc;
 	private ArrayList<String> dealerInfo = new ArrayList<String>();
 
-	public Flight(String flightNr, String departureTime, String departureLoc, String arrivalLoc, int price, ArrayList<String> dealerInfo) {
+	public Flight(String flightNr, Date departureTime, String departureLoc, String arrivalLoc, int price, ArrayList<String> dealerInfo) {
 		this.flightNr = flightNr;
 		this.departureTime = departureTime;
 		this.departureLoc = departureLoc;
@@ -19,6 +19,7 @@ public abstract class Flight {
 		this.dealerInfo = dealerInfo;
 	}
 	
+	/*
 	public List<List<String>> getResults() {
 		List<List<String>> results = new ArrayList<List<String>>();
 		List<String> resultsRow1 = new ArrayList<String>();
@@ -52,10 +53,11 @@ public abstract class Flight {
 		
 		return results;
 	}
+	*/
 
 	// Get methods for all the attributes
 	public int get_price() {return price; }
-	public String get_depTime() { return departureTime; }
+	public Date get_depTime() { return departureTime; }
 	public String get_depLoc() { return departureLoc; }
 	public String get_arrivLoc() { return arrivalLoc; }
 	public ArrayList<String> get_dealerInfo() { return dealerInfo; }

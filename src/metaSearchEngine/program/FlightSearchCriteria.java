@@ -3,6 +3,8 @@
  */
 package metaSearchEngine.program;
 
+import java.util.Date;
+
 /**
  * @author Gunnar Atli
  *
@@ -10,19 +12,19 @@ package metaSearchEngine.program;
 public class FlightSearchCriteria {
 	
 	// Attributes
-	String departureTime;
-	private String arrivalTime;
+	Date departureTime;
+	//private String arrivalTime;
 	String departureLoc;
 	String arrivalLoc;
-	private int priceRange;
-	private String flightClass;
-	private int numOfSeatsEconomy;
-	private int numOfSeatsComfort;
-	private boolean overLay;
-	private boolean returnFlight;
+	private int[] priceRange;
+	private String seatClass;
+	private int numSeats;
+	//private int numOfSeatsComfort;
+	//private boolean overLay;
+	private boolean returnTrip;
 	
 	// Methods
-	void setDepartureTime(String depTime) {
+	void setDepartureTime(Date depTime) {
 		this.departureTime = depTime;
 	}
 	
@@ -38,28 +40,52 @@ public class FlightSearchCriteria {
 		this.arrivalLoc = arrLoc;
 	}
 	
-	void setPriceRange() {
-		
+	void setPriceRange(int[] priceRange) {
+		this.priceRange = priceRange;
 	}
 	
-	void setFlightClass() {
-		
+	void setSeatClass(String seatClass) {
+		this.seatClass = seatClass;
 	}
 	
-	void setNumOfSeatsEconomy() {
-		
-	}
-	
-	void setNumOfSeatsComfort() {
-		
+	void setNumSeats(int numSeats) {
+		this.numSeats = numSeats;
 	}
 	
 	void setOverLay() {
 		
 	}
 	
-	void setReturnFlight() {
-		
+	void setReturnTrip(boolean returnTrip) {
+		this.returnTrip = returnTrip;
+	}
+
+	public Date getDepartureTime() {
+		return departureTime;
+	}
+
+	public String getDepartureLoc() {
+		return departureLoc;
+	}
+
+	public String getArrivalLoc() {
+		return arrivalLoc;
+	}
+
+	public int[] getPriceRange() {
+		return priceRange;
+	}
+
+	public boolean getReturnTrip() {
+		return returnTrip;
+	}
+
+	public int getNumSeats() {
+		return numSeats;
+	}
+
+	public String getSeatClass() {
+		return seatClass;
 	}
 	
 }
