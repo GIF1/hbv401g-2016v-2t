@@ -1,6 +1,7 @@
 package metaSearchEngine.program;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import metaSearchEngine.mockobjects.Flight;
 
@@ -11,7 +12,7 @@ public class FlightBooking extends Booking {
 	private String seatNr;
 	private int luggage;
 	private boolean flightMeal;
-	private String departureTime;
+	private Date departureTime;
 	private String departureLoc;
 	private String arrivalLoc;
 	private String flightNr;
@@ -26,7 +27,7 @@ public class FlightBooking extends Booking {
 			throw new IllegalArgumentException("Error: Flight number has incorrect format.");
 		}
 		
-		String depTime = flight.get_depTime();
+		Date depTime = flight.get_depTime();
 		if(depTime==null) throw new IllegalArgumentException("Error: Departure time is missing.");
 		else if(depTime.length()!=19) throw new IllegalArgumentException("Error: Departure time of wrong length");
 		// Note: It is still possible to set invalid departure time. 31st of febuary for example. Refine regexp

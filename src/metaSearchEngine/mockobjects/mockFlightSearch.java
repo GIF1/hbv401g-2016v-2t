@@ -74,10 +74,10 @@ public class mockFlightSearch {
 		wow_info.add("Vsknr. 109354");
 		
 		ArrayList<String> ice_info = new ArrayList<String>();
-		wow_info.add("Icelandair");
-		wow_info.add("Katrínartún 12 - 105 Reykjavík");
-		wow_info.add("Kt. 451011-0220");
-		wow_info.add("Vsknr. 109354");
+		ice_info.add("Icelandair");
+		ice_info.add("Katrínartún 12 - 105 Reykjavík");
+		ice_info.add("Kt. 451011-0220");
+		ice_info.add("Vsknr. 109354");
 		
 		//SimpleDateFormat duration = new SimpleDateFormat("HH:mm");
 		//Date duration1 = duration.parse("02:15");
@@ -96,6 +96,11 @@ public class mockFlightSearch {
 		FlightExtend flight3 = new FlightExtend("AC789", new Date(2016-1900,7+1,22,12,30), 
 				"Reykjavík", "Akureyri", 12000, 10, 0, "02:15", ice_info);
 		flights.add(flight3);
+		
+		@SuppressWarnings("deprecation")
+		FlightExtend flight4 = new FlightExtend("AC789", new Date(2016-1900,7+1,15,12,30), 
+				"Akureyri", "Reykjavík", 18000, 10, 0, "02:15", ice_info);
+		flights.add(flight4);
 		
 		return flights;
 	}
