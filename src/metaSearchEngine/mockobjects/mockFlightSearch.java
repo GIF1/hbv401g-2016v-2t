@@ -17,7 +17,7 @@ public class mockFlightSearch {
 	private int numSeats;
 	private String seatClass;
 	
-	public static ArrayList<FlightExtend> FlightSearch(FlightSearchCriteria flightCrit) {
+	public static ArrayList<Flight> FlightSearch(FlightSearchCriteria flightCrit) {
 		mockFlightSearch flightCriteria = new mockFlightSearch();
 		flightCriteria.departureTime = flightCrit.getDepartureTime();
 		flightCriteria.departureLoc = flightCrit.getDepartureLoc();
@@ -27,14 +27,14 @@ public class mockFlightSearch {
 		flightCriteria.numSeats = flightCrit.getNumSeats();
 		flightCriteria.seatClass = flightCrit.getSeatClass();
 		
-		ArrayList<FlightExtend> flightsResults = searchFlights(flightCriteria);
+		ArrayList<Flight> flightsResults = searchFlights(flightCriteria);
 		
 		return flightsResults;
 	}
 	
-	public static ArrayList<FlightExtend> searchFlights(mockFlightSearch criteria) {
+	public static ArrayList<Flight> searchFlights(mockFlightSearch criteria) {
 		ArrayList<FlightExtend> flights = flightMockConstructor();
-		ArrayList<FlightExtend> flightResults = new ArrayList<FlightExtend>();
+		ArrayList<Flight> flightResults = new ArrayList<Flight>();
 		
 		for (int i=0; i<flights.size(); i++) {
 			FlightExtend flight = flights.get(i);

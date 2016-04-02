@@ -18,6 +18,7 @@ import javax.swing.table.TableCellRenderer;
 
 import org.jdatepicker.impl.*;
 
+import metaSearchEngine.mockobjects.Flight;
 import metaSearchEngine.mockobjects.FlightExtend;
 
 import java.util.*;
@@ -131,8 +132,8 @@ public class UserInterface extends JFrame implements ActionListener{
 							//newFlightSearch.setDepartureTime(depTimeText.getText());
 							
 							//List<List<String>> flightResults = SearchEngine.flightSearch(newFlightSearch);
-							List<FlightExtend> flightResults = SearchEngine.flightSearch(newFlightSearch);
-							displayResults(flightResults,source);
+							List<Flight> flightResults = SearchEngine.flightSearch(newFlightSearch);
+							//displayResults(flightResults,source);
 						};
 					});
 					
@@ -619,10 +620,10 @@ public class UserInterface extends JFrame implements ActionListener{
 		newFlightSearch.setNumSeats(1);
 		newFlightSearch.setSeatClass("Economy");
 
-		List<FlightExtend> flightResults = SearchEngine.flightSearch(newFlightSearch);
+		List<Flight> flightResults = SearchEngine.flightSearch(newFlightSearch);
 		
 		for (int i = 0; i<flightResults.size(); i++) {
-			FlightExtend flight = flightResults.get(i);
+			Flight flight = flightResults.get(i);
 			System.out.println("Flight nr.\tDep. Location\tArr. Location\tDep. Time\t\t\tPrice\tDealer");
 			System.out.println(flight.get_flightNr() + "\t\t" + flight.get_depLoc() + "\t" + flight.get_arrivLoc()
 			 + "\t" + flight.get_depTime() + "\t" + flight.get_price() + "\t" + flight.get_dealerInfo().get(0));

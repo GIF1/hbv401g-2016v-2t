@@ -7,7 +7,7 @@ import java.util.List;
 
 public class SearchEngine {
 	
-	static ArrayList<FlightExtend> flightSearch(FlightSearchCriteria flightSearch) {
+	static ArrayList<Flight> flightSearch(FlightSearchCriteria flightSearch) {
 		/*
 		ArrayList<String> wow_info = new ArrayList<String>();
 		wow_info.add("WOW air");
@@ -18,7 +18,7 @@ public class SearchEngine {
 
 		List<List<String>> results = flightResults.getResults();
 		*/
-		ArrayList<FlightExtend> flightResults = mockFlightSearch.FlightSearch(flightSearch);
+		ArrayList<Flight> flightResults = mockFlightSearch.FlightSearch(flightSearch);
 		
 		return flightResults;
 	}
