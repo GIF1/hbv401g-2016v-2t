@@ -3,14 +3,14 @@ package metaSearchEngine.program;
 import java.util.List;
 
 public class User{
-	// Note: Not sure why these attributes are static
-	// someone else wrote this - Sigurgeir 06.04
-	private static int age;
-	private static String hobbies[];
-	private static String password;
-	private static boolean admin;
+	static String username;
+	static Integer age;
+	static String email;
+	static String hobbies[];
+	static String password;
+	static boolean admin;
 	
-	public User(String username, int age, String email, String[] hobbies, String password, boolean admin) {
+	public User(String username, Integer age, String email, String[] hobbies, String password, boolean admin) {
 		this.username = username;
 		this.age = age;
 		this.email = email;
@@ -52,7 +52,7 @@ public class User{
 	public void updateUser(User updateParam){
 		username = updateParam.username;
 	};
-	static void setAge(int age){
+	static void setAge(Integer age){
 		
 	};
 	private void setEmail(String email){
@@ -64,7 +64,7 @@ public class User{
 	private void setPassword(String password){
 		
 	};
-	private void deleteTrip(Package some_trip){
+	private void deleteTrip(Class Package){
 		
 	};
 }
