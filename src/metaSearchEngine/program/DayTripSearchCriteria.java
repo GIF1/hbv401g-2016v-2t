@@ -3,55 +3,79 @@
  */
 package metaSearchEngine.program;
 
-/**
- * @author Gunnar Atli
- *
- */
+import java.util.Date;
+
 public class DayTripSearchCriteria {
 	
 	// Attributes
 	private String name;
 	private String location;
-	private String startTime;
-	private String endTime;
-	private int priceRange;
+	private Date startTime;
+	private Date endTime;
+	private int[] priceRange;
 	private int numParticipants;
-	private boolean getHobbies;
+	private boolean Hobbies;
 	private String[] category;
 	
 	// Methods
-	void setName() {
-		
+	public void setName(String name) {
+		this.name = name;
 	}
 	
-	void setLocation() {
-		
+	public void setLocation(String location) {
+		this.location = location;
 	}
 	
-	void setStartTime() {
-		
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
 	}
 	
-	void setEndTime() {
-		
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
 	}
 	
-	void setPriceRange() {
-		
+	public void setPriceRange(int[] priceRange) {
+		this.priceRange = priceRange; 
 	}
 	
-	void setNumParticipants() {
-		
+	public void setNumParticipants(int numParticipants) {
+		this.numParticipants = numParticipants;
 	}
 	
-	void getHobbies() {
-		
+	public void setCategory(String[] category) {
+		this.category = category;
 	}
 	
-	void setCategory() {
-		
+	public String getName() {
+		return name;
 	}
 	
+	public String getLocation() {
+		return location;
+	}
 	
-
+	public Date getStartTime() {
+		return startTime;
+	}
+	
+	public Date getEndTime() {
+		return endTime;
+	}
+	
+	public int[] getPriceRange() {
+		return priceRange;
+	}
+	
+	public int getNumParticipants() {
+		return numParticipants;
+	}
+	
+	public boolean getHobbies() {
+		return Hobbies;
+	}
+	
+	public String[] getCategory() {
+		return category;
+	}
+	
 }

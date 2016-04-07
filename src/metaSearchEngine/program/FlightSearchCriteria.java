@@ -5,21 +5,17 @@ package metaSearchEngine.program;
 
 import java.util.Date;
 
-/**
- * @author Gunnar Atli
- *
- */
 public class FlightSearchCriteria {
 	
 	// Attributes
-	Date departureTime;
-	String departureLoc;
-	String arrivalLoc;
-	int[] priceRange;
-	String seatClass;
-	int numSeats;
+	private Date departureTime;
+	private String departureLoc;
+	private String arrivalLoc;
+	private int[] priceRange;
+	private String seatClass;
+	private int numSeats;
 	private boolean overLay;
-	boolean returnTrip;
+	private boolean returnTrip;
 	
 	// Methods
 	public void setDepartureTime(Date depTime) {
