@@ -8,7 +8,7 @@ public interface UserClass {
 
 	// Minimum attributes all User classes should contain: 
 	private String username;
-	private final String id;	// unique for database usage. Initialized in constructor. Never changed. 
+	private final int id;	// unique for database usage. Initialized in constructor. Never changed. 
 	private String email;
 
 	// Usage: username = changeUserName(newUserName);

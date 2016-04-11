@@ -1,70 +1,46 @@
 package metaSearchEngine.program;
 
-import java.util.List;
-
-public class User{
-	// Note: Not sure why these attributes are static
-	// someone else wrote this - Sigurgeir 06.04
-	private static int age;
-	private static String hobbies[];
-	private static String password;
-	private static boolean admin;
+public class User implements UserClass {
+	private String username;
+	private int id;
+	private String email;
+	private boolean admin;
 	
-	public User(String username, int age, String email, String[] hobbies, String password, boolean admin) {
-		this.username = username;
-		this.age = age;
-		this.email = email;
-		this.hobbies = hobbies;
-		this.password = password;
+	public User(int id, String user, String email, boolean admin) {
+		this.id = id;
 		this.admin = admin;
+		setUserName(user);
+		setEmail(email);
 	}
 	
-	// Usage: Used with method getUserInfo in UserInterface class
-	void login() {
-		UserInterface.displayLogin();
-		System.out.println(username);
-		// username = "mike";
-		// username = userLoggedIn.username;
-		// UserInterface.displayLogin();
-		// Get username and password from fields
-		// loginUsername = 
-		//String user = loginVal.username;
-	};
 	
-	// Usage: setProfile(userLoggedIn)
-	// Before: userLoggedIn is of type List<List<String>> containing
-	//		list of two lists of strings where one contains username, 
-	//		age, email, password and admin and the other one contains
-	//		hobbies.
-	// After: The attributes of the class User have been set
-	//		according to user logged in at the moment.
-	/*
-	static void setProfile(List<List<String>> userLoggedIn) {
-		username = userLoggedIn.get(0).get(0);
-		age = Integer.parseInt(userLoggedIn.get(0).get(1));
-		email = userLoggedIn.get(0).get(2);
-		password = userLoggedIn.get(0).get(3);
-		admin = Boolean.parseBoolean(userLoggedIn.get(0).get(4));
-		hobbies = userLoggedIn.get(1).toArray(new String[0]);
-	};
-	*/
-	
-	public void updateUser(User updateParam){
-		username = updateParam.username;
-	};
-	static void setAge(int age){
+	 // Usage: username = changeUserName(newUserName);
+	// Before: Both username and newUserName are Strings
+	// 	   of length 3 <= username.length() <= 20 and 
+	//	   consist only of numbers and letters and start with a letter
+	// After: username has been changed to newUserName
+	public void setUserName(String newUserName){
+		String userPattern = "^[a-zA-Z]{1}[a-zA-Z0-9]{2,19}";
 		
+		if (newUserName.matches(userPattern)) {
+			this.username = newUserName;
+		} else {
+			throw new IllegalArgumentException("Error: Username not of legal format.");
+		}
 	};
-	private void setEmail(String email){
 		
-	};
-	private void setHobbies(String[] hobbies){
+	// Usage: email = setEmail(newEmail);
+	// Before: Both variables are contain a valid email address.
+	// 	  (They might for example match the regular expression
+	//	   ^([\w−] + (? : \.[\w−]+)*)@((? : [\w−] + \.)*\w[\w−]0, 66)\.([a − z]2, 6(? : \.[a − z]2)?)$ )
+	// After: email has been changed to newEmail.
+	public void setEmail(String newEmail) {
+		String emailPattern = "^([\w−] + (? : \.[\w−]+)*)@((? : [\w−] + \.)*\w[\w−]0, 66)\.([a − z]2, 6(? : \.[a − z]2)?)$ )";
 		
-	};
-	private void setPassword(String password){
-		
-	};
-	private void deleteTrip(Package some_trip){
-		
+		if (newEmail.matches(emailPattern)) {
+			this.email = newEmail;
+		} else {
+			throw new IllegalArgumentException("Error: Email not of legal format.");
+		}
 	};
 }
