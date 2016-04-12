@@ -1,50 +1,76 @@
 /**
  * 
  */
-package cluster2T;
+package metaSearchEngine.program;
 
-/**
- * @author Gunnar Atli
- *
- */
+import java.util.Date;
+
 public class HotelSearchCriteria {
 	
 	// Attributes
-	private String startTime;
-	private String endTime;
-	private int priceRange;
+	private Date startTime;
+	private Date endTime;
+	private int[] priceRange;
 	private String location;
 	private int numRoomSingle;
 	private int numRoomDouble;
 	private int numRoomMulti;
 	
 	// Methods
-	void setStartTime() {
-		
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
 	}
 	
-	void setEndTime() {
-		
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
 	}
 	
-	void setPriceRange() {
-		
+	public void setPriceRange(int[] priceRange) {
+		this.priceRange = priceRange;
 	}
 	
-	void setLocation() {
-		
+	public void setLocation(String location) {
+		this.location = location;
 	}
 	
-	void setNumRoomSingle() {
-		
+	public void setNumRoomSingle(int numRoomSingle) {
+		this.numRoomSingle = numRoomSingle;
 	}
 	
-	void setNumRoomDouble() {
-		
+	public void setNumRoomDouble(int numRoomDouble) {
+		this.numRoomDouble = numRoomDouble;
 	}
 	
-	void setNumRoomMulti() {
-		
+	public void setNumRoomMulti(int numRoomMulti) {
+		this.numRoomMulti = numRoomMulti;
+	}
+	
+	public Date getStartTime() {
+		return startTime;
+	}
+	
+	public Date getEndTime() {
+		return endTime;
+	}
+	
+	public int[] getPriceRange() {
+		return priceRange;
+	}
+	
+	public String getLocation() {
+		return location;
+	}
+	
+	public int getNumRoomSingle() {
+		return numRoomSingle;
+	}
+	
+	public int getNumRoomDouble() {
+		return numRoomDouble;
+	}
+	
+	public int getNumRoomMulti() {
+		return numRoomMulti;
 	}
 
 }
