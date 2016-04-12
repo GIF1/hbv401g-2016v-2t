@@ -25,10 +25,6 @@ public class User extends UserClass {
 		setEmail(email);
 	}
 	
-	// Usage: Used with method getUserInfo in UserInterface class
-	void login() {
-		
-	}
 	
 	public void setUserName(String newUserName){
 		if(newUserName.length()>2 && newUserName.length<20 && newUserName.matches("^([a-zA-Z][a-zA-Z0-9]*$") username = newUserName;
