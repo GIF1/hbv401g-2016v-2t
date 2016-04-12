@@ -2,69 +2,82 @@ package metaSearchEngine.program;
 
 import java.util.List;
 
-public class User{
-	// Note: Not sure why these attributes are static
-	// someone else wrote this - Sigurgeir 06.04
-	private static int age;
-	private static String hobbies[];
-	private static String password;
-	private static boolean admin;
+public class User extends UserClass {
+
+	// Data invariant:
+	//
+
+
+	private int age;
+	private String hobbies[];
+	private String password;
+	private boolean admin=false;
+	private List<Package> packages = new List<Package>();
+	private final String id;
+	private String username;
+	private boolean logedIn;
 	
-	public User(String username, int age, String email, String[] hobbies, String password, boolean admin) {
+	public User(String username, String email, String password, boolean admin) {
 		this.username = username;
-		this.age = age;
 		this.email = email;
-		this.hobbies = hobbies;
 		this.password = password;
 		this.admin = admin;
 	}
 	
 	// Usage: Used with method getUserInfo in UserInterface class
 	void login() {
-		UserInterface.displayLogin();
-		System.out.println(username);
-		// username = "mike";
-		// username = userLoggedIn.username;
-		// UserInterface.displayLogin();
-		// Get username and password from fields
-		// loginUsername = 
-		//String user = loginVal.username;
-	};
+		
+	}
 	
-	// Usage: setProfile(userLoggedIn)
-	// Before: userLoggedIn is of type List<List<String>> containing
-	//		list of two lists of strings where one contains username, 
-	//		age, email, password and admin and the other one contains
-	//		hobbies.
-	// After: The attributes of the class User have been set
-	//		according to user logged in at the moment.
-	/*
-	static void setProfile(List<List<String>> userLoggedIn) {
-		username = userLoggedIn.get(0).get(0);
-		age = Integer.parseInt(userLoggedIn.get(0).get(1));
-		email = userLoggedIn.get(0).get(2);
-		password = userLoggedIn.get(0).get(3);
-		admin = Boolean.parseBoolean(userLoggedIn.get(0).get(4));
-		hobbies = userLoggedIn.get(1).toArray(new String[0]);
-	};
-	*/
-	
-	public void updateUser(User updateParam){
-		username = updateParam.username;
-	};
-	static void setAge(int age){
+	public void setUserName(String newUserName){
+		if(newUserName.length()>2 && newUserName.length<20 && newUserName.matches("^([a-zA-Z][a-zA-Z0-9]*$") username = newUserName;
+		else throw new IllegalArgumentException("Error: Invalid username");
+	}
+
+	// Usage: x = setAge(newAge);
+	// Before: newAge is an integer 13<newAge<110
+	// After: x contains the value of newAge
+	static void setAge(int newAge){
+		if(newAge<13 || newAge>110) throw new IllegalArgumentException("Error: Invalid age for user. ");
+		age = newAge;
+	}
+
+	void setUserName(String newUserName) {
+		if(newUserName.length()<3 || newUserName.length()>20) throw new IllegalArgumentException();
+		else username=newUserName;
+
+	}
+
+	void setId(String newId){
+		if(newId.length()>0) id=newId;
+		else throw new IllegalArgumentException();
+
+	}
+
+	void setEmail(String newEmail){
 		
-	};
-	private void setEmail(String email){
-		
-	};
-	private void setHobbies(String[] hobbies){
-		
-	};
-	private void setPassword(String password){
-		
-	};
-	private void deleteTrip(Package some_trip){
-		
-	};
+		if(newEmail.matches(^([\w−] + (? : \.[\w−]+)*)@((? : [\w−] + \.)*\w[\w−]0, 66)\.([a − z]2, 6(? : \.[a − z]2)?)$)) {
+			email=newEmail;
+		}
+		else throw new IllegalArgumentException();
+	}
+
+
+	void setHobbies(String[] newHobbies){
+		hobbies=newHobbies;
+	}
+
+
+	void setPassword(String newPassword, String oldPassword){
+		if(password==null) password=newPassword;
+		else if(passord==oldPassword) password=newPassword;
+		else System.out.println("Wrong password. Password not updated");
+	}
+	void deleteTrip(Package some_trip){
+		packages.remove(some_trip); 
+	}
+
+	void addTrip(Package some_trip) {
+		packages.add(some_trip);
+	}
 }
