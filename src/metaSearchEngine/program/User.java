@@ -1,6 +1,8 @@
 package metaSearchEngine.program;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class User implements UserClass {
 	// Data invariant:
@@ -13,7 +15,7 @@ public class User implements UserClass {
 	private List<Package> packages;
 	private boolean admin;
 	
-	public User(int newId, String username, String email) {
+	public User(int newId, String username, String email, boolean admin) {
 		if (newId > 0) {
 			this.id = newId;
 		} else {
@@ -22,18 +24,21 @@ public class User implements UserClass {
 		
 		setUserName(username);
 		setEmail(email);
+		this.admin = admin;
 	}
 	
 	// Usage: x = setAge(newAge);
 	// Before: newAge is an integer 13<newAge<110
 	// After: x contains the value of newAge
-	void setAge(int newAge){
+	public void setAge(int newAge){
 		if(newAge<13 || newAge>110) {
 			throw new IllegalArgumentException("Error: Invalid age for user. ");
 		} else {
 			this.age = newAge;
 		}	
 	}
+	
+	
 	
 	// Usage: username = changeUserName(newUserName);
 	// Before: Both username and newUserName are Strings
@@ -57,9 +62,12 @@ public class User implements UserClass {
 	//	   ^([\w−] + (? : \.[\w−]+)*)@((? : [\w−] + \.)*\w[\w−]0, 66)\.([a − z]2, 6(? : \.[a − z]2)?)$ )
 	// After: email has been changed to newEmail.
 	public void setEmail(String newEmail){
-		String emailPattern = "^([\\w−] + (? : \\.[\\w−]+)*)@((? : [\\w−] + \\.)*\\w[\\w−]0, 66)\\.([a − z]2, 6(? : \\.[a − z]2)?)$ )";
+		String emailString = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
 		
-		if (newEmail.matches(emailPattern)) {
+		Pattern emailPattern = Pattern.compile(emailString, Pattern.CASE_INSENSITIVE);
+		Matcher matcher = emailPattern.matcher(newEmail);
+		
+		if (matcher.find()) {
 			this.email = newEmail;
 		} else {
 			throw new IllegalArgumentException("Error: Email not of legal format.");
@@ -77,4 +85,24 @@ public class User implements UserClass {
 	void addTrip(Package some_trip) {
 		packages.add(some_trip);
 	}
+
+	public int getAge() {
+		return this.age;
+	}
+	
+	@Override
+	public String getUsername() {
+		return this.username;
+	}
+
+	@Override
+	public String getEmail() {
+		return this.email;
+	}
+
+	@Override
+	public int getId() {
+		return this.id;
+	}
+	
 }

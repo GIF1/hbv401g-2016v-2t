@@ -1,6 +1,7 @@
 package metaSearchEngine.program;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -37,14 +38,12 @@ public class Database {
       return c;
   }
 
-   List<List<String>> query(String q) {
-    Statement stmt = null;
+   List<List<String>> query(Connection c, PreparedStatement q) {
     List<List<String>> result = new ArrayList<>();
-    Connection c = this.connect();
+    
 
     try {
-      stmt = c.createStatement();
-      ResultSet rs = stmt.executeQuery(q);
+      ResultSet rs = q.executeQuery();
 
       ResultSetMetaData metadata = rs.getMetaData();
       int numcols = metadata.getColumnCount();
@@ -58,7 +57,7 @@ public class Database {
         result.add(row);
       }
       if (rs != null) rs.close();
-      if (stmt != null) stmt.close();
+      if (q != null) q.close();
       if (c != null) c.close();
 
     } catch ( Exception e ) {
