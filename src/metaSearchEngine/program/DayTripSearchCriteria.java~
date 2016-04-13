@@ -14,8 +14,8 @@ public class DayTripSearchCriteria {
 	private Date endTime;
 	private int[] priceRange;
 	private int numParticipants;
-	private boolean getHobbies;
-	private String category;
+	private boolean Hobbies;
+	private String[] category;
 	
 	// Methods
 	public void setName(String name) {
@@ -42,7 +42,7 @@ public class DayTripSearchCriteria {
 		this.numParticipants = numParticipants;
 	}
 	
-	public void setCategory(String category) {
+	public void setCategory(String[] category) {
 		this.category = category;
 	}
 	
