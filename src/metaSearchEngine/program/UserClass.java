@@ -5,12 +5,19 @@ package metaSearchEngine.program;
 // various travel services. 
 
 public interface UserClass {
-
-	// Minimum attributes all User classes should contain: 
+	// Usage: username = getUsername();
+	// Before: Nothing
+	// After: Returns the string username containing the username
 	String getUsername();
 	
+	// Usage: email = getEmail();
+	// Before: Nothing
+	// After: Returns the string email, containing the users email.
 	String getEmail();
 	
+	// Usage: id = getId();
+	// Before: Nothing
+	// After: Returns the integer id, containing the users id.
 	int getId();
 
 
