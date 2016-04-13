@@ -3,12 +3,14 @@ package metaSearchEngine.program;
 public class RoomBooking extends Booking {
 
 	private Room room;
+	private String hotel;
 	private List<Date> reservedDates;
 	private int nrOfMeals=0;
 
 	// Constructor
-	public RoomBooking(Room roomSearchResult, List<Date> my_reserveDates){
+	public RoomBooking(Room roomSearchResult, List<Date> my_reserveDates, String hotel_with_room;){
 		this.room = roomSearchResult;
+		this.hotel = hotel_with_room;
 		this.reservedDates = my_reserveDates;
 	}
 	// Usage: nrOfMeals = changeMeal(meals_wanted);
