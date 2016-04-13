@@ -7,9 +7,12 @@ package metaSearchEngine.program;
 public interface UserClass {
 
 	// Minimum attributes all User classes should contain: 
-	private String username;
-	private final int id;	// unique for database usage. Initialized in constructor. Never changed. 
-	private String email;
+	String getUsername();
+	
+	String getEmail();
+	
+	int getId();
+
 
 	// Usage: username = changeUserName(newUserName);
 	// Before: Both username and newUserName are Strings
