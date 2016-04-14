@@ -16,11 +16,11 @@ public class FlightExtend extends Flight{
 	String[] seatNrEconomy;
 	String[] seatNrComfort;
 	//String flightDuration;
-	ArrayList<String> companyInfo;
+	String[] companyInfo;
 	// .... possibly more
 	
 	public FlightExtend(String flightNr, Date departureTime, String departureLoc, Date arrivalTime, String arrivalLoc, int price, 
-			String[] seatNrEconomy, String[] seatNrComfort, ArrayList<String> companyInfo) {
+			String[] seatNrEconomy, String[] seatNrComfort, String[] companyInfo) {
 		super(flightNr, departureTime, departureLoc, arrivalTime, arrivalLoc, price, companyInfo);
 		
 		this.flightNr = flightNr;
