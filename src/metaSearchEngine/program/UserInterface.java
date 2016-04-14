@@ -2,72 +2,23 @@ package metaSearchEngine.program;
 
 import java.awt.EventQueue;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import javax.swing.JLabel;
-import java.awt.FlowLayout;
-import javax.swing.JLayeredPane;
-import javax.swing.JDesktopPane;
-
-import org.eclipse.AutoCompletion;
-import org.eclipse.wb.swing.FocusTraversalOnArray;
-import java.awt.Component;
-import java.awt.Color;
-import java.awt.CardLayout;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.SwingConstants;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.Font;
-import java.awt.Window;
-
-import javax.swing.UIManager;
-import javax.swing.JTextPane;
-import com.toedter.calendar.JDateChooser;
-
-import metaSearchEngine.mockobjects.Flight;
-import metaSearchEngine.mockobjects.FlightExtend;
-
-import javax.swing.JFormattedTextField;
-import javax.swing.JRadioButton;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.KeyStroke;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.DropMode;
-import javax.swing.JList;
-import javax.swing.AbstractListModel;
-import javax.swing.ListSelectionModel;
-import com.toedter.calendar.JDayChooser;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.border.TitledBorder;
-import javax.swing.JScrollPane;
-import java.awt.event.MouseMotionAdapter;
-
 
 public class UserInterface {
 
 	private JFrame frmMetaSearchEngine;
 	private JTextField txtUsername;
 	private JTextField txtPassword;
-	private JTextField txtDepLoc;
-	private JTextField txtArrLoc;
+	private JComboBox<String> txtDepLoc;
+	private JDateChooser depTime;
+	private JComboBox<String> txtArrLoc;
+	private JComboBox<String> txtSeatClass;
+	private JRadioButton rdbtnRoundTripYes;
 	private JTextField txtLowerPriceBound;
 	private JTextField txtHigherPriceBound;
 	private JTextField txtNrSeats;
 	private final ButtonGroup btnGroupRndTrip = new ButtonGroup();
 	private final ButtonGroup btnGroupOverlay = new ButtonGroup();
+	private JComboBox<String> txtHotelLoc;
 	private JTextField txtNewUsername;
 	private JTextField txtNewPass;
 	private JTextField txtConPass;
@@ -308,6 +259,7 @@ public class UserInterface {
 
 		btnFlightSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				resultLayout.show(SearchResults,"emptyTable");
 				displayFlightSC();
 			}
 		});
@@ -320,6 +272,7 @@ public class UserInterface {
 
 		btnHotelSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				resultLayout.show(SearchResults,"emptyTable");
 				displayHotelSC();
 			}
 		});
@@ -332,6 +285,7 @@ public class UserInterface {
 
 		btnDaytripSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				resultLayout.show(SearchResults,"emptyTable");
 				displayDaytripSC();
 			}
 		});
@@ -353,29 +307,31 @@ public class UserInterface {
 		lblFlightSearch.setBounds(140, 13, 109, 22);
 		FlightSearch.add(lblFlightSearch);
 		
-		txtDepLoc = new JTextField();
-		txtDepLoc.setBackground(UIManager.getColor("TextField.background"));
+		txtDepLoc = new JComboBox<String>();
+		txtDepLoc.setModel(new DefaultComboBoxModel<String>(new String[] {"Akureyri", "Egilsstaðir", "Reykjavík"}));
+		AutoCompletion.enable(txtDepLoc);
+		txtDepLoc.setEditable(true);
 		txtDepLoc.setBounds(112, 53, 240, 22);
 		FlightSearch.add(txtDepLoc);
-		txtDepLoc.setColumns(10);
 		
 		JLabel lblArrLocation = new JLabel("Arr. Location:");
 		lblArrLocation.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblArrLocation.setBounds(12, 90, 100, 16);
 		FlightSearch.add(lblArrLocation);
 		
-		txtArrLoc = new JTextField();
-		txtArrLoc.setBackground(UIManager.getColor("TextField.background"));
+		txtArrLoc = new JComboBox<String>();
+		txtArrLoc.setModel(new DefaultComboBoxModel<String>(new String[] {"Akureyri", "Egilsstaðir", "Reykjavík"}));
+		AutoCompletion.enable(txtArrLoc);
+		txtArrLoc.setEditable(true);
 		txtArrLoc.setBounds(112, 87, 240, 22);
 		FlightSearch.add(txtArrLoc);
-		txtArrLoc.setColumns(10);
 		
 		JLabel lblDepTime = new JLabel("Dep. Time:");
 		lblDepTime.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblDepTime.setBounds(12, 125, 100, 16);
 		FlightSearch.add(lblDepTime);
 		
-		final JDateChooser depTime = new JDateChooser();
+		depTime = new JDateChooser();
 		depTime.setBounds(112, 119, 240, 22);
 		FlightSearch.add(depTime);
 		
@@ -421,7 +377,7 @@ public class UserInterface {
 		rdbtnRoundTripNo.setBounds(177, 229, 61, 25);
 		FlightSearch.add(rdbtnRoundTripNo);
 		
-		final JRadioButton rdbtnRoundTripYes = new JRadioButton("Yes");
+		rdbtnRoundTripYes = new JRadioButton("Yes");
 		btnGroupRndTrip.add(rdbtnRoundTripYes);
 		rdbtnRoundTripYes.setSelected(true);
 		rdbtnRoundTripYes.setBounds(112, 229, 61, 25);
@@ -432,8 +388,8 @@ public class UserInterface {
 		lblSeatClass.setBounds(12, 195, 100, 16);
 		FlightSearch.add(lblSeatClass);
 		
-		final JComboBox txtSeatClass = new JComboBox();
-		txtSeatClass.setModel(new DefaultComboBoxModel(new String[] {"Economy", "Business"}));
+		txtSeatClass = new JComboBox<String>();
+		txtSeatClass.setModel(new DefaultComboBoxModel<String>(new String[] {"Economy", "Business"}));
 		txtSeatClass.setBounds(112, 192, 131, 22);
 		FlightSearch.add(txtSeatClass);
 		
@@ -463,13 +419,23 @@ public class UserInterface {
 		btnSearchFlight.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FlightSearchCriteria newFlightSearch = new FlightSearchCriteria();
-				newFlightSearch.setDepartureLoc(txtDepLoc.getText());
-				newFlightSearch.setArrivalLoc(txtArrLoc.getText());
+				newFlightSearch.setDepartureLoc((String) txtDepLoc.getSelectedItem());
+				newFlightSearch.setArrivalLoc((String) txtArrLoc.getSelectedItem());
 				newFlightSearch.setDepartureTime(depTime.getDate());
 				newFlightSearch.setNumSeats(Integer.parseInt(txtNrSeats.getText()));
 				newFlightSearch.setSeatClass((String)txtSeatClass.getSelectedItem());
 				newFlightSearch.setReturnTrip(rdbtnRoundTripYes.isSelected());
-				newFlightSearch.setPriceRange(new int[]{Integer.parseInt(txtLowerPriceBound.getText()),Integer.parseInt(txtHigherPriceBound.getText())});
+				
+				// Optional
+				int lowerBound = 0;
+				int higherBound = 999999;
+				if (!(txtLowerPriceBound.getText().equals(""))) {
+					lowerBound = Integer.parseInt(txtLowerPriceBound.getText());
+				}
+				if (!(txtHigherPriceBound.getText().equals(""))) {
+					higherBound = Integer.parseInt(txtHigherPriceBound.getText());
+				}
+				newFlightSearch.setPriceRange(new int[]{lowerBound,higherBound});
 				newFlightSearch.setOverLay(rdbtnOverlayYes.isSelected());
 				
 				//List<Flight> flightResults = SearchEngine.flightSearch(newFlightSearch);
@@ -544,7 +510,8 @@ public class UserInterface {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int row = tabFlightResults.rowAtPoint(e.getPoint());
-				FlightBooking flightToBook = new FlightBooking(flightResults.get(row),1,"Gunnar");
+				User userLoggedIn = new User("Gunnar","gif1@hi.is","blabla",false,1);
+				FlightBooking flightToBook = new FlightBooking(flightResults.get(row),1,userLoggedIn);
 				displayFlightBooking(flightToBook);
 			}
 		});
@@ -605,8 +572,8 @@ public class UserInterface {
 		lblHotelSearch.setBounds(140, 13, 109, 22);
 		HotelSearch.add(lblHotelSearch);
 		
-		JComboBox txtHotelLoc = new JComboBox();
-		txtHotelLoc.setModel(new DefaultComboBoxModel(new String[] {"Reykjavík", "Akureyri"}));
+		txtHotelLoc = new JComboBox<String>();
+		txtHotelLoc.setModel(new DefaultComboBoxModel<String>(new String[] {"Reykjavík", "Akureyri"}));
 		AutoCompletion.enable(txtHotelLoc);
 		txtHotelLoc.setEditable(true);
 		txtHotelLoc.setBounds(112, 53, 240, 22);
@@ -704,8 +671,6 @@ public class UserInterface {
 	private JFrame frmMetaSearchEngine;
 	private JTextField txtUsername;
 	private JTextField txtPassword;
-	private JTextField txtDepLoc;
-	private JTextField txtArrLoc;
 	private JTextField txtLowerPriceBound;
 	private JTextField txtHigherPriceBound;
 	private JTextField txtNrSeats;
@@ -956,27 +921,29 @@ public class UserInterface {
 		lblDepLocation.setBounds(12, 55, 100, 16);
 		FlightSearch.add(lblDepLocation);
 		
+		final JComboBox txtDepLoc = new JComboBox();
+		txtDepLoc.setModel(new DefaultComboBoxModel(new String[] {"Akureyri", "Egilsstaðir", "Reykjavík"}));
+		AutoCompletion.enable(txtDepLoc);
+		txtDepLoc.setEditable(true);
+		txtDepLoc.setBounds(112, 53, 240, 22);
+		FlightSearch.add(txtDepLoc);
+		
 		JLabel lblFlightSearch = new JLabel("Flight Search");
 		lblFlightSearch.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblFlightSearch.setBounds(140, 13, 109, 22);
 		FlightSearch.add(lblFlightSearch);
-		
-		txtDepLoc = new JTextField();
-		txtDepLoc.setBackground(UIManager.getColor("TextField.background"));
-		txtDepLoc.setBounds(112, 53, 240, 22);
-		FlightSearch.add(txtDepLoc);
-		txtDepLoc.setColumns(10);
 		
 		JLabel lblArrLocation = new JLabel("Arr. Location:");
 		lblArrLocation.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblArrLocation.setBounds(12, 90, 100, 16);
 		FlightSearch.add(lblArrLocation);
 		
-		txtArrLoc = new JTextField();
-		txtArrLoc.setBackground(UIManager.getColor("TextField.background"));
+		final JComboBox txtArrLoc = new JComboBox();
+		txtArrLoc.setModel(new DefaultComboBoxModel(new String[] {"Akureyri", "Egilsstaðir", "Reykjavík"}));
+		AutoCompletion.enable(txtArrLoc);
+		txtArrLoc.setEditable(true);
 		txtArrLoc.setBounds(112, 87, 240, 22);
 		FlightSearch.add(txtArrLoc);
-		txtArrLoc.setColumns(10);
 		
 		JLabel lblDepTime = new JLabel("Dep. Time:");
 		lblDepTime.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -1071,8 +1038,8 @@ public class UserInterface {
 		btnSearchFlight.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FlightSearchCriteria newFlightSearch = new FlightSearchCriteria();
-				newFlightSearch.setDepartureLoc(txtDepLoc.getText());
-				newFlightSearch.setArrivalLoc(txtArrLoc.getText());
+				newFlightSearch.setDepartureLoc((String) txtDepLoc.getSelectedItem());
+				newFlightSearch.setArrivalLoc((String) txtArrLoc.getSelectedItem());
 				newFlightSearch.setDepartureTime(depTime.getDate());
 				newFlightSearch.setNumSeats(Integer.parseInt(txtNrSeats.getText()));
 				newFlightSearch.setSeatClass((String)txtSeatClass.getSelectedItem());
@@ -1085,13 +1052,6 @@ public class UserInterface {
 					System.out.println("Unfortunately no flights were found");
 				} else if (flightResults.size() > 0) {
 					// Display list of results
-				}
-				System.out.println("Bla");
-				for (int i = 0; i<flightResults.size(); i++) {
-					Flight flight = flightResults.get(i);
-					System.out.println("Flight nr.\tDep. Location\tArr. Location\tDep. Time\t\t\tPrice\tDealer");
-					System.out.println(flight.get_flightNr() + "\t\t" + flight.get_depLoc() + "\t" + flight.get_arrivLoc()
-					 + "\t" + flight.get_depTime() + "\t" + flight.get_price() + "\t" + flight.get_dealerInfo().get(0));
 				}
 			}
 		});
