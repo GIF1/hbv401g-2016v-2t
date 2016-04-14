@@ -10,7 +10,7 @@ public abstract class Flight {
 	private Date arrivalTime;
 	private String arrivalLoc;
 	private String[] seatNr;
-	private ArrayList<String> dealerInfo = new ArrayList<String>();
+	private String[] dealerInfo;
 
 	public Flight(String flightNr, Date departureTime, String departureLoc, Date arrivalTime, 
 			String arrivalLoc, int price, ArrayList<String> dealerInfo) {
