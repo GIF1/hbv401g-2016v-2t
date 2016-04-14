@@ -69,15 +69,9 @@ public class mockFlightSearch {
 	public static ArrayList<FlightExtend> flightMockConstructor() {
 		ArrayList<FlightExtend> flights = new ArrayList<FlightExtend>();
 		
-		ArrayList<String> wow_info = new ArrayList<String>();
-		wow_info.add("WOW air");
-		wow_info.add("Katrínartún 12 - 105 Reykjavík");
-		wow_info.add("Kt. 451011-0220");
+		String[] wow_info = new String[]{"WOW air","555-5555","www.wow.is"};
 		
-		ArrayList<String> ice_info = new ArrayList<String>();
-		ice_info.add("Icelandair");
-		ice_info.add("Katrínartún 12 - 105 Reykjavík");
-		ice_info.add("Kt. 451011-0220");
+		String[] ice_info = new String[]{"Icelandair","555-5556","www.icelandair.is"};
 		
 		//SimpleDateFormat duration = new SimpleDateFormat("HH:mm");
 		//Date duration1 = duration.parse("02:15");

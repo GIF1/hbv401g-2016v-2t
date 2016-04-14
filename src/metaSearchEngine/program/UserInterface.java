@@ -2,6 +2,59 @@ package metaSearchEngine.program;
 
 import java.awt.EventQueue;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import javax.swing.JLabel;
+import java.awt.FlowLayout;
+import javax.swing.JLayeredPane;
+import javax.swing.JDesktopPane;
+
+import org.eclipse.AutoCompletion;
+import org.eclipse.wb.swing.FocusTraversalOnArray;
+import java.awt.Component;
+import java.awt.Color;
+import java.awt.CardLayout;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.SwingConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Font;
+import java.awt.Window;
+
+import javax.swing.UIManager;
+import javax.swing.JTextPane;
+import com.toedter.calendar.JDateChooser;
+
+import metaSearchEngine.mockobjects.Flight;
+import metaSearchEngine.mockobjects.FlightExtend;
+
+import javax.swing.JFormattedTextField;
+import javax.swing.JRadioButton;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.DropMode;
+import javax.swing.JList;
+import javax.swing.AbstractListModel;
+import javax.swing.ListSelectionModel;
+import com.toedter.calendar.JDayChooser;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.border.TitledBorder;
+import javax.swing.JScrollPane;
+import java.awt.event.MouseMotionAdapter;
+
 
 public class UserInterface {
 
@@ -510,9 +563,10 @@ public class UserInterface {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int row = tabFlightResults.rowAtPoint(e.getPoint());
-				User userLoggedIn = new User("Gunnar","gif1@hi.is","blabla",false,1);
-				FlightBooking flightToBook = new FlightBooking(flightResults.get(row),1,userLoggedIn);
-				displayFlightBooking(flightToBook);
+				//User userLoggedIn = new User(1,"Gunnar","gif1@hi.is",false);
+				//FlightBooking flightToBook = new FlightBooking(flightResults.get(row),1,userLoggedIn);
+				//System.out.println(flightResults.get(3).get_depLoc());
+				displayFlightBooking(flightResults.get(row));
 			}
 		});
 		tabFlightResults.addMouseMotionListener(new MouseMotionAdapter() {
@@ -552,8 +606,9 @@ public class UserInterface {
 		scrollPaneFlight.setViewportView(tabFlightResults);
 	}
 	
-	private void displayFlightBooking(FlightBooking flightToBook) {
-		
+	private void displayFlightBooking(Flight flightToBook) {
+		User userLoggedIn = new User(1,"Gunnar","gif1@hi.is",false);
+		FlightBooking flightBooking = new FlightBooking(flightToBook,1,userLoggedIn);
 	}
 	
 	private void displayHotelSC() {
