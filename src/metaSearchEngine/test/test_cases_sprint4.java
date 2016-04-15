@@ -32,7 +32,7 @@ public class test_cases_sprint4 {
 	
 	@Test
 	public void setCorrectLuggage() {
-		Flight flight = new FlightExtend("AA123", new Date(2016-1900,7+1,15,22,30), 
+		FlightAbstract flight = new FlightExtend("AA123", new Date(2016-1900,7+1,15,22,30), 
 				"Akureyri", new Date(2016-1900,7+1,15,0,30), "Reykjavík", 12000,  
 				new String[]{"13A", "13B", "11A"}, new String[]{"1A"}, wow_info);
 		flight.set_seatNr(new String[]{"13A", "13B", "11A"});
@@ -43,7 +43,7 @@ public class test_cases_sprint4 {
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void setWrongLuggage() {
-		Flight flight = new FlightExtend("AA123", new Date(2016-1900,7+1,15,22,30), 
+		FlightAbstract flight = new FlightExtend("AA123", new Date(2016-1900,7+1,15,22,30), 
 				"Akureyri", new Date(2016-1900,7+1,15,0,30), "Reykjavík", 12000,  
 				new String[]{"13A", "13B", "11A"}, new String[]{"1A"}, wow_info);
 		flight.set_seatNr(new String[]{"13A", "13B", "11A"});
@@ -55,7 +55,7 @@ public class test_cases_sprint4 {
 	// search engine. This check is performed in the SearchEngine class.
 	@Test(expected=IllegalArgumentException.class)
 	public void emptyFlightSearch() {
-		List<Flight> flightResults = SearchEngine.flightSearch(newFlightSearch);
+		List<FlightAbstract> flightResults = SearchEngine.flightSearch(newFlightSearch);
 	}
 	
 	// Testing if a normal search is performed that the results is a List of
@@ -70,7 +70,7 @@ public class test_cases_sprint4 {
 		newFlightSearch.setReturnTrip(false);
 		newFlightSearch.setNumSeats(1);
 		newFlightSearch.setSeatClass("Economy");
-		List<Flight> flightResults = SearchEngine.flightSearch(newFlightSearch);
+		List<FlightAbstract> flightResults = SearchEngine.flightSearch(newFlightSearch);
 		if (flightResults.size()>0) {
 			for (int i=0; i<flightResults.size(); i++) {
 				assertThat(flightResults.get(i), instanceOf(FlightExtend.class));
@@ -92,7 +92,7 @@ public class test_cases_sprint4 {
 		newFlightSearch.setReturnTrip(false);
 		newFlightSearch.setNumSeats(1);
 		newFlightSearch.setSeatClass("Economy");
-		List<Flight> flightResults = SearchEngine.flightSearch(newFlightSearch);
+		List<FlightAbstract> flightResults = SearchEngine.flightSearch(newFlightSearch);
 
 		FlightBooking testBooking = new FlightBooking(flightResults.get(0),1,"Gunnar");
 		mockFlightBook bookedFlight = testBooking.bookFlight();
@@ -112,7 +112,7 @@ public class test_cases_sprint4 {
 		newFlightSearch.setReturnTrip(false);
 		newFlightSearch.setNumSeats(1);
 		newFlightSearch.setSeatClass("Economy");
-		List<Flight> flightResults = SearchEngine.flightSearch(newFlightSearch);
+		List<FlightAbstract> flightResults = SearchEngine.flightSearch(newFlightSearch);
 
 		FlightBooking testBooking = new FlightBooking(flightResults.get(0),1,"Gunnar");
 		mockFlightBook bookedFlight = testBooking.bookFlight();

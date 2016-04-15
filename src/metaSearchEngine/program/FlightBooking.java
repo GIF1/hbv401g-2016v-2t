@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 //import java.util.Date;
 
-import metaSearchEngine.mockobjects.Flight;
 import metaSearchEngine.mockobjects.mockFlightBook;
 
 public class FlightBooking extends Booking {
 
 	// Define attributes of the class
-	private Flight flight;
+	private FlightAbstract flight;
 	private String[] seatNr;
 	private String[] availableSeats;
 	public int luggage;
@@ -20,7 +19,7 @@ public class FlightBooking extends Booking {
 	//private String arrivalLoc;
 	//private String flightNr;
 
-	public void verifyFlightInfo(Flight flightSearchResult) {
+	public void verifyFlightInfo(FlightAbstract flightSearchResult) {
 		if(flightSearchResult==null) throw new IllegalArgumentException("Error: Search result class contains no value. ");
 		
 		String flightNumber = flightSearchResult.get_flightNr();
@@ -86,7 +85,7 @@ public class FlightBooking extends Booking {
 	}
 
 	// Constructor:
-	public FlightBooking(Flight flightSearchResult, int nrSeats, User buyer){
+	public FlightBooking(FlightAbstract flightSearchResult, int nrSeats, User buyer){
 		verifyFlightInfo(flightSearchResult);
 		
 		this.customer = buyer;		

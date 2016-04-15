@@ -1,13 +1,11 @@
 package metaSearchEngine.program;
 
-import metaSearchEngine.mockobjects.Daytrip;
-
 public class DaytripBooking extends Booking {
 
 	// Declare class attributes:
-	private Daytrip daytrip;
+	private DaytripAbstract daytrip;
 
-	public DaytripBooking(Daytrip daytripSearchResults) {
+	public DaytripBooking(DaytripAbstract daytripSearchResults) {
 		daytrip = daytripSearchResults;
 	}
 

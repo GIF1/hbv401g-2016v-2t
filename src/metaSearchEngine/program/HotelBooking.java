@@ -1,15 +1,13 @@
 package metaSearchEngine.program;
 
-import metaSearchEngine.mockobjects.Hotel;
-
 public class HotelBooking extends Booking {
 
-	private Hotel hotel;
+	private HotelAbstract hotel;
 	private int nrOfNights;
 	private String roomType;
 	private int nrOfMeals;
 
-	public HotelBooking(Hotel hotelSearchResult, int nights, String type, int meals){
+	public HotelBooking(HotelAbstract hotelSearchResult, int nights, String type, int meals){
 		this.hotel = hotelSearchResult;
 		this.nrOfNights = nights;
 		this.roomType = type;

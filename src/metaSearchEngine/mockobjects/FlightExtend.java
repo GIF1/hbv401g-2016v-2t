@@ -1,9 +1,9 @@
 package metaSearchEngine.mockobjects;
 
-import java.util.ArrayList;
+import metaSearchEngine.program.FlightAbstract;
 import java.util.Date;
 
-public class FlightExtend extends Flight{
+public class FlightExtend extends FlightAbstract{
 
 	String flightNr;
 	Date departureTime;
@@ -11,17 +11,14 @@ public class FlightExtend extends Flight{
 	Date arrivalTime;
 	String arrivalLoc;
 	int price;
-	//int numSeatsEconomy;
-	//int numSeatsComfort;
 	String[] seatNrEconomy;
 	String[] seatNrComfort;
-	//String flightDuration;
 	String[] companyInfo;
 	// .... possibly more
 	
 	public FlightExtend(String flightNr, Date departureTime, String departureLoc, Date arrivalTime, String arrivalLoc, int price, 
-			String[] seatNrEconomy, String[] seatNrComfort, String[] companyInfo) {
-		super(flightNr, departureTime, departureLoc, arrivalTime, arrivalLoc, price, companyInfo, seatNrEconomy);
+			String[] seatNrEconomy, String[] seatNrComfort, String[] companyInfo /*, ...*/) {
+		super(flightNr, departureTime, departureLoc, arrivalTime, arrivalLoc, price, companyInfo);
 		
 		this.flightNr = flightNr;
 		this.departureTime = departureTime;
@@ -31,7 +28,7 @@ public class FlightExtend extends Flight{
 		this.price = price;
 		this.seatNrEconomy = seatNrEconomy;
 		this.seatNrComfort = seatNrComfort;
-		//this.flightDuration = flightDuration;
 		this.companyInfo = companyInfo;
+		// ...
 	}
 }

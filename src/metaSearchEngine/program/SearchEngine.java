@@ -8,7 +8,7 @@ import java.util.List;
 
 public class SearchEngine {
 	
-	public static ArrayList<Flight> flightSearch(FlightSearchCriteria flightSearch) {
+	public static ArrayList<FlightAbstract> flightSearch(FlightSearchCriteria flightSearch) {
 		/*
 		ArrayList<String> wow_info = new ArrayList<String>();
 		wow_info.add("WOW air");
@@ -26,12 +26,12 @@ public class SearchEngine {
 		}
 		
 		// Verify departure time
-		if(flightSearch.departureTime == null) {
+		if(flightSearch.getDepartureTime() == null) {
 			throw new IllegalArgumentException("Error: Search criteria is missing departure time");
 		} else {
 			Calendar depTime = Calendar.getInstance();
 			Calendar today = Calendar.getInstance();
-			depTime.setTime(flightSearch.departureTime);
+			depTime.setTime(flightSearch.getDepartureTime());
 			today.setTime(today.getTime());
 
 			if (depTime.get(Calendar.YEAR) < today.get(Calendar.YEAR) || 
@@ -45,46 +45,46 @@ public class SearchEngine {
 		}
 		
 		// Verify departure location
-		if(flightSearch.departureLoc==null) {
+		if(flightSearch.getDepartureLoc()==null) {
 			throw new IllegalArgumentException("Error: Departure location is missing.");
 		}
-		else if(flightSearch.departureLoc.length()<3 || flightSearch.departureLoc.length()>100) {
+		else if(flightSearch.getDepartureLoc().length()<3 || flightSearch.getDepartureLoc().length()>100) {
 			throw new IllegalArgumentException("Error: Departure location is of wrong length");
 		}
-		else if(!flightSearch.departureLoc.matches("^[A-Z].*") && !flightSearch.departureLoc.matches("^[a-z].*")) {
+		else if(!flightSearch.getDepartureLoc().matches("^[A-Z].*") && !flightSearch.getDepartureLoc().matches("^[a-z].*")) {
 			throw new IllegalArgumentException("Error: Departure location should start with a letter");
 		}
 		
 		// Verify arrival location
-		if(flightSearch.arrivalLoc==null) {
+		if(flightSearch.getArrivalLoc()==null) {
 			throw new IllegalArgumentException("Error: Arrival location is missing.");
 		}
-		else if(flightSearch.arrivalLoc.length()<3 || flightSearch.arrivalLoc.length()>100) {
+		else if(flightSearch.getArrivalLoc().length()<3 || flightSearch.getArrivalLoc().length()>100) {
 			throw new IllegalArgumentException("Error: Arrival location is of wrong length");
 		}
-		else if(!flightSearch.arrivalLoc.matches("^[A-Z].*") && !flightSearch.arrivalLoc.matches("^[a-z].*")) {
+		else if(!flightSearch.getArrivalLoc().matches("^[A-Z].*") && !flightSearch.getArrivalLoc().matches("^[a-z].*")) {
 			throw new IllegalArgumentException("Error: Arrival location should start with a letter");
 		}
 		
 		// Verify price range
-		if (flightSearch.priceRange.length != 2) {
+		if (flightSearch.getPriceRange().length != 2) {
 			throw new IllegalArgumentException("Error: Price range should contain two numbers");
 		}
 		
 		// Verify seat class
-		if (flightSearch.seatClass == null) {
+		if (flightSearch.getSeatClass() == null) {
 			throw new IllegalArgumentException("Error: No seat class has been chosen");
-		} else if (!(flightSearch.seatClass == "Economy" || flightSearch.seatClass == "Comfort")) {
+		} else if (!(flightSearch.getSeatClass() == "Economy" || flightSearch.getSeatClass() == "Comfort")) {
 			throw new IllegalArgumentException("Error: Seat class should be either Economy or Comfort");
 		}
 		
 		// Verify number of seats required
-		if (flightSearch.numSeats < 1) {
+		if (flightSearch.getNumSeats() < 1) {
 			throw new IllegalArgumentException("Error: Number of passangers should be at least 1 and"
 					+ "not a negative number");
 		}
 		
-		ArrayList<Flight> flightResults = mockFlightSearch.FlightSearch(flightSearch);
+		ArrayList<FlightAbstract> flightResults = mockFlightSearch.FlightSearch(flightSearch);
 		
 		return flightResults;
 	}
