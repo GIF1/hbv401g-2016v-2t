@@ -72,7 +72,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JPasswordField;
 
-
 public class UserInterface {
 
 	private JFrame frmMetaSearchEngine;
