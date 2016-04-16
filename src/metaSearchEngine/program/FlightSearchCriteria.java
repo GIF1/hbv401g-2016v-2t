@@ -42,8 +42,8 @@ public class FlightSearchCriteria {
 		this.numSeats = numSeats;
 	}
 	
-	public void setOverLay() {
-		
+	public void setOverLay(boolean overLay) {
+		this.overLay = overLay;
 	}
 	
 	public void setReturnTrip(boolean returnTrip) {

@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 //import java.util.Date;
 
-import metaSearchEngine.mockobjects.Flight;
 import metaSearchEngine.mockobjects.mockFlightBook;
 
 public class FlightBooking extends Booking {
 
 	// Define attributes of the class
-	private Flight flight;
+	private FlightAbstract flight;
 	private String[] seatNr;
 	private String[] availableSeats;
 	public int luggage;
@@ -20,7 +19,7 @@ public class FlightBooking extends Booking {
 	//private String arrivalLoc;
 	//private String flightNr;
 
-	public void verifyFlightInfo(Flight flightSearchResult) {
+	public void verifyFlightInfo(FlightAbstract flightSearchResult) {
 		if(flightSearchResult==null) throw new IllegalArgumentException("Error: Search result class contains no value. ");
 		
 		String flightNumber = flightSearchResult.get_flightNr();
@@ -63,29 +62,30 @@ public class FlightBooking extends Booking {
 		int flightprice = flightSearchResult.get_price();
 		if(flightprice < 0 || flightprice > 100000000) throw new IllegalArgumentException("Error: Unrealistic price setting");
 		
-		ArrayList<String> dealer_info = flightSearchResult.get_dealerInfo();
+		String[] dealer_info = flightSearchResult.get_dealerInfo();
 		String[] dealerFields = new String[]{"name", "location", "ID number"};
-		if(dealer_info.size() < 3) {
+		if(dealer_info.length < 3) {
 			throw new IllegalArgumentException("Error: Dealer info is missing some info");
-		} else if (dealer_info.size() > 3) {
+		} else if (dealer_info.length > 3) {
 			throw new IllegalArgumentException("Error: Dealer info array contains to much info ");
 		} else {
-			for (int i=0; i<dealer_info.size(); i++) {
-				if (dealer_info.get(i).length()==0) {
+			for (int i=0; i<dealer_info.length; i++) {
+				if (dealer_info[i].length()==0) {
 					throw new IllegalArgumentException("Error: Dealer " + dealerFields[i] + " is missing");
 				}
 			}
+			/* Á eftir að breyta m.v. Nafn, símanúmer og vefsíðu
 			if (!dealer_info.get(1).matches("^[\\p{L}]{3,15} [0-9]{2,3} - [0-9]{3,3} [\\p{L}]{3,15}$")) {
 				throw new IllegalArgumentException("Error: The dealers address has incorrect format ");
 			} else if (!dealer_info.get(2).matches("^Kt. [0-9]{6,6}[-]?[0-9]{4,4}")) {
 				throw new IllegalArgumentException("Error: The dealers ID number has incorrect format ");
-			}
+			}*/
 		}
 		
 	}
 
 	// Constructor:
-	public FlightBooking(Flight flightSearchResult, int nrSeats, String buyer){
+	public FlightBooking(FlightAbstract flightSearchResult, int nrSeats, User buyer){
 		verifyFlightInfo(flightSearchResult);
 		
 		this.customer = buyer;		

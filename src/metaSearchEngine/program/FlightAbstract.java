@@ -1,8 +1,8 @@
-package metaSearchEngine.mockobjects;
+package metaSearchEngine.program;
 
 import java.util.*;
 
-public abstract class Flight {
+public abstract class FlightAbstract {
 	private String flightNr;
 	private Date departureTime;
 	private String departureLoc;
@@ -12,8 +12,8 @@ public abstract class Flight {
 	private String[] seatNr;
 	private String[] dealerInfo;
 
-	public Flight(String flightNr, Date departureTime, String departureLoc, Date arrivalTime, 
-			String arrivalLoc, int price, ArrayList<String> dealerInfo) {
+	public FlightAbstract(String flightNr, Date departureTime, String departureLoc, Date arrivalTime, 
+			String arrivalLoc, int price, String[] dealerInfo) {
 		this.flightNr = flightNr;
 		this.departureTime = departureTime;
 		this.departureLoc = departureLoc;
@@ -30,7 +30,7 @@ public abstract class Flight {
 	public String get_depLoc() { return departureLoc; }
 	public Date get_arrTime() { return arrivalTime; }
 	public String get_arrivLoc() { return arrivalLoc; }
-	public ArrayList<String> get_dealerInfo() { return dealerInfo; }
+	public String[] get_dealerInfo() { return dealerInfo; }
 	public String get_flightNr() {return flightNr; }
 	public String[] get_seatNr() {return seatNr;}
 }

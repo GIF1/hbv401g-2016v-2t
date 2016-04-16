@@ -2,8 +2,8 @@ package metaSearchEngine.mockobjects;
 
 import metaSearchEngine.program.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+//import java.text.ParseException;
+//import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,7 +17,7 @@ public class mockFlightSearch {
 	private int numSeats;
 	private String seatClass;
 	
-	public static ArrayList<Flight> FlightSearch(FlightSearchCriteria flightCrit) {
+	public static ArrayList<FlightAbstract> FlightSearch(FlightSearchCriteria flightCrit) {
 		mockFlightSearch flightCriteria = new mockFlightSearch();
 		flightCriteria.departureTime = flightCrit.getDepartureTime();
 		flightCriteria.departureLoc = flightCrit.getDepartureLoc();
@@ -27,14 +27,14 @@ public class mockFlightSearch {
 		flightCriteria.numSeats = flightCrit.getNumSeats();
 		flightCriteria.seatClass = flightCrit.getSeatClass();
 		
-		ArrayList<Flight> flightsResults = searchFlights(flightCriteria);
+		ArrayList<FlightAbstract> flightsResults = searchFlights(flightCriteria);
 		
 		return flightsResults;
 	}
 	
-	public static ArrayList<Flight> searchFlights(mockFlightSearch criteria) {
+	public static ArrayList<FlightAbstract> searchFlights(mockFlightSearch criteria) {
 		ArrayList<FlightExtend> flights = flightMockConstructor();
-		ArrayList<Flight> flightResults = new ArrayList<Flight>();
+		ArrayList<FlightAbstract> flightResults = new ArrayList<FlightAbstract>();
 		
 		for (int i=0; i<flights.size(); i++) {
 			FlightExtend flight = flights.get(i);
@@ -69,15 +69,9 @@ public class mockFlightSearch {
 	public static ArrayList<FlightExtend> flightMockConstructor() {
 		ArrayList<FlightExtend> flights = new ArrayList<FlightExtend>();
 		
-		ArrayList<String> wow_info = new ArrayList<String>();
-		wow_info.add("WOW air");
-		wow_info.add("Katrínartún 12 - 105 Reykjavík");
-		wow_info.add("Kt. 451011-0220");
+		String[] wow_info = new String[]{"WOW air","555-5555","www.wow.is"};
 		
-		ArrayList<String> ice_info = new ArrayList<String>();
-		ice_info.add("Icelandair");
-		ice_info.add("Katrínartún 12 - 105 Reykjavík");
-		ice_info.add("Kt. 451011-0220");
+		String[] ice_info = new String[]{"Icelandair","555-5556","www.icelandair.is"};
 		
 		//SimpleDateFormat duration = new SimpleDateFormat("HH:mm");
 		//Date duration1 = duration.parse("02:15");

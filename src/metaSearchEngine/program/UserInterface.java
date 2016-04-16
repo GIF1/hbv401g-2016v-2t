@@ -27,7 +27,6 @@ import javax.swing.UIManager;
 import javax.swing.JTextPane;
 import com.toedter.calendar.JDateChooser;
 
-import metaSearchEngine.mockobjects.Flight;
 import metaSearchEngine.mockobjects.FlightExtend;
 
 import javax.swing.JFormattedTextField;
@@ -54,34 +53,59 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.JScrollPane;
 import java.awt.event.MouseMotionAdapter;
+import javax.swing.JScrollBar;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JCheckBox;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JPasswordField;
 
 
 public class UserInterface {
 
 	private JFrame frmMetaSearchEngine;
 	private JTextField txtUsername;
-	private JTextField txtPassword;
-	private JTextField txtDepLoc;
-	private JTextField txtArrLoc;
+	private JPasswordField txtPassword;
+	private JComboBox<String> txtDepLoc;
+	private JDateChooser depTime;
+	private JComboBox<String> txtArrLoc;
+	private JComboBox<String> txtSeatClass;
+	private JRadioButton rdbtnRoundTripYes;
 	private JTextField txtLowerPriceBound;
 	private JTextField txtHigherPriceBound;
 	private JTextField txtNrSeats;
 	private final ButtonGroup btnGroupRndTrip = new ButtonGroup();
-	private final ButtonGroup btnGroupOverlay = new ButtonGroup();
+	//private final ButtonGroup btnGroupOverlay = new ButtonGroup();
+	private JComboBox<String> txtHotelLoc;
 	private JTextField txtNewUsername;
 	private JTextField txtNewPass;
 	private JTextField txtConPass;
 	private JTextField txtNewEmail;
-	private JTable tabFlightResults;
 	
+	// Fields for Day trip search criteria
+	private JTextField txtNumParti;
+	private JTextField txtLowerPrice;
+	private JTextField txtHigherPrice;
+	
+	private JTable tabFlightResults;
+	private JTable tabDaytripResults;
+	
+	// Card container for the main frame
+	// Cards to be children here are Login, 
+	// CreateNewUser, SplashScreen, Booking screen,
+	// UserProfile, EditProfile
 	JPanel CardContainer = new JPanel();
 	CardLayout mainLayout = new CardLayout();
 	
+	// Card container
 	JPanel SearchCriteria = new JPanel();
 	CardLayout searchLayout = new CardLayout();
 	
 	JPanel SearchResults = new JPanel();
 	CardLayout resultLayout = new CardLayout();
+	
+	JPanel Booking = new JPanel();
+	CardLayout bookingLayout = new CardLayout();
 
 	// Launch the application.
 	public static void main(String[] args) {
@@ -157,14 +181,11 @@ public class UserInterface {
 		Login.add(lblPassword);
 		lblPassword.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
-		txtPassword = new JTextField();
+		txtPassword = new JPasswordField();
 		txtPassword.setBounds(530, 170, 180, 24);
 		Login.add(txtPassword);
 		txtPassword.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtPassword.setForeground(Color.GRAY);
-		txtPassword.setText("Password");
-		txtPassword.setToolTipText("");
-		txtPassword.setColumns(10);
 		
 		JButton btnSignIn = new JButton("Sign In");
 		btnSignIn.addActionListener(new ActionListener() {
@@ -275,10 +296,6 @@ public class UserInterface {
 		SignUp.add(lblAndNever);
 	}
 	
-	private void displaySearchCriteria(JButton e) {
-		
-	}
-	
 	private void displayHomeScreen() {
 		JPanel SplashScreen = new JPanel();
 		CardContainer.add(SplashScreen, "SplashScreen");
@@ -308,6 +325,7 @@ public class UserInterface {
 
 		btnFlightSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				resultLayout.show(SearchResults,"emptyTable");
 				displayFlightSC();
 			}
 		});
@@ -320,6 +338,7 @@ public class UserInterface {
 
 		btnHotelSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				resultLayout.show(SearchResults,"emptyTable");
 				displayHotelSC();
 			}
 		});
@@ -332,6 +351,7 @@ public class UserInterface {
 
 		btnDaytripSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				resultLayout.show(SearchResults,"emptyTable");
 				displayDaytripSC();
 			}
 		});
@@ -343,45 +363,98 @@ public class UserInterface {
 		FlightSearch.setLayout(null);
 		searchLayout.show(SearchCriteria,"FlightSearch");
 		
-		JLabel lblDepLocation = new JLabel("Dep. Location:");
-		lblDepLocation.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblDepLocation.setBounds(12, 55, 100, 16);
-		FlightSearch.add(lblDepLocation);
-		
 		JLabel lblFlightSearch = new JLabel("Flight Search");
 		lblFlightSearch.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblFlightSearch.setBounds(140, 13, 109, 22);
 		FlightSearch.add(lblFlightSearch);
 		
-		txtDepLoc = new JTextField();
-		txtDepLoc.setBackground(UIManager.getColor("TextField.background"));
+		// Departure location
+		JLabel lblDepLocation = new JLabel("Dep. Location:");
+		lblDepLocation.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblDepLocation.setBounds(12, 55, 100, 16);
+		FlightSearch.add(lblDepLocation);
+		
+		txtDepLoc = new JComboBox<String>();
+		txtDepLoc.setModel(new DefaultComboBoxModel<String>(new String[] {"Akureyri", "Egilsstaðir", "Reykjavík"}));
+		AutoCompletion.enable(txtDepLoc);
+		txtDepLoc.setEditable(true);
 		txtDepLoc.setBounds(112, 53, 240, 22);
 		FlightSearch.add(txtDepLoc);
-		txtDepLoc.setColumns(10);
 		
+		// Arrival location
 		JLabel lblArrLocation = new JLabel("Arr. Location:");
 		lblArrLocation.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblArrLocation.setBounds(12, 90, 100, 16);
 		FlightSearch.add(lblArrLocation);
 		
-		txtArrLoc = new JTextField();
-		txtArrLoc.setBackground(UIManager.getColor("TextField.background"));
+		txtArrLoc = new JComboBox<String>();
+		txtArrLoc.setModel(new DefaultComboBoxModel<String>(new String[] {"Akureyri", "Egilsstaðir", "Reykjavík"}));
+		AutoCompletion.enable(txtArrLoc);
+		txtArrLoc.setEditable(true);
 		txtArrLoc.setBounds(112, 87, 240, 22);
 		FlightSearch.add(txtArrLoc);
-		txtArrLoc.setColumns(10);
 		
+		// Departure time 
 		JLabel lblDepTime = new JLabel("Dep. Time:");
 		lblDepTime.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblDepTime.setBounds(12, 125, 100, 16);
 		FlightSearch.add(lblDepTime);
 		
-		final JDateChooser depTime = new JDateChooser();
+		depTime = new JDateChooser();
 		depTime.setBounds(112, 119, 240, 22);
 		FlightSearch.add(depTime);
 		
+		// Number of seats needed
+		JLabel lblNrSeats = new JLabel("Nr. Seats:");
+		lblNrSeats.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNrSeats.setBounds(12, 160, 90, 16);
+		FlightSearch.add(lblNrSeats);
+		
+		txtNrSeats = new JTextField();
+		txtNrSeats.setText("1");
+		txtNrSeats.setBounds(111, 157, 60, 22);
+		FlightSearch.add(txtNrSeats);
+		txtNrSeats.setColumns(10);
+		
+		// Seatclass combobox
+		JLabel lblSeatClass = new JLabel("Class:");
+		lblSeatClass.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblSeatClass.setBounds(12, 195, 100, 16);
+		FlightSearch.add(lblSeatClass);
+		
+		txtSeatClass = new JComboBox<String>();
+		txtSeatClass.setModel(new DefaultComboBoxModel<String>(new String[] {"Economy", "Business"}));
+		txtSeatClass.setBounds(112, 192, 131, 22);
+		FlightSearch.add(txtSeatClass);
+		
+		// Return trip, radio button
+		JLabel lblReturnTrip = new JLabel("Return Trip:");
+		lblReturnTrip.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblReturnTrip.setBounds(12, 230, 83, 22);
+		FlightSearch.add(lblReturnTrip);
+		
+		JRadioButton rdbtnRoundTripNo = new JRadioButton("No");
+		btnGroupRndTrip.add(rdbtnRoundTripNo);
+		rdbtnRoundTripNo.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		rdbtnRoundTripNo.setBounds(177, 229, 61, 25);
+		FlightSearch.add(rdbtnRoundTripNo);
+		
+		rdbtnRoundTripYes = new JRadioButton("Yes");
+		btnGroupRndTrip.add(rdbtnRoundTripYes);
+		rdbtnRoundTripYes.setSelected(true);
+		rdbtnRoundTripYes.setBounds(112, 229, 61, 25);
+		FlightSearch.add(rdbtnRoundTripYes);
+		
+		// Optional label
+		JLabel lblOptional = new JLabel("Optional");
+		lblOptional.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblOptional.setBounds(161, 278, 83, 25);
+		FlightSearch.add(lblOptional);
+		
+		// Price range textboxes
 		JLabel lblPriceRange = new JLabel("Price Range:");
 		lblPriceRange.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblPriceRange.setBounds(12, 313, 100, 16);
+		lblPriceRange.setBounds(12, 311, 100, 18);
 		FlightSearch.add(lblPriceRange);
 		
 		txtLowerPriceBound = new JTextField();
@@ -399,115 +472,43 @@ public class UserInterface {
 		FlightSearch.add(txtHigherPriceBound);
 		txtHigherPriceBound.setColumns(10);
 		
-		JLabel lblNrSeats = new JLabel("Nr. Seats:");
-		lblNrSeats.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblNrSeats.setBounds(12, 160, 90, 16);
-		FlightSearch.add(lblNrSeats);
-		
-		txtNrSeats = new JTextField();
-		txtNrSeats.setText("1");
-		txtNrSeats.setBounds(111, 157, 60, 22);
-		FlightSearch.add(txtNrSeats);
-		txtNrSeats.setColumns(10);
-		
-		JLabel lblReturnTrip = new JLabel("Return Trip:");
-		lblReturnTrip.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblReturnTrip.setBounds(12, 230, 83, 22);
-		FlightSearch.add(lblReturnTrip);
-		
-		JRadioButton rdbtnRoundTripNo = new JRadioButton("No");
-		btnGroupRndTrip.add(rdbtnRoundTripNo);
-		rdbtnRoundTripNo.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		rdbtnRoundTripNo.setBounds(177, 229, 61, 25);
-		FlightSearch.add(rdbtnRoundTripNo);
-		
-		final JRadioButton rdbtnRoundTripYes = new JRadioButton("Yes");
-		btnGroupRndTrip.add(rdbtnRoundTripYes);
-		rdbtnRoundTripYes.setSelected(true);
-		rdbtnRoundTripYes.setBounds(112, 229, 61, 25);
-		FlightSearch.add(rdbtnRoundTripYes);
-		
-		JLabel lblSeatClass = new JLabel("Class:");
-		lblSeatClass.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblSeatClass.setBounds(12, 195, 100, 16);
-		FlightSearch.add(lblSeatClass);
-		
-		final JComboBox txtSeatClass = new JComboBox();
-		txtSeatClass.setModel(new DefaultComboBoxModel(new String[] {"Economy", "Business"}));
-		txtSeatClass.setBounds(112, 192, 131, 22);
-		FlightSearch.add(txtSeatClass);
-		
-		JLabel lblOptional = new JLabel("Optional");
-		lblOptional.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblOptional.setBounds(161, 278, 83, 25);
-		FlightSearch.add(lblOptional);
-		
-		JLabel lblOverlay = new JLabel("Overlay:");
-		lblOverlay.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblOverlay.setBounds(12, 348, 100, 16);
-		FlightSearch.add(lblOverlay);
-		
-		final JRadioButton rdbtnOverlayYes = new JRadioButton("Yes");
-		btnGroupOverlay.add(rdbtnOverlayYes);
-		rdbtnOverlayYes.setSelected(true);
-		rdbtnOverlayYes.setBounds(112, 344, 61, 25);
-		FlightSearch.add(rdbtnOverlayYes);
-		
-		JRadioButton rdbtnOverlayNo = new JRadioButton("No");
-		btnGroupOverlay.add(rdbtnOverlayNo);
-		rdbtnOverlayNo.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		rdbtnOverlayNo.setBounds(177, 344, 61, 25);
-		FlightSearch.add(rdbtnOverlayNo);
-		
+		// Search button definition
 		JButton btnSearchFlight = new JButton("Search");
+		btnSearchFlight.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnSearchFlight.setBounds(109, 386, 185, 38);
+		FlightSearch.add(btnSearchFlight);
+		
+		// Search button action listener.
+		// When pressed the data from above defined fields is gathered
+		// and put into a new instance of the FlightSearchCriteria 
+		// class with its set methods. Then a method from the flight
+		// search engine is called to search for flight matching the
+		// criteria. That returns a list of flight classes each class
+		// representing one flight. This list is feed to the 
+		// displayFlightResults method in the UserInterface to display
+		// a table of the list.
 		btnSearchFlight.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FlightSearchCriteria newFlightSearch = new FlightSearchCriteria();
-				newFlightSearch.setDepartureLoc(txtDepLoc.getText());
-				newFlightSearch.setArrivalLoc(txtArrLoc.getText());
+				newFlightSearch.setDepartureLoc((String) txtDepLoc.getSelectedItem());
+				newFlightSearch.setArrivalLoc((String) txtArrLoc.getSelectedItem());
 				newFlightSearch.setDepartureTime(depTime.getDate());
 				newFlightSearch.setNumSeats(Integer.parseInt(txtNrSeats.getText()));
 				newFlightSearch.setSeatClass((String)txtSeatClass.getSelectedItem());
 				newFlightSearch.setReturnTrip(rdbtnRoundTripYes.isSelected());
-				newFlightSearch.setPriceRange(new int[]{Integer.parseInt(txtLowerPriceBound.getText()),Integer.parseInt(txtHigherPriceBound.getText())});
-				newFlightSearch.setOverLay(rdbtnOverlayYes.isSelected());
 				
-				//List<Flight> flightResults = SearchEngine.flightSearch(newFlightSearch);
+				// Optional
+				int lowerBound = 0;
+				int higherBound = 999999;
+				if (!(txtLowerPriceBound.getText().equals(""))) {
+					lowerBound = Integer.parseInt(txtLowerPriceBound.getText());
+				}
+				if (!(txtHigherPriceBound.getText().equals(""))) {
+					higherBound = Integer.parseInt(txtHigherPriceBound.getText());
+				}
+				newFlightSearch.setPriceRange(new int[]{lowerBound,higherBound});
 				
-				List<Flight> flights = new ArrayList<Flight>();
-				
-				String[] wow_info = new String[]{"WOW air","555-5555","www.wow.is"};
-				
-				String[] ice_info = new String[]{"Icelandair","555-5556","www.icelandair.is"};
-				
-				//SimpleDateFormat duration = new SimpleDateFormat("HH:mm");
-				//Date duration1 = duration.parse("02:15");
-				
-				@SuppressWarnings("deprecation")
-				FlightExtend flight1 = new FlightExtend("AA123", new Date(2016,7-1,15,22,30), 
-						"Akureyri", new Date(2016-1900,7+1,15,0,30), "Reykjavík", 12000,  
-						new String[]{"13A", "13B", "11A"}, new String[]{"1A"}, wow_info);
-				flights.add(flight1);
-				
-				@SuppressWarnings("deprecation")
-				FlightExtend flight2 = new FlightExtend("AB456", new Date(2016,6-1,10,15,00), 
-						"Egilsstaðir", new Date(2016-1900,6+1,10,18,00), "Vestmannaeyjar", 500000, 
-						new String[]{"13A"}, new String[]{}, wow_info);
-				flights.add(flight2);
-				
-				@SuppressWarnings("deprecation")
-				FlightExtend flight3 = new FlightExtend("AC789", new Date(2016,7-1,22,12,30), 
-						"Reykjavík", new Date(2016-1900,7+1,22,13,00), "Akureyri", 12000, 
-						new String[]{}, new String[]{"1A", "2C", "2D"}, ice_info);
-				flights.add(flight3);
-				
-				@SuppressWarnings("deprecation")
-				FlightExtend flight4 = new FlightExtend("AC789", new Date(2016,7-1,15,12,30), 
-						"Akureyri", new Date(2016-1900,7+1,15,14,30), "Reykjavík", 18000, 
-						new String[]{"13A", "13B", "11A", "16D"}, new String[]{"1A", "2C", "2D"}, ice_info);
-				flights.add(flight4);
-				
-				List<Flight> flightResults = flights;
+				List<FlightAbstract> flightResults = SearchEngine.flightSearch(newFlightSearch);
 				
 				if (flightResults.size() == 0) {
 					System.out.println("Unfortunately no flights were found");
@@ -515,22 +516,11 @@ public class UserInterface {
 					// Display list of results
 					displayFlightResults(flightResults);
 				}
-				/*
-				System.out.println("Bla");
-				for (int i = 0; i<flightResults.size(); i++) {
-					Flight flight = flightResults.get(i);
-					System.out.println("Flight nr.\tDep. Location\tArr. Location\tDep. Time\t\t\tPrice\tDealer");
-					System.out.println(flight.get_flightNr() + "\t\t" + flight.get_depLoc() + "\t" + flight.get_arrivLoc()
-					 + "\t" + flight.get_depTime() + "\t" + flight.get_price() + "\t" + flight.get_dealerInfo().get(0));
-				}*/
 			}
 		});
-		btnSearchFlight.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnSearchFlight.setBounds(109, 386, 185, 38);
-		FlightSearch.add(btnSearchFlight);
 	}
 	
-	private void displayFlightResults(final List<Flight> flightResults) {
+	private void displayFlightResults(final List<FlightAbstract> flightResults) {
 		JScrollPane scrollPaneFlight = new JScrollPane();
 		SearchResults.add(scrollPaneFlight, "FlightResults");
 		resultLayout.show(SearchResults,"FlightResults");
@@ -544,8 +534,10 @@ public class UserInterface {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int row = tabFlightResults.rowAtPoint(e.getPoint());
-				FlightBooking flightToBook = new FlightBooking(flightResults.get(row),1,"Gunnar");
-				displayFlightBooking(flightToBook);
+				//User userLoggedIn = new User(1,"Gunnar","gif1@hi.is",false);
+				//FlightBooking flightToBook = new FlightBooking(flightResults.get(row),1,userLoggedIn);
+				//System.out.println(flightResults.get(3).get_depLoc());
+				displayFlightBooking(flightResults.get(row));
 			}
 		});
 		tabFlightResults.addMouseMotionListener(new MouseMotionAdapter() {
@@ -561,7 +553,7 @@ public class UserInterface {
 		
 		Object[][] flights = new Object[flightResults.size()][7];
 		for (int i=0; i<flightResults.size(); i++) {
-			Flight flight = flightResults.get(i);
+			FlightAbstract flight = flightResults.get(i);
 			flights[i][0] = flight.get_dealerInfo()[0];
 			flights[i][1] = flight.get_depTime();
 			flights[i][2] = flight.get_depLoc();
@@ -585,8 +577,73 @@ public class UserInterface {
 		scrollPaneFlight.setViewportView(tabFlightResults);
 	}
 	
-	private void displayFlightBooking(FlightBooking flightToBook) {
+	private void displayFlightBooking(FlightAbstract flightToBook) {
+		User userLoggedIn = new User(1,"Gunnar","gif1@hi.is",false);
+		FlightBooking flightBooking = new FlightBooking(flightToBook,1,userLoggedIn);
 		
+		CardContainer.add(Booking, "Booking");
+		mainLayout.show(CardContainer, "Booking");
+		
+		JPanel FlightBooking = new JPanel();
+		Booking.add(FlightBooking, "FlightBooking");
+		Booking.setLayout(bookingLayout);
+		bookingLayout.show(Booking, "FlightBooking");
+		
+		JLabel lblFlightBooking = new JLabel("Flight Booking");
+		lblFlightBooking.setBounds(460, 13, 202, 34);
+		lblFlightBooking.setFont(new Font("Tahoma", Font.BOLD, 28));
+		FlightBooking.add(lblFlightBooking);
+		
+		JPanel FlightBookingCards = new JPanel();
+		CardLayout flightBookingLayout = new CardLayout();
+		FlightBookingCards.setBounds(12, 67, 1098, 483);
+		FlightBooking.add(FlightBookingCards);
+		FlightBookingCards.setLayout(flightBookingLayout);
+		
+		JPanel FlightBookingConfig = new JPanel();
+		FlightBookingCards.add(FlightBookingConfig, "FlightBookingConfig");
+		flightBookingLayout.show(FlightBookingCards, "FlightBookingConfig");
+		
+		JLabel lblSelectFromAvailable = new JLabel("Select from available seats:");
+		lblSelectFromAvailable.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblSelectFromAvailable.setBounds(50, 13, 200, 22);
+		FlightBookingConfig.add(lblSelectFromAvailable);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(268, 12, 84, 88);
+		FlightBookingConfig.add(scrollPane);
+		
+		JList<String> list = new JList<String>();
+		scrollPane.setViewportView(list);
+		list.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		list.setModel(new AbstractListModel<String>() {
+			String[] values = new String[] {"11A", "11B", "12C", "14F", "11A", "11B", "12C", "14F"};
+			public int getSize() {
+				return values.length;
+			}
+			public String getElementAt(int index) {
+				return values[index];
+			}
+		});
+		
+		JLabel lblSeatsChosen = new JLabel("Seats chosen:");
+		lblSeatsChosen.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblSeatsChosen.setBounds(50, 134, 110, 22);
+		FlightBookingConfig.add(lblSeatsChosen);
+		
+		JTable table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+			},
+			new String[] {
+				"New column", "New column", "New column", "New column", "New column", "New column"
+			}
+		));
+		table.setCellSelectionEnabled(true);
+		table.setBounds(50, 169, 300, 32);
+		FlightBookingConfig.add(table);
 	}
 	
 	private void displayHotelSC() {
@@ -605,8 +662,8 @@ public class UserInterface {
 		lblHotelSearch.setBounds(140, 13, 109, 22);
 		HotelSearch.add(lblHotelSearch);
 		
-		JComboBox txtHotelLoc = new JComboBox();
-		txtHotelLoc.setModel(new DefaultComboBoxModel(new String[] {"Reykjavík", "Akureyri"}));
+		txtHotelLoc = new JComboBox<String>();
+		txtHotelLoc.setModel(new DefaultComboBoxModel<String>(new String[] {"Reykjavík", "Akureyri"}));
 		AutoCompletion.enable(txtHotelLoc);
 		txtHotelLoc.setEditable(true);
 		txtHotelLoc.setBounds(112, 53, 240, 22);
@@ -649,52 +706,220 @@ public class UserInterface {
 		DaytripSearch.setLayout(null);
 		searchLayout.show(SearchCriteria,"DaytripSearch");
 		
+		JLabel lblDayTripSearch = new JLabel("Day Trip Search");
+		lblDayTripSearch.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblDayTripSearch.setBounds(125, 13, 135, 22);
+		DaytripSearch.add(lblDayTripSearch);
+		
+		JLabel lblNameOfTrip = new JLabel("Name of trip:");
+		lblNameOfTrip.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNameOfTrip.setBounds(12, 55, 80, 16);
+		DaytripSearch.add(lblNameOfTrip);
+		
+		final JComboBox<String> txtNameOfTrip = new JComboBox<String>();
+		txtNameOfTrip.setModel(new DefaultComboBoxModel<String>(new String[] {"", "Golden circle", "Mount climbing on Arnarhóll", "Northen lights maniacs"}));
+		txtNameOfTrip.setEditable(true);
+		txtNameOfTrip.setBounds(112, 53, 240, 22);
+		DaytripSearch.add(txtNameOfTrip);
+		
+		JLabel lblCategory = new JLabel("Category:");
+		lblCategory.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblCategory.setBounds(12, 90, 80, 18);
+		DaytripSearch.add(lblCategory);
+		
+		final JComboBox<String> txtCategory = new JComboBox<String>();
+		txtCategory.setModel(new DefaultComboBoxModel<String>(new String[] {"", "Romantic", "Extreme", "Chill", "Insane"}));
+		txtCategory.setEditable(true);
+		txtCategory.setBounds(112, 88, 240, 22);
+		DaytripSearch.add(txtCategory);
+		
 		JLabel lblLocation = new JLabel("Location:");
 		lblLocation.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblLocation.setBounds(12, 54, 100, 17);
+		lblLocation.setBounds(12, 126, 80, 16);
 		DaytripSearch.add(lblLocation);
 		
-		JLabel lblHotelSearch = new JLabel("Daytrip Search");
-		lblHotelSearch.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblHotelSearch.setBounds(140, 13, 109, 22);
-		DaytripSearch.add(lblHotelSearch);
+		final JComboBox<String> txtLocation = new JComboBox<String>();
+		txtLocation.setEditable(true);
+		txtLocation.setModel(new DefaultComboBoxModel<String>(new String[] {"", "Akureyri", "Egilsstaðir", "Reykjavík"}));
+		txtLocation.setBounds(112, 124, 240, 22);
+		DaytripSearch.add(txtLocation);
 		
-		JComboBox txtHotelLoc = new JComboBox();
-		txtHotelLoc.setModel(new DefaultComboBoxModel(new String[] {"Reykjavík", "Akureyri"}));
-		AutoCompletion.enable(txtHotelLoc);
-		txtHotelLoc.setEditable(true);
-		txtHotelLoc.setBounds(112, 53, 240, 22);
-		DaytripSearch.add(txtHotelLoc);
+		JLabel lblNrParti = new JLabel("Nr. of Trippers:");
+		lblNrParti.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNrParti.setBounds(12, 221, 100, 16);
+		DaytripSearch.add(lblNrParti);
 		
-		JDateChooser dateCheckin = new JDateChooser();
-		dateCheckin.setBounds(12, 120, 150, 22);
-		DaytripSearch.add(dateCheckin);
+		txtNumParti = new JTextField();
+		txtNumParti.setText("1");
+		txtNumParti.setBounds(112, 218, 60, 22);
+		DaytripSearch.add(txtNumParti);
+		txtNumParti.setColumns(10);
 		
-		JLabel lblCheckIn = new JLabel("Check in");
-		lblCheckIn.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblCheckIn.setBounds(12, 95, 60, 16);
-		DaytripSearch.add(lblCheckIn);
+		JLabel lblTimeFrame = new JLabel("Time frame:");
+		lblTimeFrame.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblTimeFrame.setBounds(12, 179, 83, 16);
+		DaytripSearch.add(lblTimeFrame);
 		
-		JLabel lblCheckOut = new JLabel("Check out");
-		lblCheckOut.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblCheckOut.setBounds(201, 95, 71, 16);
-		DaytripSearch.add(lblCheckOut);
+		JLabel lblStartTime = new JLabel("Start Time");
+		lblStartTime.setBounds(112, 159, 67, 16);
+		DaytripSearch.add(lblStartTime);
 		
-		JDateChooser dateCheckOut = new JDateChooser();
-		dateCheckOut.setBounds(201, 120, 150, 22);
-		DaytripSearch.add(dateCheckOut);
+		final JDateChooser dateStartTime = new JDateChooser();
+		dateStartTime.setBounds(112, 179, 76, 22);
+		DaytripSearch.add(dateStartTime);
 		
-		JButton btnSearchHotel = new JButton("Search");
-		btnSearchHotel.addActionListener(new ActionListener() {
+		JLabel label_1 = new JLabel("-");
+		label_1.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		label_1.setBounds(206, 180, 26, 16);
+		DaytripSearch.add(label_1);
+		
+		JLabel lblEndTime = new JLabel("End Time");
+		lblEndTime.setBounds(231, 159, 67, 16);
+		DaytripSearch.add(lblEndTime);
+		
+		final JDateChooser dateEndTime = new JDateChooser();
+		dateEndTime.setBounds(231, 179, 76, 22);
+		DaytripSearch.add(dateEndTime);
+		
+		JLabel lblPriceRangeDay = new JLabel("Price Range:");
+		lblPriceRangeDay.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblPriceRangeDay.setBounds(12, 259, 100, 18);
+		DaytripSearch.add(lblPriceRangeDay);
+		
+		txtLowerPrice = new JTextField();
+		txtLowerPrice.setColumns(10);
+		txtLowerPrice.setBounds(112, 256, 100, 22);
+		DaytripSearch.add(txtLowerPrice);
+		
+		JLabel label_2 = new JLabel("-");
+		label_2.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		label_2.setHorizontalAlignment(SwingConstants.CENTER);
+		label_2.setBounds(205, 259, 49, 16);
+		DaytripSearch.add(label_2);
+		
+		txtHigherPrice = new JTextField();
+		txtHigherPrice.setColumns(10);
+		txtHigherPrice.setBounds(251, 256, 101, 22);
+		DaytripSearch.add(txtHigherPrice);
+		
+		JButton btnSearchDaytrip = new JButton("Search");
+		btnSearchDaytrip.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// check if data is acceptable
 				// if acceptable create HotelSearchCriteria
 				// Search for hotels and call result display
+				DayTripSearchCriteria newDaytripSearch = new DayTripSearchCriteria();
+				if (!(txtNameOfTrip.getSelectedItem().equals(""))) {
+					newDaytripSearch.setName((String) txtNameOfTrip.getSelectedItem());
+				} else {
+					newDaytripSearch.setName(null);
+				}
+				if (!(txtCategory.getSelectedItem().equals(""))) {
+					newDaytripSearch.setCategory((String) txtCategory.getSelectedItem());
+				} else {
+					newDaytripSearch.setCategory(null);
+				}
+				if (!(txtCategory.getSelectedItem().equals(""))) {
+					newDaytripSearch.setLocation((String) txtLocation.getSelectedItem());
+				} else {
+					newDaytripSearch.setLocation(null);
+				}
+				
+				newDaytripSearch.setStartTime(dateStartTime.getDate());
+				newDaytripSearch.setEndTime(dateEndTime.getDate());
+				
+				int numParti = 0;
+				try {
+					numParti = Integer.parseInt(txtNumParti.getText());
+				} catch(NumberFormatException exc) {
+					numParti = -1;
+				}
+				newDaytripSearch.setNumParticipants(numParti);
+				
+				int lowerBound = 0;
+				int higherBound = 0;
+				try {
+					lowerBound = Integer.parseInt(txtLowerPrice.getText());
+				} catch(NumberFormatException exc) {
+					lowerBound = -1;
+				}
+				try {
+					higherBound = Integer.parseInt(txtHigherPrice.getText());
+				} catch(NumberFormatException exc) {
+					higherBound = -1;
+				}
+				newDaytripSearch.setPriceRange(new int[]{lowerBound,higherBound});
+				
+				List<DaytripAbstract> daytripResults = SearchEngine.daytripSearch(newDaytripSearch);
+				
+				if (daytripResults.size() == 0) {
+					System.out.println("Unfortunately no day trips were found");
+				} else if (daytripResults.size() > 0) {
+					// Display list of results
+					displayDaytripResults(daytripResults);
+				}
 			}
 		});
-		btnSearchHotel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnSearchHotel.setBounds(109, 200, 185, 38);
-		DaytripSearch.add(btnSearchHotel);
+		btnSearchDaytrip.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnSearchDaytrip.setBounds(109, 291, 185, 38);
+		DaytripSearch.add(btnSearchDaytrip);
+	}
+	
+	private void displayDaytripResults(final List<DaytripAbstract> daytripResults) {
+		JScrollPane scrollPaneDaytrip = new JScrollPane();
+		SearchResults.add(scrollPaneDaytrip, "DaytripResults");
+		resultLayout.show(SearchResults, "DaytripResults");
+		
+		tabDaytripResults = new JTable();
+		tabDaytripResults.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				tabDaytripResults.clearSelection();
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row = tabDaytripResults.rowAtPoint(e.getPoint());
+				//User userLoggedIn = new User(1,"Gunnar","gif1@hi.is",false);
+				//FlightBooking flightToBook = new FlightBooking(flightResults.get(row),1,userLoggedIn);
+				//System.out.println(flightResults.get(3).get_depLoc());
+				displayDaytripBooking(daytripResults.get(row));
+			}
+		});
+		
+		tabDaytripResults.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				int row = tabDaytripResults.rowAtPoint(e.getPoint());
+				if (row > -1) {
+					tabDaytripResults.clearSelection();
+					tabDaytripResults.setRowSelectionInterval(row,row);
+				}
+			}
+		});
+		
+		Object[][] daytrips = new Object[daytripResults.size()][6];
+		for (int i=0; i<daytripResults.size(); i++) {
+			DaytripAbstract daytrip = daytripResults.get(i);
+			daytrips[i][0] = daytrip.getDealerInfo()[0];
+			daytrips[i][1] = daytrip.getCategory();
+			daytrips[i][2] = daytrip.getLocation();
+			daytrips[i][3] = daytrip.getStartTime();
+			daytrips[i][4] = daytrip.getEndTime();
+			daytrips[i][5] = daytrip.getPrice();
+		}
+		String[] columns = new String[] {
+				"Organizer", "Type", "Location", "Go time", "Return time", "Price"
+		};
+		
+		tabDaytripResults.setSurrendersFocusOnKeystroke(true);
+		tabDaytripResults.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tabDaytripResults.setModel(new DefaultTableModel(daytrips,columns));
+		
+		scrollPaneDaytrip.setViewportView(tabDaytripResults);
+	}
+	
+	private void displayDaytripBooking(DaytripAbstract daytripToBook) {
+		System.out.println(daytripToBook.getCategory());
 	}
 }
 
@@ -703,9 +928,6 @@ public class UserInterface {
 
 	private JFrame frmMetaSearchEngine;
 	private JTextField txtUsername;
-	private JTextField txtPassword;
-	private JTextField txtDepLoc;
-	private JTextField txtArrLoc;
 	private JTextField txtLowerPriceBound;
 	private JTextField txtHigherPriceBound;
 	private JTextField txtNrSeats;
@@ -716,6 +938,13 @@ public class UserInterface {
 	private JTextField txtConPass;
 	private JTextField txtNewEmail;
 	private JTable tabFlightResults;
+	private JTable table;
+	private JTextField txtNumParti;
+	private JTextField txtLowerPrice;
+	private JTextField txtHigherPrice;
+	private JTable tabDaytripResults;
+	private JTable tabHotelResults;
+	private JPasswordField pwdPassword;
 
 	// Launch the application.
 	
@@ -778,15 +1007,6 @@ public class UserInterface {
 		Login.add(lblPassword);
 		lblPassword.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
-		txtPassword = new JTextField();
-		txtPassword.setBounds(530, 170, 180, 24);
-		Login.add(txtPassword);
-		txtPassword.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		txtPassword.setForeground(Color.GRAY);
-		txtPassword.setText("Password");
-		txtPassword.setToolTipText("");
-		txtPassword.setColumns(10);
-		
 		JButton btnSignIn = new JButton("Sign In");
 		btnSignIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -821,6 +1041,10 @@ public class UserInterface {
 		lblSignIn.setFont(new Font("Comic Sans MS", Font.ITALIC, 18));
 		lblSignIn.setBounds(492, 63, 272, 23);
 		Login.add(lblSignIn);
+		
+		pwdPassword = new JPasswordField();
+		pwdPassword.setBounds(530, 170, 180, 24);
+		Login.add(pwdPassword);
 		
 		JPanel SignUp = new JPanel();
 		CardContainer.add(SignUp, "SignUp");
@@ -917,23 +1141,6 @@ public class UserInterface {
 		final CardLayout searchLayout = new CardLayout();
 		SearchCriteria.setLayout(searchLayout);
 		
-		// Setting up the Login buttons and listeners
-		JButton btnLogin = new JButton("Login");
-		btnLogin.setBounds(542, 13, 97, 25);
-		SplashScreen.add(btnLogin);
-		btnLogin.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				mainLayout.show(CardContainer, "Login");
-			}
-		});
-		btnLogin.setForeground(Color.BLACK);
-		btnLogin.setBackground(UIManager.getColor("Button.background"));
-		
-		JButton btnSignUp1 = new JButton("Sign Up");
-		btnSignUp1.setBounds(651, 13, 97, 25);
-		SplashScreen.add(btnSignUp1);
-		btnSignUp1.setBackground(UIManager.getColor("Button.light"));
-		
 		// Setting up Flight search criteria
 		JButton btnFlightSearch = new JButton("Flight Search");
 		btnFlightSearch.setForeground(Color.BLACK);
@@ -956,27 +1163,29 @@ public class UserInterface {
 		lblDepLocation.setBounds(12, 55, 100, 16);
 		FlightSearch.add(lblDepLocation);
 		
+		final JComboBox txtDepLoc = new JComboBox();
+		txtDepLoc.setModel(new DefaultComboBoxModel(new String[] {"Akureyri", "Egilsstaðir", "Reykjavík"}));
+		AutoCompletion.enable(txtDepLoc);
+		txtDepLoc.setEditable(true);
+		txtDepLoc.setBounds(112, 53, 240, 22);
+		FlightSearch.add(txtDepLoc);
+		
 		JLabel lblFlightSearch = new JLabel("Flight Search");
 		lblFlightSearch.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblFlightSearch.setBounds(140, 13, 109, 22);
 		FlightSearch.add(lblFlightSearch);
-		
-		txtDepLoc = new JTextField();
-		txtDepLoc.setBackground(UIManager.getColor("TextField.background"));
-		txtDepLoc.setBounds(112, 53, 240, 22);
-		FlightSearch.add(txtDepLoc);
-		txtDepLoc.setColumns(10);
 		
 		JLabel lblArrLocation = new JLabel("Arr. Location:");
 		lblArrLocation.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblArrLocation.setBounds(12, 90, 100, 16);
 		FlightSearch.add(lblArrLocation);
 		
-		txtArrLoc = new JTextField();
-		txtArrLoc.setBackground(UIManager.getColor("TextField.background"));
+		final JComboBox txtArrLoc = new JComboBox();
+		txtArrLoc.setModel(new DefaultComboBoxModel(new String[] {"Akureyri", "Egilsstaðir", "Reykjavík"}));
+		AutoCompletion.enable(txtArrLoc);
+		txtArrLoc.setEditable(true);
 		txtArrLoc.setBounds(112, 87, 240, 22);
 		FlightSearch.add(txtArrLoc);
-		txtArrLoc.setColumns(10);
 		
 		JLabel lblDepTime = new JLabel("Dep. Time:");
 		lblDepTime.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -1071,8 +1280,8 @@ public class UserInterface {
 		btnSearchFlight.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FlightSearchCriteria newFlightSearch = new FlightSearchCriteria();
-				newFlightSearch.setDepartureLoc(txtDepLoc.getText());
-				newFlightSearch.setArrivalLoc(txtArrLoc.getText());
+				newFlightSearch.setDepartureLoc((String) txtDepLoc.getSelectedItem());
+				newFlightSearch.setArrivalLoc((String) txtArrLoc.getSelectedItem());
 				newFlightSearch.setDepartureTime(depTime.getDate());
 				newFlightSearch.setNumSeats(Integer.parseInt(txtNrSeats.getText()));
 				newFlightSearch.setSeatClass((String)txtSeatClass.getSelectedItem());
@@ -1080,18 +1289,11 @@ public class UserInterface {
 				newFlightSearch.setPriceRange(new int[]{Integer.parseInt(txtLowerPriceBound.getText()),Integer.parseInt(txtHigherPriceBound.getText())});
 				newFlightSearch.setOverLay(rdbtnOverlayYes.isSelected());
 				
-				List<Flight> flightResults = SearchEngine.flightSearch(newFlightSearch);
+				List<FlightAbstract> flightResults = SearchEngine.flightSearch(newFlightSearch);
 				if (flightResults.size() == 0) {
 					System.out.println("Unfortunately no flights were found");
 				} else if (flightResults.size() > 0) {
 					// Display list of results
-				}
-				System.out.println("Bla");
-				for (int i = 0; i<flightResults.size(); i++) {
-					Flight flight = flightResults.get(i);
-					System.out.println("Flight nr.\tDep. Location\tArr. Location\tDep. Time\t\t\tPrice\tDealer");
-					System.out.println(flight.get_flightNr() + "\t\t" + flight.get_depLoc() + "\t" + flight.get_arrivLoc()
-					 + "\t" + flight.get_depTime() + "\t" + flight.get_price() + "\t" + flight.get_dealerInfo().get(0));
 				}
 			}
 		});
@@ -1161,6 +1363,111 @@ public class UserInterface {
 		btnSearchHotel.setBounds(109, 200, 185, 38);
 		HotelSearch.add(btnSearchHotel);
 		
+		JPanel DaytripSearch = new JPanel();
+		SearchCriteria.add(DaytripSearch, "name_282145842151674");
+		DaytripSearch.setLayout(null);
+		
+		JLabel lblDayTripSearch = new JLabel("Day Trip Search");
+		lblDayTripSearch.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblDayTripSearch.setBounds(125, 13, 135, 22);
+		DaytripSearch.add(lblDayTripSearch);
+		
+		JLabel lblNrParti = new JLabel("Nr. of Trippers:");
+		lblNrParti.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNrParti.setBounds(12, 221, 100, 16);
+		DaytripSearch.add(lblNrParti);
+		
+		txtNumParti = new JTextField();
+		txtNumParti.setText("1");
+		txtNumParti.setBounds(112, 218, 60, 22);
+		DaytripSearch.add(txtNumParti);
+		txtNumParti.setColumns(10);
+		
+		JLabel lblTimeFrame = new JLabel("Time frame:");
+		lblTimeFrame.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblTimeFrame.setBounds(12, 179, 83, 16);
+		DaytripSearch.add(lblTimeFrame);
+		
+		JLabel lblStartTime = new JLabel("Start Time");
+		lblStartTime.setBounds(112, 159, 67, 16);
+		DaytripSearch.add(lblStartTime);
+		
+		JDateChooser dateStartTime = new JDateChooser();
+		dateStartTime.setBounds(112, 179, 76, 22);
+		DaytripSearch.add(dateStartTime);
+		
+		JDateChooser dateEndTime = new JDateChooser();
+		dateEndTime.setBounds(231, 179, 76, 22);
+		DaytripSearch.add(dateEndTime);
+		
+		JLabel lblEndTime = new JLabel("End Time");
+		lblEndTime.setBounds(231, 159, 67, 16);
+		DaytripSearch.add(lblEndTime);
+		
+		JLabel label_1 = new JLabel("-");
+		label_1.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		label_1.setBounds(206, 180, 26, 16);
+		DaytripSearch.add(label_1);
+		
+		JLabel lblPriceRangeDay = new JLabel("Price Range:");
+		lblPriceRangeDay.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblPriceRangeDay.setBounds(12, 259, 100, 18);
+		DaytripSearch.add(lblPriceRangeDay);
+		
+		txtLowerPrice = new JTextField();
+		txtLowerPrice.setColumns(10);
+		txtLowerPrice.setBounds(112, 256, 100, 22);
+		DaytripSearch.add(txtLowerPrice);
+		
+		JLabel label_2 = new JLabel("-");
+		label_2.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		label_2.setHorizontalAlignment(SwingConstants.CENTER);
+		label_2.setBounds(205, 259, 49, 16);
+		DaytripSearch.add(label_2);
+		
+		txtHigherPrice = new JTextField();
+		txtHigherPrice.setColumns(10);
+		txtHigherPrice.setBounds(251, 256, 101, 22);
+		DaytripSearch.add(txtHigherPrice);
+		
+		JLabel lblLocation_1 = new JLabel("Location:");
+		lblLocation_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblLocation_1.setBounds(12, 126, 80, 16);
+		DaytripSearch.add(lblLocation_1);
+		
+		JComboBox txtLocation = new JComboBox();
+		txtLocation.setEditable(true);
+		txtLocation.setModel(new DefaultComboBoxModel(new String[] {"Akureyri", "Egilsstaðir", "Reykjavík"}));
+		txtLocation.setBounds(112, 124, 240, 22);
+		DaytripSearch.add(txtLocation);
+		
+		JButton btnSearchDaytrip = new JButton("Search");
+		btnSearchDaytrip.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnSearchDaytrip.setBounds(109, 291, 185, 38);
+		DaytripSearch.add(btnSearchDaytrip);
+		
+		JLabel lblNameOfTrip = new JLabel("Name of trip:");
+		lblNameOfTrip.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNameOfTrip.setBounds(12, 55, 80, 16);
+		DaytripSearch.add(lblNameOfTrip);
+		
+		JComboBox txtNameOfTrip = new JComboBox();
+		txtNameOfTrip.setModel(new DefaultComboBoxModel(new String[] {"Golden circle", "Mount climbing on Arnarhóll", "Northen lights maniacs"}));
+		txtNameOfTrip.setEditable(true);
+		txtNameOfTrip.setBounds(112, 53, 240, 22);
+		DaytripSearch.add(txtNameOfTrip);
+		
+		JLabel lblCategory = new JLabel("Category:");
+		lblCategory.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblCategory.setBounds(12, 90, 80, 18);
+		DaytripSearch.add(lblCategory);
+		
+		JComboBox txtCategory = new JComboBox();
+		txtCategory.setModel(new DefaultComboBoxModel(new String[] {"Romantic", "Extreme", "Chill", "Insane"}));
+		txtCategory.setEditable(true);
+		txtCategory.setBounds(112, 88, 240, 22);
+		DaytripSearch.add(txtCategory);
+		
 		// Setting up Daytrip search criteria
 		JButton btnDaytripSearch = new JButton("Daytrip Search");
 		btnDaytripSearch.setBounds(295, 13, 120, 40);
@@ -1215,5 +1522,88 @@ public class UserInterface {
 		tabFlightResults.getColumnModel().getColumn(5).setPreferredWidth(85);
 		tabFlightResults.getColumnModel().getColumn(6).setPreferredWidth(65);
 		scrollPaneFlight.setViewportView(tabFlightResults);
+		
+		JScrollPane scrollPaneDaytrip = new JScrollPane();
+		SearchResults.add(scrollPaneDaytrip, "name_285815963765841");
+		
+		tabDaytripResults = new JTable();
+		tabDaytripResults.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null},
+			},
+			new String[] {
+				"Organizer", "Type", "Location", "Go time", "Return time", "Price"
+			}
+		));
+		scrollPaneDaytrip.setViewportView(tabDaytripResults);
+		
+		JScrollPane scrollPaneHotel = new JScrollPane();
+		SearchResults.add(scrollPaneHotel, "name_285932842491231");
+		
+		tabHotelResults = new JTable();
+		scrollPaneHotel.setViewportView(tabHotelResults);
+		
+		JPanel Booking = new JPanel();
+		CardContainer.add(Booking, "name_207987206227820");
+		Booking.setLayout(new CardLayout(0, 0));
+		
+		JPanel FlightBooking = new JPanel();
+		Booking.add(FlightBooking, "name_208050841529867");
+		FlightBooking.setLayout(null);
+		
+		JLabel lblFlightBooking = new JLabel("Flight Booking");
+		lblFlightBooking.setBounds(460, 13, 202, 34);
+		lblFlightBooking.setFont(new Font("Tahoma", Font.BOLD, 28));
+		FlightBooking.add(lblFlightBooking);
+		
+		JPanel FlightBookingCards = new JPanel();
+		FlightBookingCards.setBounds(12, 67, 1098, 483);
+		FlightBooking.add(FlightBookingCards);
+		FlightBookingCards.setLayout(new CardLayout(0, 0));
+		
+		JPanel FlightBookingConfig = new JPanel();
+		FlightBookingCards.add(FlightBookingConfig, "name_208877203966821");
+		FlightBookingConfig.setLayout(null);
+		
+		JLabel lblSelectFromAvailable = new JLabel("Select from available seats:");
+		lblSelectFromAvailable.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblSelectFromAvailable.setBounds(50, 13, 200, 22);
+		FlightBookingConfig.add(lblSelectFromAvailable);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(268, 12, 84, 88);
+		FlightBookingConfig.add(scrollPane);
+		
+		JList list = new JList();
+		scrollPane.setViewportView(list);
+		list.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		list.setModel(new AbstractListModel() {
+			String[] values = new String[] {"11A", "11B", "12C", "14F", "11A", "11B", "12C", "14F"};
+			public int getSize() {
+				return values.length;
+			}
+			public Object getElementAt(int index) {
+				return values[index];
+			}
+		});
+		
+		JLabel lblSeatsChosen = new JLabel("Seats chosen:");
+		lblSeatsChosen.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblSeatsChosen.setBounds(50, 134, 110, 22);
+		FlightBookingConfig.add(lblSeatsChosen);
+		
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+			},
+			new String[] {
+				"New column", "New column", "New column", "New column", "New column", "New column"
+			}
+		));
+		table.setCellSelectionEnabled(true);
+		table.setBounds(50, 169, 300, 32);
+		FlightBookingConfig.add(table);
 	}
 }*/

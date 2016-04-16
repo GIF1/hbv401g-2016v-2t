@@ -1,18 +1,19 @@
-package metaSearchEngine.mockobjects;
+package metaSearchEngine.program;
 
-import java.util.ArrayList;
+import java.util.Date;
 
-public abstract class Daytrip {
+public abstract class DaytripAbstract {
 	
-	private String startTime;
-	private String endTime;
+	private Date startTime;
+	private Date endTime;
 	private String location;
 	private int price;
 	private int numParticipantsAvail;
 	private String category;
-	private ArrayList<String> dealerInfo = new ArrayList<String>();
+	private String[] dealerInfo;
+	private String name;
 	
-	public Daytrip(String startTime, String endTime, String loc, int price, int numPar, String cat, ArrayList<String> dealerInfo) {
+	public DaytripAbstract(Date startTime, Date endTime, String loc, int price, int numPar, String cat, String[] dealerInfo, String name) {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.location = loc;
@@ -20,21 +21,24 @@ public abstract class Daytrip {
 		this.numParticipantsAvail = numPar;
 		this.category = cat;
 		this.setDealerInfo(dealerInfo);
+		this.name = name;
 	}
 	
-	public String getStartTime() {return startTime;}
-	public String getEndTime() {return endTime;}
+	public Date getStartTime() {return startTime;}
+	public Date getEndTime() {return endTime;}
 	public String getLocation() {return location;}
 	public int getPrice() {return price;}
 	public int getNumParticipantsAvail() {return numParticipantsAvail;}
 	public String getCategory() {return category;}
-	public ArrayList<String> getDealerInfo() {return dealerInfo;}
+	public String[] getDealerInfo() {return dealerInfo;}
+	public String getName() {return name;}
 	
-	void setStartTime(String startTime) {this.startTime = startTime;}
-	void setEndTime(String endTime) {this.endTime = endTime;}
+	void setStartTime(Date startTime) {this.startTime = startTime;}
+	void setEndTime(Date endTime) {this.endTime = endTime;}
 	void setLocation(String location) {this.location = location;}
 	void setPrice(int price) {this.price = price;}
 	void setNumParticipantsAvail(int numParticipantsAvail) {this.numParticipantsAvail = numParticipantsAvail;}
 	void setCategory(String category) {this.category = category;}
-	void setDealerInfo(ArrayList<String> dealerInfo) {this.dealerInfo = dealerInfo;}
+	void setDealerInfo(String[] dealerInfo) {this.dealerInfo = dealerInfo;}
+	void setName(String name) {this.name = name;}
 }
