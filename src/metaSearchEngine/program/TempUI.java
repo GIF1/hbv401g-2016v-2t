@@ -11,8 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class TempUI {
 	
@@ -139,24 +137,19 @@ public class TempUI {
 			e1.printStackTrace();
 		}
 		
-		
-		String userPattern = "^[a-zA-Z]{1}[a-zA-Z0-9]{2,19}";
-		String emailString = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
-		Pattern emailPattern = Pattern.compile(emailString, Pattern.CASE_INSENSITIVE);
-		Matcher matcher = emailPattern.matcher(newEmail);
 		String sql = null;
 		
 		//Validate inputs
-		if (!newUsername.matches(userPattern)) {
+		if (!User.verifyUsername(newUsername)) {
 			throw new IllegalArgumentException("Error: Username not of legal format.");
 		} 
 		
-		if (!matcher.find()) {
+		if (!User.verifyEmail(newEmail)) {
 			throw new IllegalArgumentException("Error: Email not of legal format.");
 		}
 		
 		if (newAge != null) {
-			if(newAge < 13 || newAge > 110) {
+			if(!User.verifyAge(newAge)) {
 				throw new IllegalArgumentException("Error: Invalid age for user.");
 			}
 			
