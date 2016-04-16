@@ -3,7 +3,8 @@ package metaSearchEngine.program;
 import java.io.*;
 import java.util.*;
 
-public class Package {
+@SuppressWarnings("serial")
+public class Package implements Serializable {
 
 	protected List <Booking> Trip = new ArrayList<Booking>();
 	
@@ -17,6 +18,10 @@ public class Package {
 	// After: new_booking has been added to the trip
 	public void addToTrip(Booking new_booking) {
 		Trip.add(new_booking);
+	}
+	
+	public void printer() {
+		System.out.println("WOE!");
 	}
 	
 

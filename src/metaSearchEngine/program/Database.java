@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.Statement;
 import java.util.*;
 
 public class Database {
@@ -37,8 +36,8 @@ public class Database {
       System.out.println("Opened database successfully");
       return c;
   }
-
-   List<List<String>> query(Connection c, PreparedStatement q) {
+  
+  List<List<String>> query(Connection c, PreparedStatement q) {
     List<List<String>> result = new ArrayList<>();
     
 
@@ -68,15 +67,12 @@ public class Database {
     return result;
   }
 
-  void update(String opt, String sql) {
+  void update(String opt, Connection c, PreparedStatement q) {
     if (opt.equals("insert") | opt.equals("Insert"))
     {
-      Connection c = this.connect();
-      Statement stmt = null;
       try {
-        stmt = c.createStatement();
-        stmt.executeUpdate(sql);
-        stmt.close();
+    	q.execute();
+        q.close();
         c.commit();
         c.close();
       } catch (Exception e) {
@@ -86,12 +82,9 @@ public class Database {
         System.out.println("Records created successfully");
     } else if (opt.equals("update") | opt.equals("Update")) {
         try {
-          Connection c = this.connect();
-          Statement stmt = null;
-          stmt = c.createStatement();
-          stmt.executeUpdate(sql);
+          q.execute();
+          q.close();
           c.commit();
-          stmt.close();
           c.close();
         } catch ( Exception e ) {
            System.err.println( e.getClass().getName()+": "+ e.getMessage() );
@@ -99,5 +92,5 @@ public class Database {
          }
          System.out.println("Operation done successfully");
      }
-  }
+  } 
 }

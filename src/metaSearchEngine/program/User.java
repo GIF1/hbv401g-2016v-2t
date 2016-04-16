@@ -37,7 +37,9 @@ public class User implements UserClass {
 		}	
 	}
 	
-	
+	public void setPackages(List<Package> packages){
+		this.packages=packages;
+	}
 	
 	// Usage: username = changeUserName(newUserName);
 	// Before: Both username and newUserName are Strings
@@ -92,7 +94,14 @@ public class User implements UserClass {
 	public int getAge() {
 		return this.age;
 	}
-	
+
+	// Usage: isAdmin = getAdmin();
+	// Before: Nothing
+	// After: the variable idAdmin contains a boolean representing wheter the user is an admin or not.
+	public boolean getAdmin() {
+		return this.admin;
+	}
+		
 	// Usage: username = getUsername();
 	// Before: Nothing
 	// After: the variable username contains a string representing the users name.

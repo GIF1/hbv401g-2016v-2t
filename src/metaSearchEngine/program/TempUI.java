@@ -1,14 +1,23 @@
 package metaSearchEngine.program;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TempUI {
 	
 	
+	@SuppressWarnings({ "unchecked" })
 	static User login(Database db, String username, String password) throws EmptySQLreturnException {
 		String sql = "SELECT \"Password\" FROM \"Users\" WHERE \"Username\" = ?;";
 		Connection c = db.connect();
@@ -29,7 +38,8 @@ public class TempUI {
 				
 				//Check if passwords match
 				if (trimmedRes.contains(password)) {
-					String sqlUserInfo = "SELECT * FROM \"Users\" WHERE \"Username\" = ?;";
+					//Passwords match, get info about user.
+					String sqlUserInfo = "SELECT \"id\",\"Username\",\"Age\",\"Email\",\"Admin\" FROM \"Users\" WHERE \"Username\" = ?;";
 					PreparedStatement prepStmtUserInfo;
 					
 					try {
@@ -47,15 +57,47 @@ public class TempUI {
 									trimmedResUserInfo.add( resUserInfo.get(0).get(i).trim());
 								}
 							}
+							//Parse User information.
 							int newId = Integer.parseInt(trimmedResUserInfo.get(0));
-							String newUsername = trimmedResUserInfo.get(2);
-							String newAge = trimmedResUserInfo.get(3);
-							String newEmail = trimmedResUserInfo.get(4);
-							boolean newAdmin = Boolean.valueOf(trimmedResUserInfo.get(5));
+							String newUsername = trimmedResUserInfo.get(1);
+							String newAge = trimmedResUserInfo.get(2);
+							String newEmail = trimmedResUserInfo.get(3);
+							boolean newAdmin = Boolean.valueOf(trimmedResUserInfo.get(4));
 							
 							user = new User(newId,newUsername,newEmail,newAdmin);
 							
 							if (newAge != null) user.setAge(Integer.parseInt(newAge));
+							
+							//Get Package object for user
+							String getPackage = "SELECT \"Packages\" FROM \"Users\" WHERE \"Username\" = ?;";
+							PreparedStatement pstmt;
+										
+							try {
+								conn = db.connect();
+								pstmt = conn.prepareStatement(getPackage);
+								pstmt.setString(1, username);
+								ResultSet rs = pstmt.executeQuery();
+							    rs.next();
+							    byte[] bytes = rs.getBytes(1);
+							    ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+								ObjectInputStream in = new ObjectInputStream(bais);
+								ArrayList<Package> element = null;
+								element = (ArrayList<Package>) in.readObject();
+								user.setPackages(element);
+								rs.close();
+							    pstmt.close();
+							    conn.commit();
+							    conn.close();
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (ClassNotFoundException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						} else {
 							throw new EmptySQLreturnException("Sorry, the query had no return");
 						} 
@@ -66,7 +108,7 @@ public class TempUI {
 						
 						
 				} else {
-					
+					//Passwords don't match, return null
 				}
 			} else {
 				throw new EmptySQLreturnException("Sorry, the query had no return");
@@ -79,11 +121,130 @@ public class TempUI {
 		return user;	
 	}
 	
-	public static void main(String [] args) {
+	static User createUser(Database db, String newUsername, String newPassword, String newEmail, boolean newAdmin, Integer newAge) throws EmptySQLreturnException  {
+		Connection c = db.connect();
+		PreparedStatement prepStmt;
+		User user = null;
+		byte[] bytes = null;
+		
+		try {
+			List<Package> emptyPackages = new ArrayList<Package>();
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream oos;
+			oos = new ObjectOutputStream(baos);
+			oos.writeObject(emptyPackages);
+			bytes = baos.toByteArray();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
+		String userPattern = "^[a-zA-Z]{1}[a-zA-Z0-9]{2,19}";
+		String emailString = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
+		Pattern emailPattern = Pattern.compile(emailString, Pattern.CASE_INSENSITIVE);
+		Matcher matcher = emailPattern.matcher(newEmail);
+		String sql = null;
+		
+		//Validate inputs
+		if (!newUsername.matches(userPattern)) {
+			throw new IllegalArgumentException("Error: Username not of legal format.");
+		} 
+		
+		if (!matcher.find()) {
+			throw new IllegalArgumentException("Error: Email not of legal format.");
+		}
+		
+		if (newAge != null) {
+			if(newAge < 13 || newAge > 110) {
+				throw new IllegalArgumentException("Error: Invalid age for user.");
+			}
+			
+			sql = "INSERT INTO \"Users\"(\"Password\", \"Username\", \"Age\", \"Email\", \"Admin\", \"Packages\") VALUES (?, ?, ?, ?, ?, ?);";
+			
+			try {
+				prepStmt = c.prepareStatement(sql);
+				prepStmt.setString(1, newPassword);
+				prepStmt.setString(2, newUsername);
+				prepStmt.setInt(3, newAge);
+				prepStmt.setString(4, newEmail);
+				prepStmt.setBoolean(5, newAdmin);
+				prepStmt.setBytes(6, bytes);
+				db.update("Insert",c ,prepStmt);
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		} else {
+			sql = "INSERT INTO \"Users\"(\"Password\", \"Username\", \"Email\", \"Admin\", \"Packages\") VALUES (?, ?, ?, ?, ?);";
+			
+			try {
+				prepStmt = c.prepareStatement(sql);
+				prepStmt.setString(1, newPassword);
+				prepStmt.setString(2, newUsername);
+				prepStmt.setString(3, newEmail);
+				prepStmt.setBoolean(4, newAdmin);
+				prepStmt.setBytes(5, bytes);
+				db.update("Insert",c ,prepStmt);
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			user = login(db,newUsername,newPassword);
+		} catch (EmptySQLreturnException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	static User editUser(Database db, User user, String newUsername, String newPassword, String newEmail, boolean newAdmin, Integer newAge, List<Package> packages) {
+		
+		
+	}
+	
+	public static void main(String [] args) throws IOException {
 		Database db = new Database("localhost",5432,"Tripplaner","postgres","tester123");
 
 		try {
-			User user = login(db,"Notandi","test123");
+			List<Package> testList = new ArrayList<Package>();
+			Package pack1 = new Package();
+			Package pack2 = new Package();
+			Package pack3 = new Package();
+			testList.add(pack1);
+			testList.add(pack2);
+			testList.add(pack3);
+			
+			String sql = "UPDATE \"Users\" SET \"Packages\" = ? WHERE \"id\" = 2;";
+			Connection conn = db.connect();
+			
+			try {
+				  ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				  ObjectOutputStream oos = new ObjectOutputStream(baos);
+				  oos.writeObject(testList);
+				  byte[] bytes = baos.toByteArray();
+				  
+				  PreparedStatement pstmt;
+			  
+				  pstmt = conn.prepareStatement(sql);
+				  pstmt.setBytes(1, bytes);
+				  pstmt.executeUpdate();
+			  } catch (SQLException e) {
+				  // TODO Auto-generated catch block
+				  e.printStackTrace();
+			  }
+			
+			
+		    
+			
+			User user = createUser(db,"Baaambi","tester123","Asdasddsa@gmail.com",false,null);
+			//User user = login(db,"Notandi","test123");
 			if (user != null) {
 				System.out.println(user.getUsername());	
 				System.out.println(user.getAge());	
