@@ -48,6 +48,13 @@ public class User implements UserClass {
 		}	
 	}
 	
+	// Usage: setAdmin(newAdmin);
+	// Before: newAdmin is a boolean variable
+	// After: The user admin attribute is now newAdmin
+	public void setAdmin(boolean newAdmin){
+		this.admin = newAdmin;
+	}
+	
 	// Usage: x = verifyAge(age);
 	// Before: age is an integer
 	// After: if age is a legal age, x is true. Else x is false.
