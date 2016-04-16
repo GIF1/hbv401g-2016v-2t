@@ -125,6 +125,11 @@ public class UserInterface {
 	JPanel Booking = new JPanel();
 	CardLayout bookingLayout = new CardLayout();
 	
+	JPanel BookingDisplay = new JPanel();
+	CardLayout bookingDispLayout = new CardLayout();
+	
+	User userLoggedIn = null;
+	
 	Database db = new Database("localhost",5432,"Tripplaner","postgres","tester123");
 
 	// Launch the application.
@@ -192,7 +197,6 @@ public class UserInterface {
 		txtUsername.setBounds(530, 125, 180, 24);
 		Login.add(txtUsername);
 		txtUsername.setForeground(Color.GRAY);
-		txtUsername.setText("Username");
 		txtUsername.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtUsername.setColumns(10);
 		
@@ -215,7 +219,21 @@ public class UserInterface {
 				// it matches any user
 				// if so, open main screen with an instance
 				// of the user class.
-				displayHomeScreen();
+				String password = txtPassword.getText();
+				String username = txtUsername.getText();
+				
+				try {
+					userLoggedIn = db.login(username, password);
+				} catch (EmptySQLreturnException databaseError) {
+					// TODO Auto-generated catch block
+					//System.out.println("Error");
+					databaseError.printStackTrace();
+				}
+				if (userLoggedIn != null) {
+					displayHomeScreen();
+				} else {
+					System.out.println("Username or password incorrect");
+				}
 			}
 		});
 		btnSignIn.setBounds(431, 220, 125, 30);
@@ -290,17 +308,25 @@ public class UserInterface {
 		btnSignUp_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String newPassword = txtNewPass.getText();
+				User newUser = null;
 				if (txtNewPass.getText().equals(txtConPass.getText())) {
 					String newUsername = txtNewUsername.getText();
 					String newEmail = txtNewEmail.getText();
 					
 					try {
-						User newUser = db.createUser(newUsername, newPassword, newEmail, false, null);
+						newUser = db.createUser(newUsername, newPassword, newEmail, false, null);
 					} catch (EmptySQLreturnException databaseError) {
 						// TODO Auto-generated catch block
-						System.out.println("Error");
-						//databaseError.printStackTrace();
+						//System.out.println("Error");
+						databaseError.printStackTrace();
 					}
+					
+					if (newUser != null) {
+						userLoggedIn = newUser;
+						displayHomeScreen();
+					}
+				} else {
+					System.out.println("Passwords do not match");
 				}
 			}
 		});
@@ -388,6 +414,31 @@ public class UserInterface {
 				displayDaytripSC();
 			}
 		});
+		
+		// User functionality
+		JButton btnNewButton = new JButton("Log out");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				userLoggedIn = null;
+				displayLogin();
+			}
+		});
+		btnNewButton.setBounds(1013, 13, 97, 25);
+		SplashScreen.add(btnNewButton);
+		
+		JLabel lblUserLoggedIn = new JLabel(userLoggedIn.getUsername(), SwingConstants.RIGHT);
+		lblUserLoggedIn.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblUserLoggedIn.setBounds(785, 13, 97, 22);
+		SplashScreen.add(lblUserLoggedIn);
+		
+		JButton btnEditProfile = new JButton("Edit Profile");
+		btnEditProfile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				displayEditProfile();
+			}
+		});
+		btnEditProfile.setBounds(906, 13, 97, 25);
+		SplashScreen.add(btnEditProfile);
 	}
 	
 	private void displayFlightSC() {
@@ -617,10 +668,27 @@ public class UserInterface {
 		CardContainer.add(Booking, "Booking");
 		mainLayout.show(CardContainer, "Booking");
 		
+		JButton btnLogOut = new JButton("Log out");
+		btnLogOut.setBounds(1013, 13, 97, 25);
+		Booking.add(btnLogOut);
+		
+		JLabel lblUserLoggedIn2 = new JLabel("User logged in");
+		lblUserLoggedIn2.setBounds(785, 13, 97, 22);
+		Booking.add(lblUserLoggedIn2);
+		lblUserLoggedIn2.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		JButton btnEditProfile_1 = new JButton("Edit Profile");
+		btnEditProfile_1.setBounds(906, 13, 97, 25);
+		Booking.add(btnEditProfile_1);
+		
+		BookingDisplay = new JPanel();
+		BookingDisplay.setBounds(0, 60, 1110, 503);
+		Booking.add(BookingDisplay);
+		
 		JPanel FlightBooking = new JPanel();
-		Booking.add(FlightBooking, "FlightBooking");
-		Booking.setLayout(bookingLayout);
-		bookingLayout.show(Booking, "FlightBooking");
+		BookingDisplay.add(FlightBooking, "FlightBooking");
+		BookingDisplay.setLayout(bookingDispLayout);
+		bookingDispLayout.show(BookingDisplay, "FlightBooking");
 		
 		JLabel lblFlightBooking = new JLabel("Flight Booking");
 		lblFlightBooking.setBounds(460, 13, 202, 34);
@@ -629,7 +697,7 @@ public class UserInterface {
 		
 		JPanel FlightBookingCards = new JPanel();
 		CardLayout flightBookingLayout = new CardLayout();
-		FlightBookingCards.setBounds(12, 67, 1098, 483);
+		FlightBookingCards.setBounds(12, 67, 1098, 436);
 		FlightBooking.add(FlightBookingCards);
 		FlightBookingCards.setLayout(flightBookingLayout);
 		
@@ -953,6 +1021,110 @@ public class UserInterface {
 	
 	private void displayDaytripBooking(DaytripAbstract daytripToBook) {
 		System.out.println(daytripToBook.getCategory());
+	}
+	
+	private void displayEditProfile() {
+		JPanel EditUser = new JPanel();
+		CardContainer.add(EditUser, "EditUser");
+		EditUser.setLayout(null);
+		mainLayout.show(CardContainer, "EditUser");
+		
+		JLabel Heading = new JLabel("Define yourself");
+		Heading.setBounds(10, 11, 1102, 59);
+		Heading.setHorizontalAlignment(SwingConstants.CENTER);
+		Heading.setFont(new Font("Comic Sans MS", Font.PLAIN, 25));
+		EditUser.add(Heading);
+		
+		final JTextField editUserUsername = new JTextField();
+		editUserUsername.setBounds(537, 125, 200, 20);
+		editUserUsername.setText(userLoggedIn.getUsername());
+		EditUser.add(editUserUsername);
+		editUserUsername.setColumns(10);
+		
+		final JTextField editUserPassword = new JTextField();
+		editUserPassword.setBounds(537, 175, 200, 20);
+		EditUser.add(editUserPassword);
+		editUserPassword.setColumns(10);
+		
+		JLabel lblUsername_1 = new JLabel("Username");
+		lblUsername_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblUsername_1.setBounds(460, 124, 67, 19);
+		EditUser.add(lblUsername_1);
+		
+		JLabel lblPassword_1 = new JLabel("New Password");
+		lblPassword_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblPassword_1.setBounds(460, 174, 67, 19);
+		EditUser.add(lblPassword_1);
+		
+		JLabel lblConfirmPassword_1 = new JLabel("Confirm password");
+		lblConfirmPassword_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblConfirmPassword_1.setBounds(411, 227, 116, 19);
+		EditUser.add(lblConfirmPassword_1);
+		
+		final JTextField editUserConfirmPassword = new JTextField();
+		editUserConfirmPassword.setColumns(10);
+		editUserConfirmPassword.setBounds(537, 228, 200, 20);
+		EditUser.add(editUserConfirmPassword);
+		
+		JLabel lblAge = new JLabel("Age");
+		lblAge.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblAge.setBounds(502, 330, 25, 19);
+		EditUser.add(lblAge);
+		
+		final JTextField editUserAge = new JTextField();
+		editUserAge.setColumns(10);
+		editUserAge.setBounds(537, 331, 200, 20);
+		editUserAge.setText(Integer.toString(userLoggedIn.getAge()));
+		EditUser.add(editUserAge);
+		
+		JLabel lblEmail_1 = new JLabel("Email");
+		lblEmail_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblEmail_1.setBounds(494, 280, 33, 19);
+		EditUser.add(lblEmail_1);
+		
+		final JTextField editUserEmail = new JTextField();
+		editUserEmail.setColumns(10);
+		editUserEmail.setBounds(537, 281, 200, 20);
+		editUserEmail.setText(userLoggedIn.getEmail());
+		EditUser.add(editUserEmail);
+		
+		JButton editUserSaveChanges = new JButton("Save Changes");
+		editUserSaveChanges.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Here we are saving the changes!
+				String newUsername = editUserUsername.getText();
+				String newPassword = null;
+				if (editUserPassword.getText().equals(editUserConfirmPassword.getText())) {
+					newPassword = editUserPassword.getText();
+				} else {
+					System.out.println("Password not successfully updated. Confirm password did not match.");
+				}
+				String newEmail = editUserEmail.getText();
+				Boolean newAdmin = null;
+				Integer newAge = null;
+				try {
+					newAge = Integer.parseInt(editUserAge.getText());
+				} catch (NumberFormatException exc) {
+					System.out.println("Age containes illegal input");
+				}
+				List<Package> newPackages = null;
+				
+				userLoggedIn = db.editUser(userLoggedIn, newUsername, newPassword, newEmail, newAdmin, newAge, newPackages);
+			}
+		});
+		editUserSaveChanges.setBackground(Color.GREEN);
+		editUserSaveChanges.setBounds(460, 406, 116, 23);
+		EditUser.add(editUserSaveChanges);
+		
+		JButton editUserCancel = new JButton("Cancel");
+		editUserCancel.setBackground(Color.RED);
+		editUserCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				displayHomeScreen();
+			}
+		});
+		editUserCancel.setBounds(621, 406, 116, 23);
+		EditUser.add(editUserCancel);
 	}
 }
 
@@ -1576,12 +1748,54 @@ public class UserInterface {
 		tabHotelResults = new JTable();
 		scrollPaneHotel.setViewportView(tabHotelResults);
 		
+		JButton btnNewButton = new JButton("Log out");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// userLoggedIn = null;
+				// displayLogin();
+			}
+		});
+		btnNewButton.setBounds(1013, 13, 97, 25);
+		SplashScreen.add(btnNewButton);
+		
+		JLabel lblUserLoggedIn = new JLabel("User logged in");
+		lblUserLoggedIn.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblUserLoggedIn.setBounds(785, 13, 97, 22);
+		SplashScreen.add(lblUserLoggedIn);
+		
+		JButton btnEditProfile = new JButton("Edit Profile");
+		btnEditProfile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// displayEditProfile(User userToEdit)
+			}
+		});
+		btnEditProfile.setBounds(906, 13, 97, 25);
+		SplashScreen.add(btnEditProfile);
+		
 		JPanel Booking = new JPanel();
 		CardContainer.add(Booking, "name_207987206227820");
-		Booking.setLayout(new CardLayout(0, 0));
+		Booking.setLayout(null);
+		
+		JButton btnLogOut = new JButton("Log out");
+		btnLogOut.setBounds(1013, 13, 97, 25);
+		Booking.add(btnLogOut);
+		
+		JLabel lblUserLoggedIn2 = new JLabel("User logged in");
+		lblUserLoggedIn2.setBounds(785, 13, 97, 22);
+		Booking.add(lblUserLoggedIn2);
+		lblUserLoggedIn2.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		JButton btnEditProfile_1 = new JButton("Edit Profile");
+		btnEditProfile_1.setBounds(906, 13, 97, 25);
+		Booking.add(btnEditProfile_1);
+		
+		JPanel BookingDisplay = new JPanel();
+		BookingDisplay.setBounds(0, 60, 1110, 503);
+		Booking.add(BookingDisplay);
+		BookingDisplay.setLayout(new CardLayout(0, 0));
 		
 		JPanel FlightBooking = new JPanel();
-		Booking.add(FlightBooking, "name_208050841529867");
+		BookingDisplay.add(FlightBooking, "name_351337352329809");
 		FlightBooking.setLayout(null);
 		
 		JLabel lblFlightBooking = new JLabel("Flight Booking");
@@ -1590,7 +1804,7 @@ public class UserInterface {
 		FlightBooking.add(lblFlightBooking);
 		
 		JPanel FlightBookingCards = new JPanel();
-		FlightBookingCards.setBounds(12, 67, 1098, 483);
+		FlightBookingCards.setBounds(12, 67, 1098, 436);
 		FlightBooking.add(FlightBookingCards);
 		FlightBookingCards.setLayout(new CardLayout(0, 0));
 		
@@ -1638,5 +1852,90 @@ public class UserInterface {
 		table.setCellSelectionEnabled(true);
 		table.setBounds(50, 169, 300, 32);
 		FlightBookingConfig.add(table);
+		btnEditProfile_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// displayEditUser(User userToEdit);
+			}
+		});
+		
+		JPanel EditUser = new JPanel();
+		CardContainer.add(EditUser, "name_63891211660140");
+		EditUser.setLayout(null);
+		
+		JLabel Heading = new JLabel("Define yourself");
+		Heading.setBounds(10, 11, 1102, 59);
+		Heading.setHorizontalAlignment(SwingConstants.CENTER);
+		Heading.setFont(new Font("Comic Sans MS", Font.PLAIN, 25));
+		EditUser.add(Heading);
+		
+		final JTextField editUserUsername = new JTextField();
+		editUserUsername.setBounds(537, 125, 200, 20);
+		EditUser.add(editUserUsername);
+		editUserUsername.setColumns(10);
+		
+		final JTextField editUserPassword = new JTextField();
+		editUserPassword.setBounds(537, 175, 200, 20);
+		EditUser.add(editUserPassword);
+		editUserPassword.setColumns(10);
+		
+		JLabel lblUsername_1 = new JLabel("Username");
+		lblUsername_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblUsername_1.setBounds(460, 124, 67, 19);
+		EditUser.add(lblUsername_1);
+		
+		JLabel lblPassword_1 = new JLabel("Password");
+		lblPassword_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblPassword_1.setBounds(460, 174, 67, 19);
+		EditUser.add(lblPassword_1);
+		
+		JLabel lblConfirmPassword_1 = new JLabel("Confirm password");
+		lblConfirmPassword_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblConfirmPassword_1.setBounds(411, 227, 116, 19);
+		EditUser.add(lblConfirmPassword_1);
+		
+		final JTextField editUserConfirmPassword = new JTextField();
+		editUserConfirmPassword.setColumns(10);
+		editUserConfirmPassword.setBounds(537, 228, 200, 20);
+		EditUser.add(editUserConfirmPassword);
+		
+		JLabel lblAge = new JLabel("Age");
+		lblAge.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblAge.setBounds(502, 330, 25, 19);
+		EditUser.add(lblAge);
+		
+		final JTextField editUserAge = new JTextField();
+		editUserAge.setColumns(10);
+		editUserAge.setBounds(537, 331, 200, 20);
+		EditUser.add(editUserAge);
+		
+		JLabel lblEmail_1 = new JLabel("Email");
+		lblEmail_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblEmail_1.setBounds(494, 280, 33, 19);
+		EditUser.add(lblEmail_1);
+		
+		final JTextField editUserEmail = new JTextField();
+		editUserEmail.setColumns(10);
+		editUserEmail.setBounds(537, 281, 200, 20);
+		EditUser.add(editUserEmail);
+		
+		JButton editUserSaveChanges = new JButton("Save Changes");
+		editUserSaveChanges.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Here we are saving the changes!
+			}
+		});
+		editUserSaveChanges.setBackground(Color.GREEN);
+		editUserSaveChanges.setBounds(460, 406, 116, 23);
+		EditUser.add(editUserSaveChanges);
+		
+		JButton editUserCancel = new JButton("Cancel");
+		editUserCancel.setBackground(Color.RED);
+		editUserCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//Here we are cancelling
+			}
+		});
+		editUserCancel.setBounds(621, 406, 116, 23);
+		EditUser.add(editUserCancel);
 	}
 }*/
