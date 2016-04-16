@@ -12,6 +12,8 @@ import javax.swing.JDesktopPane;
 
 import org.eclipse.AutoCompletion;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
+import org.postgresql.util.PSQLException;
+
 import java.awt.Component;
 import java.awt.Color;
 import java.awt.CardLayout;
@@ -53,6 +55,16 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.JScrollPane;
 import java.awt.event.MouseMotionAdapter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import javax.swing.JScrollBar;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JCheckBox;
@@ -92,20 +104,28 @@ public class UserInterface {
 	
 	// Card container for the main frame
 	// Cards to be children here are Login, 
-	// CreateNewUser, SplashScreen, Booking screen,
-	// UserProfile, EditProfile
+	// CreateNewUser, SplashScreen, Booking,
+	// UserProfile, EditProfile and UserManagement
 	JPanel CardContainer = new JPanel();
 	CardLayout mainLayout = new CardLayout();
 	
-	// Card container
+	// Card container for the search criteria
+	// Cards to be children here are FlightSearchCriteria,
+	// HotelSearchCriteria, DaytripSearchCriteria
 	JPanel SearchCriteria = new JPanel();
 	CardLayout searchLayout = new CardLayout();
 	
+	// Card container for the search result table
+	// Cards to be children here are FlightResults,
+	// HotelResults and DaytripResults
 	JPanel SearchResults = new JPanel();
 	CardLayout resultLayout = new CardLayout();
 	
+	
 	JPanel Booking = new JPanel();
 	CardLayout bookingLayout = new CardLayout();
+	
+	Database db = new Database("localhost",5432,"Tripplaner","postgres","tester123");
 
 	// Launch the application.
 	public static void main(String[] args) {
@@ -269,6 +289,19 @@ public class UserInterface {
 		JButton btnSignUp_1 = new JButton("Sign Up...");
 		btnSignUp_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String newPassword = txtNewPass.getText();
+				if (txtNewPass.getText().equals(txtConPass.getText())) {
+					String newUsername = txtNewUsername.getText();
+					String newEmail = txtNewEmail.getText();
+					
+					try {
+						User newUser = db.createUser(newUsername, newPassword, newEmail, false, null);
+					} catch (EmptySQLreturnException databaseError) {
+						// TODO Auto-generated catch block
+						System.out.println("Error");
+						//databaseError.printStackTrace();
+					}
+				}
 			}
 		});
 		btnSignUp_1.setFont(new Font("Tahoma", Font.PLAIN, 18));
