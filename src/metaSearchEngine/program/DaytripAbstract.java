@@ -12,6 +12,7 @@ public abstract class DaytripAbstract {
 	private String category;
 	private String[] dealerInfo;
 	private String name;
+	private int IndivID;
 	
 	public DaytripAbstract(Date startTime, Date endTime, String loc, int price, int numPar, String cat, String[] dealerInfo, String name) {
 		this.startTime = startTime;
@@ -32,6 +33,7 @@ public abstract class DaytripAbstract {
 	public String getCategory() {return category;}
 	public String[] getDealerInfo() {return dealerInfo;}
 	public String getName() {return name;}
+	public int getIndivID() {return IndivID;}
 	
 	void setStartTime(Date startTime) {this.startTime = startTime;}
 	void setEndTime(Date endTime) {this.endTime = endTime;}
@@ -41,4 +43,5 @@ public abstract class DaytripAbstract {
 	void setCategory(String category) {this.category = category;}
 	void setDealerInfo(String[] dealerInfo) {this.dealerInfo = dealerInfo;}
 	void setName(String name) {this.name = name;}
+	void setIndivID(int IndivID) {this.IndivID = IndivID;}
 }
