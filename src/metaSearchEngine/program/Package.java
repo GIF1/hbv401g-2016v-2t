@@ -19,11 +19,6 @@ public class Package implements Serializable {
 	public void addToTrip(Booking new_booking) {
 		Trip.add(new_booking);
 	}
-	
-	public void printer() {
-		System.out.println("WOE!");
-	}
-	
 
 	// Usage: removeFromtrip(booked_item)
 	// Before: booked_item is an instance of the FlightBooking, HotelBooking or the DaytripBooking class. 
