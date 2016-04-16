@@ -12,11 +12,12 @@ public class DaytripExtend extends DaytripAbstract{
 	int numParticipantsAvail;
 	String category;
 	String[] dealerInfo;
+	String name;
 	// .... possibly more
 	
 	//Constructor
-	public DaytripExtend(Date startTime, Date endTime, String loc, int price, int numParticipants, String category, String[] dealerInfo /*, ...*/) {
-		super(startTime, endTime, loc, price, numParticipants, category, dealerInfo);
+	public DaytripExtend(Date startTime, Date endTime, String loc, int price, int numParticipants, String category, String[] dealerInfo, String name /*, ...*/) {
+		super(startTime, endTime, loc, price, numParticipants, category, dealerInfo, name);
 		// ...
 	}
 }

@@ -14,7 +14,6 @@ public class DayTripSearchCriteria {
 	private Date endTime;
 	private int[] priceRange;
 	private int numParticipants;
-	private boolean getHobbies;
 	private String category;
 	
 	// Methods
@@ -70,11 +69,7 @@ public class DayTripSearchCriteria {
 		return numParticipants;
 	}
 	
-	public boolean getHobbies() {
-		return Hobbies;
-	}
-	
-	public String[] getCategory() {
+	public String getCategory() {
 		return category;
 	}
 	

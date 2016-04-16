@@ -88,4 +88,11 @@ public class SearchEngine {
 		
 		return flightResults;
 	}
+	
+	public static ArrayList<DaytripAbstract> daytripSearch(DayTripSearchCriteria daytripSearch) {
+		
+		ArrayList<DaytripAbstract> daytripResults = DaytripSearcher.search(daytripSearch);
+		
+		return daytripResults;
+	}
 }

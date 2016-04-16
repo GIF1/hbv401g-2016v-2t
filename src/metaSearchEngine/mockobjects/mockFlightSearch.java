@@ -2,8 +2,8 @@ package metaSearchEngine.mockobjects;
 
 import metaSearchEngine.program.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+//import java.text.ParseException;
+//import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;

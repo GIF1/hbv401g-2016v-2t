@@ -11,8 +11,9 @@ public abstract class DaytripAbstract {
 	private int numParticipantsAvail;
 	private String category;
 	private String[] dealerInfo;
+	private String name;
 	
-	public DaytripAbstract(Date startTime, Date endTime, String loc, int price, int numPar, String cat, String[] dealerInfo) {
+	public DaytripAbstract(Date startTime, Date endTime, String loc, int price, int numPar, String cat, String[] dealerInfo, String name) {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.location = loc;
@@ -20,6 +21,7 @@ public abstract class DaytripAbstract {
 		this.numParticipantsAvail = numPar;
 		this.category = cat;
 		this.setDealerInfo(dealerInfo);
+		this.name = name;
 	}
 	
 	public Date getStartTime() {return startTime;}
@@ -29,6 +31,7 @@ public abstract class DaytripAbstract {
 	public int getNumParticipantsAvail() {return numParticipantsAvail;}
 	public String getCategory() {return category;}
 	public String[] getDealerInfo() {return dealerInfo;}
+	public String getName() {return name;}
 	
 	void setStartTime(Date startTime) {this.startTime = startTime;}
 	void setEndTime(Date endTime) {this.endTime = endTime;}
@@ -37,4 +40,5 @@ public abstract class DaytripAbstract {
 	void setNumParticipantsAvail(int numParticipantsAvail) {this.numParticipantsAvail = numParticipantsAvail;}
 	void setCategory(String category) {this.category = category;}
 	void setDealerInfo(String[] dealerInfo) {this.dealerInfo = dealerInfo;}
+	void setName(String name) {this.name = name;}
 }
