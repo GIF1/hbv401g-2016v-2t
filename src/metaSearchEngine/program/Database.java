@@ -104,8 +104,9 @@ public class Database {
   
   //User related database functions
   @SuppressWarnings({ "unchecked" })
-	static User login(Database db, String username, String password) throws EmptySQLreturnException {
-		String sql = "SELECT \"Password\" FROM \"Users\" WHERE \"Username\" = ?;";
+	public User login(String username, String password) throws EmptySQLreturnException {
+	  	Database db = this; 
+	  	String sql = "SELECT \"Password\" FROM \"Users\" WHERE \"Username\" = ?;";
 		Connection c = db.connect();
 		PreparedStatement prepStmt;
 		User user = null;
@@ -207,7 +208,8 @@ public class Database {
 		return user;	
 	}
 	
-	static User createUser(Database db, String newUsername, String newPassword, String newEmail, boolean newAdmin, Integer newAge) throws EmptySQLreturnException  {
+	public User createUser(String newUsername, String newPassword, String newEmail, boolean newAdmin, Integer newAge) throws EmptySQLreturnException  {
+		Database db = this;
 		Connection c = db.connect();
 		PreparedStatement prepStmt;
 		User user = null;
@@ -277,7 +279,7 @@ public class Database {
 		}
 		
 		try {
-			user = login(db,newUsername,newPassword);
+			user = login(newUsername,newPassword);
 		} catch (EmptySQLreturnException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -285,7 +287,8 @@ public class Database {
 		return user;
 	}
 	
-	static User editUser(Database db, User user, String newUsername, String newPassword, String newEmail, Boolean newAdmin, Integer newAge, List<Package> newPackages) {
+	public User editUser(User user, String newUsername, String newPassword, String newEmail, Boolean newAdmin, Integer newAge, List<Package> newPackages) {
+		Database db = this;
 		Connection c = db.connect();
 		PreparedStatement prepStmt;
 		byte[] bytes = null;
