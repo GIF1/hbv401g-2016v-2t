@@ -58,13 +58,14 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JCheckBox;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JPasswordField;
 
 
 public class UserInterface {
 
 	private JFrame frmMetaSearchEngine;
 	private JTextField txtUsername;
-	private JTextField txtPassword;
+	private JPasswordField txtPassword;
 	private JComboBox<String> txtDepLoc;
 	private JDateChooser depTime;
 	private JComboBox<String> txtArrLoc;
@@ -89,9 +90,14 @@ public class UserInterface {
 	private JTable tabFlightResults;
 	private JTable tabDaytripResults;
 	
+	// Card container for the main frame
+	// Cards to be children here are Login, 
+	// CreateNewUser, SplashScreen, Booking screen,
+	// UserProfile, EditProfile
 	JPanel CardContainer = new JPanel();
 	CardLayout mainLayout = new CardLayout();
 	
+	// Card container
 	JPanel SearchCriteria = new JPanel();
 	CardLayout searchLayout = new CardLayout();
 	
@@ -175,14 +181,11 @@ public class UserInterface {
 		Login.add(lblPassword);
 		lblPassword.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
-		txtPassword = new JTextField();
+		txtPassword = new JPasswordField();
 		txtPassword.setBounds(530, 170, 180, 24);
 		Login.add(txtPassword);
 		txtPassword.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtPassword.setForeground(Color.GRAY);
-		txtPassword.setText("Password");
-		txtPassword.setToolTipText("");
-		txtPassword.setColumns(10);
 		
 		JButton btnSignIn = new JButton("Sign In");
 		btnSignIn.addActionListener(new ActionListener() {
@@ -291,10 +294,6 @@ public class UserInterface {
 		lblAndNever.setFont(new Font("Comic Sans MS", Font.ITALIC, 18));
 		lblAndNever.setBounds(558, 62, 220, 23);
 		SignUp.add(lblAndNever);
-	}
-	
-	private void displaySearchCriteria(JButton e) {
-		
 	}
 	
 	private void displayHomeScreen() {
@@ -929,7 +928,6 @@ public class UserInterface {
 
 	private JFrame frmMetaSearchEngine;
 	private JTextField txtUsername;
-	private JTextField txtPassword;
 	private JTextField txtLowerPriceBound;
 	private JTextField txtHigherPriceBound;
 	private JTextField txtNrSeats;
@@ -946,6 +944,7 @@ public class UserInterface {
 	private JTextField txtHigherPrice;
 	private JTable tabDaytripResults;
 	private JTable tabHotelResults;
+	private JPasswordField pwdPassword;
 
 	// Launch the application.
 	
@@ -1008,15 +1007,6 @@ public class UserInterface {
 		Login.add(lblPassword);
 		lblPassword.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
-		txtPassword = new JTextField();
-		txtPassword.setBounds(530, 170, 180, 24);
-		Login.add(txtPassword);
-		txtPassword.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		txtPassword.setForeground(Color.GRAY);
-		txtPassword.setText("Password");
-		txtPassword.setToolTipText("");
-		txtPassword.setColumns(10);
-		
 		JButton btnSignIn = new JButton("Sign In");
 		btnSignIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1051,6 +1041,10 @@ public class UserInterface {
 		lblSignIn.setFont(new Font("Comic Sans MS", Font.ITALIC, 18));
 		lblSignIn.setBounds(492, 63, 272, 23);
 		Login.add(lblSignIn);
+		
+		pwdPassword = new JPasswordField();
+		pwdPassword.setBounds(530, 170, 180, 24);
+		Login.add(pwdPassword);
 		
 		JPanel SignUp = new JPanel();
 		CardContainer.add(SignUp, "SignUp");

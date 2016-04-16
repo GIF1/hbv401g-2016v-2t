@@ -9,17 +9,7 @@ import java.util.List;
 public class SearchEngine {
 	
 	public static ArrayList<FlightAbstract> flightSearch(FlightSearchCriteria flightSearch) {
-		/*
-		ArrayList<String> wow_info = new ArrayList<String>();
-		wow_info.add("WOW air");
-		wow_info.add("Katrínartún 12 - 105 Reykjavik");
-		wow_info.add("Kt. 451011-0220");
-		wow_info.add("Vsknr. 109354");
-		Flight flightResults = new Flight("AA123", flightSearch.departureTime, flightSearch.departureLoc, flightSearch.arrivalLoc, 100, wow_info);
-
-		List<List<String>> results = flightResults.getResults();
-		*/
-		
+	
 		// Verify if there is any information
 		if(flightSearch == null) {
 			throw new IllegalArgumentException("Error: No search criteria has been entered");
