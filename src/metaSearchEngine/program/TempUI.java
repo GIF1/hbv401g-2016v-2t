@@ -79,8 +79,8 @@ public class TempUI {
 							    byte[] bytes = rs.getBytes(1);
 							    ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 								ObjectInputStream in = new ObjectInputStream(bais);
-								ArrayList<Package> element = null;
-								element = (ArrayList<Package>) in.readObject();
+								List<Package> element = null;
+								element = (List<Package>) in.readObject();
 								user.setPackages(element);
 								rs.close();
 							    pstmt.close();
@@ -197,58 +197,100 @@ public class TempUI {
 		return user;
 	}
 	
-	static User editUser(Database db, User user, String newUsername, String newPassword, String newEmail, boolean newAdmin, Integer newAge, List<Package> packages) {
+	static User editUser(Database db, User user, String newUsername, String newPassword, String newEmail, Boolean newAdmin, Integer newAge, List<Package> newPackages) {
+		Connection c = db.connect();
+		PreparedStatement prepStmt;
+		byte[] bytes = null;
+		String sql = null;
 		
+		if(!(newUsername == null)) {
+			user.setUserName(newUsername);
+		}
+		if(!(newEmail == null)) {
+			user.setEmail(newEmail);
+		}
+		if(!(newAdmin == null)) {
+			user.setAdmin(newAdmin);
+		}
+		if(!(newAge == null)) {
+			user.setAge(newAge);
+		}
+		if(!(newPackages == null)) {
+			user.setPackages(newPackages);
+		}
 		
+		try {
+			List<Package> emptyPackages = user.getTrip();
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream oos;
+			oos = new ObjectOutputStream(baos);
+			oos.writeObject(emptyPackages);
+			bytes = baos.toByteArray();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		if(!(newPassword == null)) {
+			sql = "UPDATE \"Users\" SET \"Password\"=?, \"Username\"=?, \"Age\"=?, \"Email\"=?, \"Admin\"=?,\"Packages\"=? WHERE \"id\" = ?;";
+			
+			try {
+				prepStmt = c.prepareStatement(sql);
+				prepStmt.setString(1, newPassword);
+				prepStmt.setString(2, user.getUsername());
+				prepStmt.setInt(3, user.getAge());
+				prepStmt.setString(4, user.getEmail());
+				prepStmt.setBoolean(5, user.getAdmin());
+				prepStmt.setBytes(6, bytes);
+				prepStmt.setInt(7, user.getId());
+				db.update("Update",c,prepStmt);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			sql = "UPDATE \"Users\" SET \"Username\"=?, \"Age\"=?, \"Email\"=?, \"Admin\"=?,\"Packages\"=? WHERE \"id\" = ?;";
+			
+			try {
+				prepStmt = c.prepareStatement(sql);
+				prepStmt.setString(1, user.getUsername());
+				prepStmt.setInt(2, user.getAge());
+				prepStmt.setString(3, user.getEmail());
+				prepStmt.setBoolean(4, user.getAdmin());
+				prepStmt.setBytes(5, bytes);
+				prepStmt.setInt(6, user.getId());
+				db.update("Update",c,prepStmt);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return user;
 	}
 	
 	public static void main(String [] args) throws IOException {
 		Database db = new Database("localhost",5432,"Tripplaner","postgres","tester123");
-
+		User user;
+		
 		try {
-			List<Package> testList = new ArrayList<Package>();
-			Package pack1 = new Package();
-			Package pack2 = new Package();
-			Package pack3 = new Package();
-			testList.add(pack1);
-			testList.add(pack2);
-			testList.add(pack3);
-			
-			String sql = "UPDATE \"Users\" SET \"Packages\" = ? WHERE \"id\" = 2;";
-			Connection conn = db.connect();
-			
-			try {
-				  ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				  ObjectOutputStream oos = new ObjectOutputStream(baos);
-				  oos.writeObject(testList);
-				  byte[] bytes = baos.toByteArray();
-				  
-				  PreparedStatement pstmt;
-			  
-				  pstmt = conn.prepareStatement(sql);
-				  pstmt.setBytes(1, bytes);
-				  pstmt.executeUpdate();
-			  } catch (SQLException e) {
-				  // TODO Auto-generated catch block
-				  e.printStackTrace();
-			  }
-			
-			
-		    
-			
-			User user = createUser(db,"Baaambi","tester123","Asdasddsa@gmail.com",false,null);
-			//User user = login(db,"Notandi","test123");
+			user = login(db,"Notandi","test123");
 			if (user != null) {
 				System.out.println(user.getUsername());	
-				System.out.println(user.getAge());	
+				System.out.println(user.getAge());
+				System.out.println(user.getEmail());
+				editUser(db, user, null, null, "Hjartarson92@gmail.com", null, 19, null);
+				System.out.println(user.getUsername());	
+				System.out.println(user.getAge());
+				System.out.println(user.getEmail());
 			} else {
 				System.out.println("Þetta tokst vist ekki!");
 			}
-			
 		} catch (EmptySQLreturnException e) {
-			// TODO Here we need to send the user back to the login screen
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		
 	}
 	
