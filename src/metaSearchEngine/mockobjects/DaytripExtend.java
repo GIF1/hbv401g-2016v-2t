@@ -13,6 +13,7 @@ public class DaytripExtend extends DaytripAbstract{
 	String category;
 	String[] dealerInfo;
 	String name;
+	int idnivID;
 	// .... possibly more
 	
 	//Constructor
