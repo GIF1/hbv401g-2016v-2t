@@ -82,7 +82,6 @@ public class UserInterface {
 
 	private JFrame frmMetaSearchEngine;
 	private JTextField txtHigherPriceBound;
-	private final ButtonGroup btnGroupRndTrip = new ButtonGroup();
 	private JComboBox<String> txtHotelLoc;
 	
 	// Fields for Day trip search criteria
@@ -92,6 +91,7 @@ public class UserInterface {
 	
 	private JTable tabFlightResults;
 	private JTable tabDaytripResults;
+	private DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 	
 	// Card container for the main frame
 	// Cards to be children here are Login, 
@@ -163,7 +163,7 @@ public class UserInterface {
 	}
 	
 	private void displayLogin() {
-		JPanel Login = new JPanel();
+		final JPanel Login = new JPanel();
 		CardContainer.add(Login, "Login");
 		Login.setLayout(null);
 		mainLayout.show(CardContainer, "Login");
@@ -218,7 +218,13 @@ public class UserInterface {
 				} catch (EmptySQLreturnException databaseError) {
 					// TODO Auto-generated catch block
 					//System.out.println("Error");
-					databaseError.printStackTrace();
+					JLabel errorMessage = new JLabel("Username or password not correct");
+					errorMessage.setBounds(460, 100, 250, 20);
+					Login.add(errorMessage);
+					errorMessage.setFont(new Font("Tahoma", Font.PLAIN, 16));
+					errorMessage.setForeground(Color.RED);
+					
+					//databaseError.printStackTrace();
 				}
 				if (userLoggedIn != null) {
 					displayHomeScreen();
@@ -243,7 +249,7 @@ public class UserInterface {
 	}
 	
 	private void displayCreateNewUser() {
-		JPanel SignUp = new JPanel();
+		final JPanel SignUp = new JPanel();
 		CardContainer.add(SignUp, "SignUp");
 		SignUp.setLayout(null);
 		mainLayout.show(CardContainer, "SignUp");
@@ -264,8 +270,7 @@ public class UserInterface {
 		lblNewPassword.setBounds(432, 176, 80, 20);
 		SignUp.add(lblNewPassword);
 		
-		final JTextField txtNewPass = new JTextField();
-		txtNewPass.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		final JPasswordField txtNewPass = new JPasswordField();
 		txtNewPass.setBounds(512, 174, 160, 25);
 		SignUp.add(txtNewPass);
 		txtNewPass.setColumns(10);
@@ -275,8 +280,7 @@ public class UserInterface {
 		lblConfirmPassword.setBounds(380, 211, 120, 20);
 		SignUp.add(lblConfirmPassword);
 		
-		final JTextField txtConPass = new JTextField();
-		txtConPass.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		final JPasswordField txtConPass = new JPasswordField();
 		txtConPass.setBounds(512, 209, 160, 25);
 		SignUp.add(txtConPass);
 		txtConPass.setColumns(10);
@@ -302,16 +306,62 @@ public class UserInterface {
 			public void actionPerformed(ActionEvent e) {
 				String newPassword = txtNewPass.getText();
 				User newUser = null;
+				
+				final JLabel lblEmailError = new JLabel("This email is occupied");
+				lblEmailError.setBounds(680, 245, 160, 25);
+				SignUp.add(lblEmailError);
+				lblEmailError.setFont(new Font("Tahoma", Font.PLAIN, 16));
+				lblEmailError.setForeground(Color.RED);
+				lblEmailError.setVisible(false);
+				
+				final JLabel lblUsernameError = new JLabel("This username is occupied");
+				lblUsernameError.setBounds(680, 139, 200, 25);
+				SignUp.add(lblUsernameError);
+				lblUsernameError.setFont(new Font("Tahoma", Font.PLAIN, 16));
+				lblUsernameError.setForeground(Color.RED);
+				lblUsernameError.setVisible(false);
+				
+				final JLabel lblPasswordError = new JLabel("The password does not match");
+				lblPasswordError.setBounds(680, 209, 250, 25);
+				SignUp.add(lblPasswordError);
+				lblPasswordError.setFont(new Font("Tahoma", Font.PLAIN, 16));
+				lblPasswordError.setForeground(Color.RED);
+				lblPasswordError.setVisible(false);
 				if (txtNewPass.getText().equals(txtConPass.getText())) {
 					String newUsername = txtNewUsername.getText();
 					String newEmail = txtNewEmail.getText();
 					
 					try {
 						newUser = db.createUser(newUsername, newPassword, newEmail, false, null);
-					} catch (EmptySQLreturnException databaseError) {
+					} catch (SQLException databaseError) {
 						// TODO Auto-generated catch block
-						//System.out.println("Error");
-						databaseError.printStackTrace();
+						String errorMessage = databaseError.getMessage();
+						if (errorMessage.toLowerCase().contains("Users_Email_key".toLowerCase())) {
+							/*
+							SignUp.remove(lblUsernameError);
+							SignUp.remove(lblPasswordError);
+							SignUp.revalidate(); 
+							SignUp.repaint();
+							lblEmailError.setText("This email is occupied");*/
+							lblUsernameError.setVisible(false);
+							lblPasswordError.setVisible(false);
+							lblEmailError.setVisible(true);
+							return;
+						} else if (errorMessage.toLowerCase().contains("Users_Username_key".toLowerCase())) {
+							/*
+							SignUp.remove(lblEmailError);
+							SignUp.remove(lblPasswordError);
+							SignUp.revalidate(); 
+							SignUp.repaint();
+							lblUsernameError.setText("This username is occupied");*/
+							lblUsernameError.setVisible(true);
+							lblPasswordError.setVisible(false);
+							lblEmailError.setVisible(false);
+							return;
+						}
+					} catch (Exception ex) {
+						System.err.println( ex.getClass().getName()+": "+ ex.getMessage() );
+					    System.exit(0);
 					}
 					
 					if (newUser != null) {
@@ -319,7 +369,16 @@ public class UserInterface {
 						displayHomeScreen();
 					}
 				} else {
-					System.out.println("Passwords do not match");
+					/*
+					SignUp.remove(lblUsernameError);
+					SignUp.remove(lblEmailError);
+					SignUp.revalidate(); 
+					SignUp.repaint();
+					lblPasswordError.setText("The password does not match");*/
+					lblUsernameError.setVisible(false);
+					lblPasswordError.setVisible(true);
+					lblEmailError.setVisible(false);
+					return;
 				}
 			}
 		});
@@ -510,6 +569,8 @@ public class UserInterface {
 		lblReturnTrip.setBounds(12, 230, 83, 22);
 		FlightSearch.add(lblReturnTrip);
 		
+		final ButtonGroup btnGroupRndTrip = new ButtonGroup();
+		
 		JRadioButton rdbtnRoundTripNo = new JRadioButton("No");
 		btnGroupRndTrip.add(rdbtnRoundTripNo);
 		rdbtnRoundTripNo.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -632,10 +693,10 @@ public class UserInterface {
 		for (int i=0; i<flightResults.size(); i++) {
 			FlightAbstract flight = flightResults.get(i);
 			flights[i][0] = flight.get_dealerInfo()[0];
-			flights[i][1] = flight.get_depTime();
+			flights[i][1] = df.format(flight.get_depTime());
 			flights[i][2] = flight.get_depLoc();
 			flights[i][3] = "-";
-			flights[i][4] = flight.get_arrTime();
+			flights[i][4] = df.format(flight.get_arrTime());
 			flights[i][5] = flight.get_arrivLoc();
 			flights[i][6] = flight.get_price();
 		}
@@ -647,10 +708,13 @@ public class UserInterface {
 		tabFlightResults.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tabFlightResults.setModel(new DefaultTableModel(flights,columns));
 		
-		tabFlightResults.getColumnModel().getColumn(2).setPreferredWidth(90);
-		tabFlightResults.getColumnModel().getColumn(3).setPreferredWidth(40);
-		tabFlightResults.getColumnModel().getColumn(5).setPreferredWidth(85);
-		tabFlightResults.getColumnModel().getColumn(6).setPreferredWidth(65);
+		tabFlightResults.getColumnModel().getColumn(1).setPreferredWidth(90);
+		tabFlightResults.getColumnModel().getColumn(1).setPreferredWidth(85);
+		tabFlightResults.getColumnModel().getColumn(2).setPreferredWidth(60);
+		tabFlightResults.getColumnModel().getColumn(3).setPreferredWidth(20);
+		tabFlightResults.getColumnModel().getColumn(4).setPreferredWidth(85);
+		tabFlightResults.getColumnModel().getColumn(5).setPreferredWidth(60);
+		tabFlightResults.getColumnModel().getColumn(6).setPreferredWidth(40);
 		scrollPaneFlight.setViewportView(tabFlightResults);
 	}
 	
@@ -998,8 +1062,8 @@ public class UserInterface {
 			daytrips[i][0] = daytrip.getDealerInfo()[0];
 			daytrips[i][1] = daytrip.getCategory();
 			daytrips[i][2] = daytrip.getLocation();
-			daytrips[i][3] = daytrip.getStartTime();
-			daytrips[i][4] = daytrip.getEndTime();
+			daytrips[i][3] = df.format(daytrip.getStartTime());
+			daytrips[i][4] = df.format(daytrip.getEndTime());
 			daytrips[i][5] = daytrip.getPrice();
 		}
 		String[] columns = new String[] {
@@ -1072,7 +1136,6 @@ public class UserInterface {
 		DaytripBookName.setBounds(142, 170, 375, 14);
 		DaytripBooking.add(DaytripBookName);
 		
-		DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		String startTime = df.format(daytripToBook.getStartTime());
 		
 		JLabel DaytripBookStartTime = new JLabel(startTime);
@@ -1100,7 +1163,7 @@ public class UserInterface {
 		lblPrice.setBounds(101, 244, 31, 14);
 		DaytripBooking.add(lblPrice);
 		
-		JLabel DaytripBookPrice = new JLabel(String.valueOf(daytripToBook.getPrice()));
+		JLabel DaytripBookPrice = new JLabel(String.valueOf(daytripToBook.getPrice()) + " ISK");
 		DaytripBookPrice.setBounds(142, 244, 375, 14);
 		DaytripBooking.add(DaytripBookPrice);
 		
@@ -1149,8 +1212,9 @@ public class UserInterface {
 		lblLocation_2.setBounds(81, 294, 51, 14);
 		DaytripBooking.add(lblLocation_2);
 		
+		int numPartAv = daytripToBook.getNumParticipantsAvail();
 		final JLabel DayTripBookSeatLabel = new JLabel("");
-		DayTripBookSeatLabel.setBounds(850, 144, 92, 14);
+		DayTripBookSeatLabel.setBounds(420+numPartAv*18, 144, 92, 14);
 		DaytripBooking.add(DayTripBookSeatLabel);
 		
 		final JSlider DaytripBookSeats = new JSlider();
@@ -1165,35 +1229,36 @@ public class UserInterface {
 		DaytripBookSeats.setValue(1);
 		DaytripBookSeats.setSnapToTicks(true);
 		DaytripBookSeats.setPaintTicks(true);
-		DaytripBookSeats.setMaximum(daytripToBook.getNumParticipantsAvail());
+		DaytripBookSeats.setMaximum(numPartAv);
 		DaytripBookSeats.setMinimum(1);
-		DaytripBookSeats.setBounds(646, 144, 200, 50);
+		DaytripBookSeats.setBounds(400, 144, numPartAv*18, 50);
 		DaytripBooking.add(DaytripBookSeats);
 		
-		JLabel lblNewLabel_1 = new JLabel("Number of seats to book:");
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblNewLabel_1.setBounds(610, 116, 177, 17);
-		DaytripBooking.add(lblNewLabel_1);
+		JLabel lblNumSeats = new JLabel("Number of seats to book:");
+		lblNumSeats.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblNumSeats.setBounds(400, 116, 177, 17);
+		DaytripBooking.add(lblNumSeats);
 				
-		JButton btnNewButton = new JButton("Book");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton btnBookTrip = new JButton("Book");
+		btnBookTrip.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//HERE WE ARE BOOKING!
 			}
 		});
-		btnNewButton.setBackground(Color.GREEN);
-		btnNewButton.setBounds(851, 513, 91, 23);
-		DaytripBooking.add(btnNewButton);
+		btnBookTrip.setBackground(Color.GREEN);
+		btnBookTrip.setBounds(475, 467, 91, 23);
+		DaytripBooking.add(btnBookTrip);
 		
-		JButton btnNewButton_1 = new JButton("Cancel");
-		btnNewButton_1.addActionListener(new ActionListener() {
+		JButton btnCancelBooking = new JButton("Cancel");
+		btnCancelBooking.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//HERE WE ARE CANCELLING!
+				displayHomeScreen();
 			}
 		});
-		btnNewButton_1.setBackground(Color.RED);
-		btnNewButton_1.setBounds(975, 513, 91, 23);
-		DaytripBooking.add(btnNewButton_1);
+		btnCancelBooking.setBackground(Color.RED);
+		btnCancelBooking.setBounds(599, 467, 91, 23);
+		DaytripBooking.add(btnCancelBooking);
 	}
 	
 	private void displayEditProfile() {
@@ -1226,7 +1291,7 @@ public class UserInterface {
 		
 		JLabel lblPassword_1 = new JLabel("New Password");
 		lblPassword_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblPassword_1.setBounds(460, 174, 67, 19);
+		lblPassword_1.setBounds(460, 174, 116, 19);
 		EditUser.add(lblPassword_1);
 		
 		JLabel lblConfirmPassword_1 = new JLabel("Confirm password");
@@ -2149,7 +2214,7 @@ public class UserInterface {
 		
 		JButton btnNewButton1 = new JButton("Book");
 		btnNewButton1.setBackground(Color.GREEN);
-		btnNewButton1.setBounds(851, 513, 91, 23);
+		btnNewButton1.setBounds(475, 467, 91, 23);
 		DaytripBooking.add(btnNewButton1);
 		
 		JButton btnNewButton_1 = new JButton("Cancel");
@@ -2159,7 +2224,7 @@ public class UserInterface {
 			}
 		});
 		btnNewButton_1.setBackground(Color.RED);
-		btnNewButton_1.setBounds(975, 513, 91, 23);
+		btnNewButton_1.setBounds(599, 467, 91, 23);
 		DaytripBooking.add(btnNewButton_1);
 		btnEditProfile_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

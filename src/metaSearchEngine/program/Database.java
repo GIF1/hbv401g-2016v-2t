@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.postgresql.util.PSQLException;
+
 public class Database {
   private String serverName;
   private int port;
@@ -74,7 +76,7 @@ public class Database {
     return result;
   }
 
-  void update(String opt, Connection c, PreparedStatement q) {
+  void update(String opt, Connection c, PreparedStatement q) throws SQLException{
     if (opt.equals("insert") | opt.equals("Insert"))
     {
       try {
@@ -82,6 +84,8 @@ public class Database {
         q.close();
         c.commit();
         c.close();
+      } catch (SQLException e) {
+    	  throw e;
       } catch (Exception e) {
         System.err.println( e.getClass().getName()+": "+ e.getMessage() );
         System.exit(0);
@@ -208,10 +212,10 @@ public class Database {
 		return user;	
 	}
 	
-	public User createUser(String newUsername, String newPassword, String newEmail, boolean newAdmin, Integer newAge) throws EmptySQLreturnException  {
+	public User createUser(String newUsername, String newPassword, String newEmail, boolean newAdmin, Integer newAge) throws EmptySQLreturnException, SQLException  {
 		Database db = this;
 		Connection c = db.connect();
-		PreparedStatement prepStmt;
+		PreparedStatement prepStmt = null;
 		User user = null;
 		byte[] bytes = null;
 		
@@ -257,7 +261,7 @@ public class Database {
 				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw e;
 			}
 			
 		} else {
@@ -271,10 +275,8 @@ public class Database {
 				prepStmt.setBoolean(4, newAdmin);
 				prepStmt.setBytes(5, bytes);
 				db.update("Insert",c ,prepStmt);
-				
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw e;
 			}
 		}
 		
@@ -338,6 +340,8 @@ public class Database {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch (Exception e) {
+				System.err.println( e.getClass().getName()+": "+ e.getMessage() );
 			}
 		} else {
 			sql = "UPDATE \"Users\" SET \"Username\"=?, \"Age\"=?, \"Email\"=?, \"Admin\"=?,\"Packages\"=? WHERE \"id\" = ?;";
@@ -354,6 +358,8 @@ public class Database {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch (Exception e) {
+				System.err.println( e.getClass().getName()+": "+ e.getMessage() );
 			}
 		}
 		
