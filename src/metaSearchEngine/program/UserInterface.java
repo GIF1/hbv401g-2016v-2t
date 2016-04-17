@@ -84,13 +84,10 @@ public class UserInterface {
 	private JTextField txtHigherPriceBound;
 	private JComboBox<String> txtHotelLoc;
 	
-	// Fields for Day trip search criteria
-	private JTextField txtNumParti;
-	private JTextField txtLowerPrice;
-	private JTextField txtHigherPrice;
-	
 	private JTable tabFlightResults;
 	private JTable tabDaytripResults;
+	
+	// Date format for displaying dates
 	private DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 	
 	// Card container for the main frame
@@ -115,7 +112,8 @@ public class UserInterface {
 	
 	//JPanel Booking = new JPanel();
 	//CardLayout bookingLayout = new CardLayout();
-	
+	// Card container for displaying different 
+	// 
 	JPanel BookingDisplay = new JPanel();
 	CardLayout bookingDispLayout = new CardLayout();
 	
@@ -204,6 +202,7 @@ public class UserInterface {
 		
 		JButton btnSignIn = new JButton("Sign In");
 		btnSignIn.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				// Check if legal name and password
 				// if so, search through the database if
@@ -324,6 +323,7 @@ public class UserInterface {
 		
 		JButton btnSignUp_1 = new JButton("Sign Up...");
 		btnSignUp_1.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				String newPassword = txtNewPass.getText();
 				User newUser = null;
@@ -626,9 +626,19 @@ public class UserInterface {
 				}
 				newFlightSearch.setPriceRange(new int[]{lowerBound,higherBound});
 				
-				List<FlightAbstract> flightResults = SearchEngine.flightSearch(newFlightSearch);
+				List<FlightAbstract> flightResults = null;
+				try {
+					flightResults = SearchEngine.flightSearch(newFlightSearch);
+				} catch (IllegalArgumentException faultyCriteria) {
+					String errorMessage = faultyCriteria.getMessage();
+					if (errorMessage.toLowerCase().contains("Departure time is earlier than todays time".toLowerCase())) {
+						System.out.println(errorMessage);
+					}
+				}
 				
-				if (flightResults.size() == 0) {
+				if (flightResults == null) {
+					System.out.println("Illegal criteria");
+				} else if (flightResults.size() == 0) {
 					System.out.println("Unfortunately no flights were found");
 				} else if (flightResults.size() > 0) {
 					// Display list of results
@@ -698,34 +708,45 @@ public class UserInterface {
 		scrollPaneFlight.setViewportView(tabFlightResults);
 	}
 	
-	private void displayFlightBooking(FlightAbstract flightToBook) {
-		//User userLoggedIn = new User(1,"Gunnar","gif1@hi.is",false);
-		//FlightBooking flightBooking = new FlightBooking(flightToBook,1,userLoggedIn);
-		
+	@SuppressWarnings("serial")
+	private void displayFlightBooking(FlightAbstract flightToBook) {	
 		JPanel Booking = new JPanel();
 		CardContainer.add(Booking, "Booking");
+		Booking.setLayout(null);
 		mainLayout.show(CardContainer, "Booking");
 		
 		JButton btnLogOut = new JButton("Log out");
+		btnLogOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				userLoggedIn = null;
+				displayLogin();
+			}
+		});
 		btnLogOut.setBounds(1013, 13, 97, 25);
 		Booking.add(btnLogOut);
 		
-		JLabel lblUserLoggedIn2 = new JLabel("User logged in");
+		JLabel lblUserLoggedIn2 = new JLabel(userLoggedIn.getUsername(), SwingConstants.RIGHT);
 		lblUserLoggedIn2.setBounds(785, 13, 97, 22);
 		Booking.add(lblUserLoggedIn2);
 		lblUserLoggedIn2.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		JButton btnEditProfile_1 = new JButton("Edit Profile");
-		btnEditProfile_1.setBounds(906, 13, 97, 25);
-		Booking.add(btnEditProfile_1);
-		
+		JButton btnEditProfile = new JButton("Edit Profile");
+		btnEditProfile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				displayEditProfile();
+			}
+		});
+		btnEditProfile.setBounds(906, 13, 97, 25);
+		Booking.add(btnEditProfile);
+
 		BookingDisplay = new JPanel();
 		BookingDisplay.setBounds(0, 60, 1110, 503);
 		Booking.add(BookingDisplay);
+		BookingDisplay.setLayout(bookingDispLayout);
 		
 		JPanel FlightBooking = new JPanel();
-		BookingDisplay.add(FlightBooking, "FlightBooking");
-		BookingDisplay.setLayout(bookingDispLayout);
+		BookingDisplay.add(FlightBooking, "FlighBooking");
+		FlightBooking.setLayout(null);
 		bookingDispLayout.show(BookingDisplay, "FlightBooking");
 		
 		JLabel lblFlightBooking = new JLabel("Flight Booking");
@@ -888,7 +909,7 @@ public class UserInterface {
 		lblNrParti.setBounds(12, 221, 100, 16);
 		DaytripSearch.add(lblNrParti);
 		
-		txtNumParti = new JTextField();
+		final JTextField txtNumParti = new JTextField();
 		txtNumParti.setText("1");
 		txtNumParti.setBounds(112, 218, 60, 22);
 		DaytripSearch.add(txtNumParti);
@@ -925,10 +946,10 @@ public class UserInterface {
 		lblPriceRangeDay.setBounds(12, 259, 100, 18);
 		DaytripSearch.add(lblPriceRangeDay);
 		
-		txtLowerPrice = new JTextField();
-		txtLowerPrice.setColumns(10);
-		txtLowerPrice.setBounds(112, 256, 100, 22);
-		DaytripSearch.add(txtLowerPrice);
+		final JTextField txtLowerPriceBound = new JTextField();
+		txtLowerPriceBound.setColumns(10);
+		txtLowerPriceBound.setBounds(112, 256, 100, 22);
+		DaytripSearch.add(txtLowerPriceBound);
 		
 		JLabel label_2 = new JLabel("-");
 		label_2.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -936,10 +957,10 @@ public class UserInterface {
 		label_2.setBounds(205, 259, 49, 16);
 		DaytripSearch.add(label_2);
 		
-		txtHigherPrice = new JTextField();
-		txtHigherPrice.setColumns(10);
-		txtHigherPrice.setBounds(251, 256, 101, 22);
-		DaytripSearch.add(txtHigherPrice);
+		final JTextField txtHigherPriceBound = new JTextField();
+		txtHigherPriceBound.setColumns(10);
+		txtHigherPriceBound.setBounds(251, 256, 101, 22);
+		DaytripSearch.add(txtHigherPriceBound);
 		
 		JButton btnSearchDaytrip = new JButton("Search");
 		btnSearchDaytrip.addActionListener(new ActionListener() {
@@ -978,12 +999,12 @@ public class UserInterface {
 				int lowerBound = 0;
 				int higherBound = 0;
 				try {
-					lowerBound = Integer.parseInt(txtLowerPrice.getText());
+					lowerBound = Integer.parseInt(txtLowerPriceBound.getText());
 				} catch(NumberFormatException exc) {
 					lowerBound = -1;
 				}
 				try {
-					higherBound = Integer.parseInt(txtHigherPrice.getText());
+					higherBound = Integer.parseInt(txtHigherPriceBound.getText());
 				} catch(NumberFormatException exc) {
 					higherBound = -1;
 				}
@@ -1329,7 +1350,7 @@ public class UserInterface {
 		EditUser.add(lblEmailError);
 		lblEmailError.setVisible(false);
 		
-		final JLabel lblAgeError = new JLabel("");
+		final JLabel lblAgeError = new JLabel("Age containes illegal input");
 		lblAgeError.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblAgeError.setBounds(745, 331, 300, 20);
 		lblAgeError.setForeground(Color.RED);
@@ -1352,14 +1373,17 @@ public class UserInterface {
 		
 		JButton editUserSaveChanges = new JButton("Save Changes");
 		editUserSaveChanges.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				//Here we are saving the changes!
 				String newUsername = editUserUsername.getText();
 				String newPassword = editUserPassword.getText();
+				boolean validData = true;
 				if (newPassword.equals(editUserConfirmPassword.getText()) && !newPassword.equals("")) {
 					newPassword = editUserPassword.getText();
 				} else if (!newPassword.equals(editUserConfirmPassword.getText())) {
 					System.out.println("Confirm password did not match.");
+					validData = false;
 					lblUsernameError.setVisible(false);
 					lblPasswordError.setVisible(true);
 					lblEmailError.setVisible(false);
@@ -1379,6 +1403,8 @@ public class UserInterface {
 					if (editUserAge.getText().equals("")) {
 						newAge = null;
 					} else {
+						System.out.println("Age containes illegal input");
+						validData = false;
 						lblAgeError.setText("Age containes illegal input");
 						lblUsernameError.setVisible(false);
 						lblPasswordError.setVisible(false);
@@ -1388,75 +1414,77 @@ public class UserInterface {
 						lblSuccessMessage.setVisible(false);
 					}
 				}
-				List<Package> newPackages = null;
-				boolean success = true;
-				try {
-					userLoggedIn = db.editUser(userLoggedIn, newUsername, newPassword, newEmail, newAdmin, newAge, newPackages);
-				} catch (IllegalArgumentException dataFail) {
-					success = false;
-					String errorMessage = dataFail.getMessage();
-					System.out.println(errorMessage);
-					if (errorMessage.toLowerCase().contains("Email not of legal format".toLowerCase())) {
-						System.out.println("This email is illegal");
-						lblEmailError.setText("This email is illegal");
-						lblUsernameError.setVisible(false);
-						lblPasswordError.setVisible(false);
-						lblEmailError.setVisible(true);
-						lblAgeError.setVisible(false);
-						lblUpdateSuccess.setVisible(false);
-						lblSuccessMessage.setVisible(false);
-					} else if (errorMessage.toLowerCase().contains("Username not of legal format".toLowerCase())) {
-						System.out.println("This username is illegal");
-						lblUsernameError.setText("This username is illegal");
-						lblUsernameError.setVisible(true);
-						lblPasswordError.setVisible(false);
-						lblEmailError.setVisible(false);
-						lblAgeError.setVisible(false);
-						lblUpdateSuccess.setVisible(false);
-						lblSuccessMessage.setVisible(false);
-					} else if (errorMessage.toLowerCase().contains("Invalid age for user".toLowerCase())) {
-						System.out.println("This age is not valid");
-						lblAgeError.setText("This age is invalid for the MSE");
-						lblUsernameError.setVisible(false);
-						lblPasswordError.setVisible(false);
-						lblEmailError.setVisible(false);
-						lblAgeError.setVisible(true);
-						lblUpdateSuccess.setVisible(false);
-						lblSuccessMessage.setVisible(false);
-					}
-					
-				} catch (SQLException dbFail) {
-					success = false;
-					String errorMessage = dbFail.getMessage();
-					System.out.println(errorMessage);
-					if (errorMessage.toLowerCase().contains("Users_Email_key".toLowerCase())) {
-						System.out.println("This email is occupied");
-						lblEmailError.setText("This email is occupied");
-						lblUsernameError.setVisible(false);
-						lblPasswordError.setVisible(false);
-						lblEmailError.setVisible(true);
-						lblAgeError.setVisible(false);
-						lblUpdateSuccess.setVisible(false);
-						lblSuccessMessage.setVisible(false);
-					} else if (errorMessage.toLowerCase().contains("Users_Username_key".toLowerCase())) {
-						System.out.println("This username is occupied");
-						lblUsernameError.setText("This username is occupied");
-						lblUsernameError.setVisible(true);
-						lblPasswordError.setVisible(false);
-						lblEmailError.setVisible(false);
-						lblAgeError.setVisible(false);
-						lblUpdateSuccess.setVisible(false);
-						lblSuccessMessage.setVisible(false);
-					}
-				}
 				
-				if (success) {
-					lblUsernameError.setVisible(false);
-					lblPasswordError.setVisible(false);
-					lblEmailError.setVisible(false);
-					lblAgeError.setVisible(false);
-					lblUpdateSuccess.setVisible(true);
-					lblSuccessMessage.setVisible(true);
+				if (validData) {
+					List<Package> newPackages = null;
+					boolean success = true;
+					try {
+						userLoggedIn = db.editUser(userLoggedIn, newUsername, newPassword, newEmail, newAdmin, newAge, newPackages);
+					} catch (IllegalArgumentException dataFail) {
+						success = false;
+						String errorMessage = dataFail.getMessage();
+						System.out.println(errorMessage);
+						if (errorMessage.toLowerCase().contains("Email not of legal format".toLowerCase())) {
+							System.out.println("This email is illegal");
+							lblEmailError.setText("This email is illegal");
+							lblUsernameError.setVisible(false);
+							lblPasswordError.setVisible(false);
+							lblEmailError.setVisible(true);
+							lblAgeError.setVisible(false);
+							lblUpdateSuccess.setVisible(false);
+							lblSuccessMessage.setVisible(false);
+						} else if (errorMessage.toLowerCase().contains("Username not of legal format".toLowerCase())) {
+							System.out.println("This username is illegal");
+							lblUsernameError.setText("This username is illegal");
+							lblUsernameError.setVisible(true);
+							lblPasswordError.setVisible(false);
+							lblEmailError.setVisible(false);
+							lblAgeError.setVisible(false);
+							lblUpdateSuccess.setVisible(false);
+							lblSuccessMessage.setVisible(false);
+						} else if (errorMessage.toLowerCase().contains("Invalid age for user".toLowerCase())) {
+							System.out.println("This age is not valid");
+							lblAgeError.setText("This age is invalid for the MSE");
+							lblUsernameError.setVisible(false);
+							lblPasswordError.setVisible(false);
+							lblEmailError.setVisible(false);
+							lblAgeError.setVisible(true);
+							lblUpdateSuccess.setVisible(false);
+							lblSuccessMessage.setVisible(false);
+						}
+						
+					} catch (SQLException dbFail) {
+						success = false;
+						String errorMessage = dbFail.getMessage();
+						System.out.println(errorMessage);
+						if (errorMessage.toLowerCase().contains("Users_Email_key".toLowerCase())) {
+							System.out.println("This email is occupied");
+							lblEmailError.setText("This email is occupied");
+							lblUsernameError.setVisible(false);
+							lblPasswordError.setVisible(false);
+							lblEmailError.setVisible(true);
+							lblAgeError.setVisible(false);
+							lblUpdateSuccess.setVisible(false);
+							lblSuccessMessage.setVisible(false);
+						} else if (errorMessage.toLowerCase().contains("Users_Username_key".toLowerCase())) {
+							System.out.println("This username is occupied");
+							lblUsernameError.setText("This username is occupied");
+							lblUsernameError.setVisible(true);
+							lblPasswordError.setVisible(false);
+							lblEmailError.setVisible(false);
+							lblAgeError.setVisible(false);
+							lblUpdateSuccess.setVisible(false);
+							lblSuccessMessage.setVisible(false);
+						}
+					}
+					if (success) {
+						lblUsernameError.setVisible(false);
+						lblPasswordError.setVisible(false);
+						lblEmailError.setVisible(false);
+						lblAgeError.setVisible(false);
+						lblUpdateSuccess.setVisible(true);
+						lblSuccessMessage.setVisible(true);
+					}
 				}
 			}
 		});
