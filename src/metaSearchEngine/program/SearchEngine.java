@@ -1,6 +1,6 @@
 package metaSearchEngine.program;
 
-import metaSearchEngine.mockobjects.*;
+//import metaSearchEngine.mockobjects.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -81,8 +81,97 @@ public class SearchEngine {
 	
 	public static ArrayList<DaytripAbstract> daytripSearch(DayTripSearchCriteria daytripSearch) {
 		
+		// Verify if there is any information
+		if(daytripSearch == null) {
+			throw new IllegalArgumentException("Error: No search criteria has been entered");
+		}
+
+		if(daytripSearch.startTime.compareTo(daytripSearch.endTime) > 0) {
+			throw new IllegalArgumentException("Error: The trip can not end before it starts");
+		}
+		else {
+			Calendar depTime = Calendar.getInstance();
+			Calendar today = Calendar.getInstance();
+			depTime.setTime(daytripSearch.getStartTime());
+			today.setTime(today.getTime());
+
+			if (depTime.get(Calendar.YEAR) < today.get(Calendar.YEAR) || 
+					(depTime.get(Calendar.YEAR) == today.get(Calendar.YEAR) && 
+					depTime.get(Calendar.MONTH) < today.get(Calendar.MONTH)) ||
+					(depTime.get(Calendar.YEAR) == today.get(Calendar.YEAR) && 
+					depTime.get(Calendar.MONTH) == today.get(Calendar.MONTH) &&
+					depTime.get(Calendar.DAY_OF_MONTH) < today.get(Calendar.DAY_OF_MONTH))) {
+				throw new IllegalArgumentException("Error: Fool of a Took! You can not search for trips back in time!");
+			}
+		}
+
+		if(dayTripSearch.getLocation()==null) {
+			throw new IllegalArgumentException("Error: Departure location is missing.");
+		}
+
+		if(dayTripSearch.getPriceRange()==null) {
+			throw new IllegalArgumentException("Error: Please select a price range.");
+		}
+
+		int[] tmpPriceRange = dayTripSearch.getPriceRange();
+		if(tmpPriceRange[0]>tmpPriceRange[1] || tmpPriceRange.length>2) {
+			throw new IllegalArgumentException("Error: Invalid price-range. Please make sure that you select the lower limit first and then the higher limit.");
+		}
+
+		if(dayTripSearch.getNumParticipants()<1) {
+			throw new IllegalArgumentException("Error: You must search for a minimum of one seat.");
+		}
+
+		if(dayTripSearch.getNumParticipants()==null) {
+			throw new IllegalArgumentException("Error: You have not specified how many seats you would like.");
+		}
+
 		ArrayList<DaytripAbstract> daytripResults = DaytripSearcher.search(daytripSearch);
 		
 		return daytripResults;
 	}
+
+	public static ArrayList<HotelAbstract> HotelSearch(HotelSearchCriteria hotelSearch) {
+
+
+		if(hotelSearch.startTime.compareTo(hotelSearch.endTime) > 0) {
+			throw new IllegalArgumentException("Error: The trip can not end before it starts");
+
+		}
+		else {
+			Calendar depTime = Calendar.getInstance();
+			Calendar today = Calendar.getInstance();
+			depTime.setTime(daytripSearch.getStartTime());
+			today.setTime(today.getTime());
+
+			if (depTime.get(Calendar.YEAR) < today.get(Calendar.YEAR) || 
+					(depTime.get(Calendar.YEAR) == today.get(Calendar.YEAR) && 
+					depTime.get(Calendar.MONTH) < today.get(Calendar.MONTH)) ||
+					(depTime.get(Calendar.YEAR) == today.get(Calendar.YEAR) && 
+					depTime.get(Calendar.MONTH) == today.get(Calendar.MONTH) &&
+					depTime.get(Calendar.DAY_OF_MONTH) < today.get(Calendar.DAY_OF_MONTH))) {
+				throw new IllegalArgumentException("Error: Fool of a Took! You can not search for trips back in time!");
+			}
+		}
+
+		if(hotelSearch.getLocation()==null) {
+			throw new IllegalArgumentException("Error: Departure location is missing.");
+		}
+
+		if(hotelSearch.getPriceRange()==null) {
+			throw new IllegalArgumentException("Error: Please select a price range.");
+		}
+
+		int[] tmpPriceRange = hotelSearch.getPriceRange();
+		if(tmpPriceRange[0]>tmpPriceRange[1] || tmpPriceRange.length>2) {
+			throw new IllegalArgumentException("Error: Invalid price-range. Please make sure that you select the lower limit first and then the higher limit.");
+		}
+
+		// Structure of the searchWithAddress method of the HotelManager class: 
+		// HotelManager.searchWithAddress(priceRange: int[] maxStars:int, street:String,  city:String, zipCode:String)
+		ArrayList<HotelAbstract> HotelResults = HotelManager.searchWithAddress(hotelSearch.getPriceRange(), null, null, hotelSearch.getLocation(), null);
+		
+		return HotelResults;
+	}
+	
 }

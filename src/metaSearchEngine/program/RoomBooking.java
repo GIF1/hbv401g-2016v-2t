@@ -3,21 +3,16 @@ package metaSearchEngine.program;
 public class RoomBooking extends Booking {
 
 	private Room room;
-	private List<Date> reservedDates;
-	private int nrOfMeals=0;
+	private Date fromDate;
+	private Date toDate;
 
 	// Constructor
-	public RoomBooking(Room roomSearchResult, List<Date> my_reserveDates){
+	public RoomBooking(Room roomSearchResult, Date my_fromDate, DAte my_toDate){
 		this.room = roomSearchResult;
-		this.reservedDates = my_reserveDates;
+		this.fromDate = my_fromDate;
+		this.toDate = my_toDate;
 	}
-	// Usage: nrOfMeals = changeMeal(meals_wanted);
-	// Before: nrOfMeals is an integer specifying the nr of meals pr day the customer wants to eat at the hotel. 0 <= x < 5
-	// After: nrOfMeals has been changed to meals_wanted
-	package void changeMeal(int meals_wanted) {
-		if(-1 < meals_wanted && meals_wanted < 5) this.nrOfMeals = meals_wanted;
-		else throw new IllegalArgumentException("Error: The number of meals specified is not available. Please select a number between 0 and 4. ");
-	}
+
 
 	// Usage: reservedDates = reserveRoom(my_reserveDate)
 	// Before: The roomtype is available on my_reserveDate as otherwise

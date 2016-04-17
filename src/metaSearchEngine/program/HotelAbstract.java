@@ -6,43 +6,53 @@ public abstract class HotelAbstract {
 
 	private Date startTime;
 	private Date endTime;
-	private int numRoomSingleAvail;
-	private int numRoomDoubleAvail;
-	private int numRoomMultiAvail;
-	private int priceSingle;
-	private int priceDouble;
-	private int priceMulti;
-	private String Location;
+	private int[] priceRange;
+	private String location;
 	private String[] dealerInfo;
 
-	public HotelAbstract(Date startTime, Date endTime, int numSingle, int numDouble, int numMulti, int priceSingle, int priceDouble, int priceMulti, String Loc, String[] dealerInfo) {
-		this.numRoomSingleAvail = numSingle;
-		this.numRoomDoubleAvail = numDouble;
-		this.numRoomMultiAvail = numMulti;
-		this.priceSingle = priceSingle;
-		this.priceDouble = priceDouble;
-		this.priceMulti = priceMulti;
-		this.Location = Loc;
+	private int price;
+	private int area;
+	private int numOfBeds;
+	private int numOfBedrooms;
+
+	public HotelAbstract(Date startTime, Date endTime, int[] priceRange, String location, String[] dealerInfo, int price, int area, int numOfBeds, int numOfBedrooms) {
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.priceRange = priceRange;
+		this.location = location;
 		this.dealerInfo = dealerInfo;
+		this.price = price;
+		this.area = area;
+		this.numOfBeds = numOfBeds;
+		this.numOfBedrooms = numOfBedrooms;
 	}
 
-	//Getters
-	public int getNumRoomSingleAvail() {return this.numRoomSingleAvail; }
-	public int getNumRoomDoubleAvail() {return this.numRoomDoubleAvail; }
-	public int getNumRoomMultiAvail() {return this.numRoomMultiAvail; }
-	public int getPriceSingle() {return this.priceSingle; }
-	public int getPriceDouble() {return this.priceDouble; }
-	public int getPriceMulti() {return this.priceMulti; }
+	//Getter
+	public Date getStartTime() {return this.startTime;}
+	public Date getEndTime() {return this.endTime;}
+	public int[] getPriceRange() {return this.priceRange;}
 	public String getLocation() {return this.Location; }
 	public String[] getDealerInfo() {return dealerInfo;}
 	
-	//Setters
-	void setNumRoomSingleAvail (int numRoomsSingle) { this.numRoomSingleAvail = numRoomsSingle; }
-	void setNumRoomDoubleAvail (int numRoomsDouble) { this.numRoomDoubleAvail = numRoomsDouble; }
-	void setNumRoomMultiAvail (int numRoomsMulti) { this.numRoomMultiAvail = numRoomsMulti; }
-	void setPriceSingle (int priceSingle) { this.priceSingle = priceSingle; }
-	void setPriceDouble (int priceDouble) { this.priceDouble = priceDouble; }
-	void setPriceMulti (int priceMulti) { this.priceMulti = priceMulti; }
+	// getters
+	public int getPrice (){
+		return this.price;
+	}
+
+	public int getArea(){
+		return this.area;
+	}
+
+	public int getBeds(){
+		return this.beds;
+	}
+
+	public int getBedrooms(){
+		return this.bedrooms;
+	}
+
+	//Setter
+	void setPriceRange(int[] priceRange) {this.priceRange = priceRange;}
 	void setLocation (String Loc) {this.Location = Loc; }
 	void setDealerInfo(String[] dealerInfo) {this.dealerInfo = dealerInfo;}
 }
