@@ -97,11 +97,13 @@ public class Database {
           q.close();
           c.commit();
           c.close();
+        } catch (SQLException e) {
+        	throw e;
         } catch ( Exception e ) {
            System.err.println( e.getClass().getName()+": "+ e.getMessage() );
            System.exit(0);
-         }
-         System.out.println("Operation done successfully");
+	    }
+	    System.out.println("Operation done successfully");
      }
   } 
   
@@ -289,7 +291,7 @@ public class Database {
 		return user;
 	}
 	
-	public User editUser(User user, String newUsername, String newPassword, String newEmail, Boolean newAdmin, Integer newAge, List<Package> newPackages) {
+	public User editUser(User user, String newUsername, String newPassword, String newEmail, Boolean newAdmin, Integer newAge, List<Package> newPackages) throws SQLException {
 		Database db = this;
 		Connection c = db.connect();
 		PreparedStatement prepStmt;
@@ -339,7 +341,8 @@ public class Database {
 				db.update("Update",c,prepStmt);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw e;
+				//e.printStackTrace();
 			} catch (Exception e) {
 				System.err.println( e.getClass().getName()+": "+ e.getMessage() );
 			}
@@ -357,7 +360,8 @@ public class Database {
 				db.update("Update",c,prepStmt);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw e;
+				//e.printStackTrace();
 			} catch (Exception e) {
 				System.err.println( e.getClass().getName()+": "+ e.getMessage() );
 			}

@@ -301,32 +301,33 @@ public class UserInterface {
 		lblNewUser.setBounds(460, 98, 181, 30);
 		SignUp.add(lblNewUser);
 		
+		final JLabel lblEmailError = new JLabel("This email is occupied");
+		lblEmailError.setBounds(680, 245, 160, 25);
+		SignUp.add(lblEmailError);
+		lblEmailError.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblEmailError.setForeground(Color.RED);
+		lblEmailError.setVisible(false);
+		
+		final JLabel lblUsernameError = new JLabel("This username is occupied");
+		lblUsernameError.setBounds(680, 139, 200, 25);
+		SignUp.add(lblUsernameError);
+		lblUsernameError.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblUsernameError.setForeground(Color.RED);
+		lblUsernameError.setVisible(false);
+		
+		final JLabel lblPasswordError = new JLabel("The password does not match");
+		lblPasswordError.setBounds(680, 209, 250, 25);
+		SignUp.add(lblPasswordError);
+		lblPasswordError.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblPasswordError.setForeground(Color.RED);
+		lblPasswordError.setVisible(false);
+		
 		JButton btnSignUp_1 = new JButton("Sign Up...");
 		btnSignUp_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String newPassword = txtNewPass.getText();
 				User newUser = null;
 				
-				final JLabel lblEmailError = new JLabel("This email is occupied");
-				lblEmailError.setBounds(680, 245, 160, 25);
-				SignUp.add(lblEmailError);
-				lblEmailError.setFont(new Font("Tahoma", Font.PLAIN, 16));
-				lblEmailError.setForeground(Color.RED);
-				lblEmailError.setVisible(false);
-				
-				final JLabel lblUsernameError = new JLabel("This username is occupied");
-				lblUsernameError.setBounds(680, 139, 200, 25);
-				SignUp.add(lblUsernameError);
-				lblUsernameError.setFont(new Font("Tahoma", Font.PLAIN, 16));
-				lblUsernameError.setForeground(Color.RED);
-				lblUsernameError.setVisible(false);
-				
-				final JLabel lblPasswordError = new JLabel("The password does not match");
-				lblPasswordError.setBounds(680, 209, 250, 25);
-				SignUp.add(lblPasswordError);
-				lblPasswordError.setFont(new Font("Tahoma", Font.PLAIN, 16));
-				lblPasswordError.setForeground(Color.RED);
-				lblPasswordError.setVisible(false);
 				if (txtNewPass.getText().equals(txtConPass.getText())) {
 					String newUsername = txtNewUsername.getText();
 					String newEmail = txtNewEmail.getText();
@@ -337,27 +338,13 @@ public class UserInterface {
 						// TODO Auto-generated catch block
 						String errorMessage = databaseError.getMessage();
 						if (errorMessage.toLowerCase().contains("Users_Email_key".toLowerCase())) {
-							/*
-							SignUp.remove(lblUsernameError);
-							SignUp.remove(lblPasswordError);
-							SignUp.revalidate(); 
-							SignUp.repaint();
-							lblEmailError.setText("This email is occupied");*/
 							lblUsernameError.setVisible(false);
 							lblPasswordError.setVisible(false);
 							lblEmailError.setVisible(true);
-							return;
 						} else if (errorMessage.toLowerCase().contains("Users_Username_key".toLowerCase())) {
-							/*
-							SignUp.remove(lblEmailError);
-							SignUp.remove(lblPasswordError);
-							SignUp.revalidate(); 
-							SignUp.repaint();
-							lblUsernameError.setText("This username is occupied");*/
 							lblUsernameError.setVisible(true);
 							lblPasswordError.setVisible(false);
 							lblEmailError.setVisible(false);
-							return;
 						}
 					} catch (Exception ex) {
 						System.err.println( ex.getClass().getName()+": "+ ex.getMessage() );
@@ -369,16 +356,9 @@ public class UserInterface {
 						displayHomeScreen();
 					}
 				} else {
-					/*
-					SignUp.remove(lblUsernameError);
-					SignUp.remove(lblEmailError);
-					SignUp.revalidate(); 
-					SignUp.repaint();
-					lblPasswordError.setText("The password does not match");*/
 					lblUsernameError.setVisible(false);
 					lblPasswordError.setVisible(true);
 					lblEmailError.setVisible(false);
-					return;
 				}
 			}
 		});
@@ -1279,7 +1259,7 @@ public class UserInterface {
 		EditUser.add(editUserUsername);
 		editUserUsername.setColumns(10);
 		
-		final JTextField editUserPassword = new JTextField();
+		final JPasswordField editUserPassword = new JPasswordField();
 		editUserPassword.setBounds(537, 175, 200, 20);
 		EditUser.add(editUserPassword);
 		editUserPassword.setColumns(10);
@@ -1291,7 +1271,7 @@ public class UserInterface {
 		
 		JLabel lblPassword_1 = new JLabel("New Password");
 		lblPassword_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblPassword_1.setBounds(460, 174, 116, 19);
+		lblPassword_1.setBounds(432, 174, 116, 19);
 		EditUser.add(lblPassword_1);
 		
 		JLabel lblConfirmPassword_1 = new JLabel("Confirm password");
@@ -1299,7 +1279,7 @@ public class UserInterface {
 		lblConfirmPassword_1.setBounds(411, 227, 116, 19);
 		EditUser.add(lblConfirmPassword_1);
 		
-		final JTextField editUserConfirmPassword = new JTextField();
+		final JPasswordField editUserConfirmPassword = new JPasswordField();
 		editUserConfirmPassword.setColumns(10);
 		editUserConfirmPassword.setBounds(537, 228, 200, 20);
 		EditUser.add(editUserConfirmPassword);
@@ -1312,7 +1292,9 @@ public class UserInterface {
 		final JTextField editUserAge = new JTextField();
 		editUserAge.setColumns(10);
 		editUserAge.setBounds(537, 331, 200, 20);
-		editUserAge.setText(Integer.toString(userLoggedIn.getAge()));
+		if (userLoggedIn.getAge()>=0) {
+			editUserAge.setText(Integer.toString(userLoggedIn.getAge()));
+		}
 		EditUser.add(editUserAge);
 		
 		JLabel lblEmail_1 = new JLabel("Email");
@@ -1326,28 +1308,156 @@ public class UserInterface {
 		editUserEmail.setText(userLoggedIn.getEmail());
 		EditUser.add(editUserEmail);
 		
+		final JLabel lblUsernameError = new JLabel("");
+		lblUsernameError.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblUsernameError.setBounds(745, 125, 300, 20);
+		lblUsernameError.setForeground(Color.RED);
+		EditUser.add(lblUsernameError);
+		lblUsernameError.setVisible(false);
+		
+		final JLabel lblPasswordError = new JLabel("Password did not match");
+		lblPasswordError.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblPasswordError.setBounds(745, 228, 300, 20);
+		lblPasswordError.setForeground(Color.RED);
+		EditUser.add(lblPasswordError);
+		lblPasswordError.setVisible(false);
+		
+		final JLabel lblEmailError = new JLabel("");
+		lblEmailError.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblEmailError.setBounds(745, 281, 300, 20);
+		lblEmailError.setForeground(Color.RED);
+		EditUser.add(lblEmailError);
+		lblEmailError.setVisible(false);
+		
+		final JLabel lblAgeError = new JLabel("");
+		lblAgeError.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblAgeError.setBounds(745, 331, 300, 20);
+		lblAgeError.setForeground(Color.RED);
+		EditUser.add(lblAgeError);
+		lblAgeError.setVisible(false);
+		
+		final JLabel lblUpdateSuccess = new JLabel("User profile has successfully been updated.");
+		lblUpdateSuccess.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblUpdateSuccess.setBounds(465, 75, 300, 20);
+		lblUpdateSuccess.setForeground(Color.GREEN);
+		EditUser.add(lblUpdateSuccess);
+		lblUpdateSuccess.setVisible(false);
+		
+		final JLabel lblSuccessMessage = new JLabel("Press Cancel to go back to searching or keep updating here.");
+		lblSuccessMessage.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblSuccessMessage.setBounds(420, 95, 400, 20);
+		lblSuccessMessage.setForeground(Color.GREEN);
+		EditUser.add(lblSuccessMessage);
+		lblSuccessMessage.setVisible(false);
+		
 		JButton editUserSaveChanges = new JButton("Save Changes");
 		editUserSaveChanges.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//Here we are saving the changes!
 				String newUsername = editUserUsername.getText();
-				String newPassword = null;
-				if (editUserPassword.getText().equals(editUserConfirmPassword.getText())) {
+				String newPassword = editUserPassword.getText();
+				if (newPassword.equals(editUserConfirmPassword.getText()) && !newPassword.equals("")) {
 					newPassword = editUserPassword.getText();
+				} else if (!newPassword.equals(editUserConfirmPassword.getText())) {
+					System.out.println("Confirm password did not match.");
+					lblUsernameError.setVisible(false);
+					lblPasswordError.setVisible(true);
+					lblEmailError.setVisible(false);
+					lblAgeError.setVisible(false);
+					lblUpdateSuccess.setVisible(false);
+					lblSuccessMessage.setVisible(false);
 				} else {
-					System.out.println("Password not successfully updated. Confirm password did not match.");
+					newPassword = null;
 				}
 				String newEmail = editUserEmail.getText();
 				Boolean newAdmin = null;
 				Integer newAge = null;
+				
 				try {
 					newAge = Integer.parseInt(editUserAge.getText());
 				} catch (NumberFormatException exc) {
-					System.out.println("Age containes illegal input");
+					if (editUserAge.getText().equals("")) {
+						newAge = null;
+					} else {
+						lblAgeError.setText("Age containes illegal input");
+						lblUsernameError.setVisible(false);
+						lblPasswordError.setVisible(false);
+						lblEmailError.setVisible(false);
+						lblAgeError.setVisible(true);
+						lblUpdateSuccess.setVisible(false);
+						lblSuccessMessage.setVisible(false);
+					}
 				}
 				List<Package> newPackages = null;
+				boolean success = true;
+				try {
+					userLoggedIn = db.editUser(userLoggedIn, newUsername, newPassword, newEmail, newAdmin, newAge, newPackages);
+				} catch (IllegalArgumentException dataFail) {
+					success = false;
+					String errorMessage = dataFail.getMessage();
+					System.out.println(errorMessage);
+					if (errorMessage.toLowerCase().contains("Email not of legal format".toLowerCase())) {
+						System.out.println("This email is illegal");
+						lblEmailError.setText("This email is illegal");
+						lblUsernameError.setVisible(false);
+						lblPasswordError.setVisible(false);
+						lblEmailError.setVisible(true);
+						lblAgeError.setVisible(false);
+						lblUpdateSuccess.setVisible(false);
+						lblSuccessMessage.setVisible(false);
+					} else if (errorMessage.toLowerCase().contains("Username not of legal format".toLowerCase())) {
+						System.out.println("This username is illegal");
+						lblUsernameError.setText("This username is illegal");
+						lblUsernameError.setVisible(true);
+						lblPasswordError.setVisible(false);
+						lblEmailError.setVisible(false);
+						lblAgeError.setVisible(false);
+						lblUpdateSuccess.setVisible(false);
+						lblSuccessMessage.setVisible(false);
+					} else if (errorMessage.toLowerCase().contains("Invalid age for user".toLowerCase())) {
+						System.out.println("This age is not valid");
+						lblAgeError.setText("This age is invalid for the MSE");
+						lblUsernameError.setVisible(false);
+						lblPasswordError.setVisible(false);
+						lblEmailError.setVisible(false);
+						lblAgeError.setVisible(true);
+						lblUpdateSuccess.setVisible(false);
+						lblSuccessMessage.setVisible(false);
+					}
+					
+				} catch (SQLException dbFail) {
+					success = false;
+					String errorMessage = dbFail.getMessage();
+					System.out.println(errorMessage);
+					if (errorMessage.toLowerCase().contains("Users_Email_key".toLowerCase())) {
+						System.out.println("This email is occupied");
+						lblEmailError.setText("This email is occupied");
+						lblUsernameError.setVisible(false);
+						lblPasswordError.setVisible(false);
+						lblEmailError.setVisible(true);
+						lblAgeError.setVisible(false);
+						lblUpdateSuccess.setVisible(false);
+						lblSuccessMessage.setVisible(false);
+					} else if (errorMessage.toLowerCase().contains("Users_Username_key".toLowerCase())) {
+						System.out.println("This username is occupied");
+						lblUsernameError.setText("This username is occupied");
+						lblUsernameError.setVisible(true);
+						lblPasswordError.setVisible(false);
+						lblEmailError.setVisible(false);
+						lblAgeError.setVisible(false);
+						lblUpdateSuccess.setVisible(false);
+						lblSuccessMessage.setVisible(false);
+					}
+				}
 				
-				userLoggedIn = db.editUser(userLoggedIn, newUsername, newPassword, newEmail, newAdmin, newAge, newPackages);
+				if (success) {
+					lblUsernameError.setVisible(false);
+					lblPasswordError.setVisible(false);
+					lblEmailError.setVisible(false);
+					lblAgeError.setVisible(false);
+					lblUpdateSuccess.setVisible(true);
+					lblSuccessMessage.setVisible(true);
+				}
 			}
 		});
 		editUserSaveChanges.setBackground(Color.GREEN);
