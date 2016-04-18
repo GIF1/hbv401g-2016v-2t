@@ -1258,9 +1258,9 @@ public class UserInterface {
 		btnBookTrip.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				final DaytripBooking bookedTrip = new DaytripBooking(daytripToBook);
-				bookedTrip.setNumParticipants(DaytripBookSeats.getValue());//Integer.parseInt(DayTripBookSeatLabel.getText()));
-				String packageName = (String) addToPackage.getSelectedItem();
-				if (packageName == "New Package") {				
+				bookedTrip.setNumParticipants(DaytripBookSeats.getValue());
+				final int packageIndex = addToPackage.getSelectedIndex();
+				if (packageIndex == 0) {				
 					final JFrame choosePackageName = new JFrame();
 					
 					choosePackageName.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -1293,13 +1293,22 @@ public class UserInterface {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							displayPackages();
+							displayPackages(packageIndex);
 						}
 					});
 					btnOk.setBounds(108, 77, 97, 25);
 					contentPane.add(btnOk);
 					
 					choosePackageName.setVisible(true);
+				} else {
+					userLoggedIn.addBookingToTrip(bookedTrip, packageIndex);
+					try {
+						userLoggedIn = db.editUser(userLoggedIn, null, null, null, null, null, userLoggedIn.getTrip());
+					} catch (SQLException ex) {
+						// TODO Auto-generated catch block
+						ex.printStackTrace();
+					}
+					displayPackages(packageIndex);
 				}
 				
 				//Booking booking = bookedTrip;
@@ -1564,7 +1573,9 @@ public class UserInterface {
 		EditUser.add(editUserCancel);
 	}
 	
-	private void displayPackages() {		
+	private void displayPackages(int packageIndex) {		
+		Package chosenPackage = userLoggedIn.getTrip().get(packageIndex);
+		
 		JPanel Package = new JPanel();
 		CardContainer.add(Package, "Package");
 		Package.setLayout(null);
@@ -1620,19 +1631,55 @@ public class UserInterface {
 		btnNewButton_2.setBounds(34, 300, 89, 23);
 		Package.add(btnNewButton_2);
 		
+		
+		/*
+		Object[][] daytrips = new Object[daytripResults.size()][6];
+		for (int i=0; i<daytripResults.size(); i++) {
+			DaytripAbstract daytrip = daytripResults.get(i);
+			daytrips[i][0] = daytrip.getDealerInfo()[0];
+			daytrips[i][1] = daytrip.getCategory();
+			daytrips[i][2] = daytrip.getLocation();
+			daytrips[i][3] = df.format(daytrip.getStartTime());
+			daytrips[i][4] = df.format(daytrip.getEndTime());
+			daytrips[i][5] = daytrip.getPrice();
+		}
+		String[] columns = new String[] {
+				"Organizer", "Type", "Location", "Go time", "Return time", "Price"
+		};
+		
+		tabDaytripResults.setSurrendersFocusOnKeystroke(true);
+		tabDaytripResults.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tabDaytripResults.setModel(new DefaultTableModel(daytrips,columns));
+		
+		scrollPaneDaytrip.setViewportView(tabDaytripResults);*/
+		
+		
+		
 		JScrollPane scrollPanePackage = new JScrollPane();
 		scrollPanePackage.setBounds(142, 89, 783, 403);
 		Package.add(scrollPanePackage);
 		
-		final JTable tbPackage = new JTable();
-		tbPackage.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"null", "null", "null", "null"},
-			},
-			new String[] {
-				"Customer", "Dealer Info", "Price", "Booking Type"
+		List<Booking> bookingsList = chosenPackage.Trip;
+		Object[][] bookings = new Object[bookingsList.size()][4];
+		for (int i=0; i<chosenPackage.Trip.size(); i++) {
+			Booking booking = bookingsList.get(i);
+			bookings[i][0] = userLoggedIn.getUsername();
+			bookings[i][1] = booking.getDealerInfo()[0];
+			bookings[i][2] = booking.getPrice();
+			if (booking.f != null) {
+				bookings[i][3] = "Flight";
+			} else if (booking.d != null) {
+				bookings[i][3] = "Day trip";
+			} else if (booking.h != null) {
+				bookings[i][3] = "Hotel room";
 			}
-		));
+		}
+		String[] columns = new String[] {
+				"Customer", "Dealer Info", "Price", "Booking Type"
+		};
+		
+		final JTable tbPackage = new JTable();
+		tbPackage.setModel(new DefaultTableModel(bookings,columns));
 		scrollPanePackage.setViewportView(tbPackage);
 	}
 }

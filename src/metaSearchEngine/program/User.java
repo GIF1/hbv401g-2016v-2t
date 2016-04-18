@@ -129,6 +129,10 @@ public class User implements UserClass {
 		this.packages.add(some_trip);
 	}
 	
+	void addBookingToTrip(Booking some_booking, int packageNr) {
+		this.packages.get(packageNr).addToTrip(some_booking);
+	}
+	
 	// Usage: trip = getTrip();
 	// Before: Nothing
 	// After: the variable trip contains a list of packages the user has planed to booked.
