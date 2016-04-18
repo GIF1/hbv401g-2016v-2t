@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import metaSearchEngine.mockobjects.*;
+
 public class SearchEngine {
 	
 	public static ArrayList<FlightAbstract> flightSearch(FlightSearchCriteria flightSearch) {
@@ -86,7 +88,7 @@ public class SearchEngine {
 			throw new IllegalArgumentException("Error: No search criteria has been entered");
 		}
 
-		if(daytripSearch.startTime.compareTo(daytripSearch.endTime) > 0) {
+		if(daytripSearch.getStartTime().compareTo(daytripSearch.getEndTime()) > 0) {
 			throw new IllegalArgumentException("Error: The trip can not end before it starts");
 		}
 		else {
@@ -105,24 +107,24 @@ public class SearchEngine {
 			}
 		}
 
-		if(dayTripSearch.getLocation()==null) {
+		if(daytripSearch.getLocation()==null) {
 			throw new IllegalArgumentException("Error: Departure location is missing.");
 		}
 
-		if(dayTripSearch.getPriceRange()==null) {
+		if(daytripSearch.getPriceRange()==null) {
 			throw new IllegalArgumentException("Error: Please select a price range.");
 		}
 
-		int[] tmpPriceRange = dayTripSearch.getPriceRange();
+		int[] tmpPriceRange = daytripSearch.getPriceRange();
 		if(tmpPriceRange[0]>tmpPriceRange[1] || tmpPriceRange.length>2) {
 			throw new IllegalArgumentException("Error: Invalid price-range. Please make sure that you select the lower limit first and then the higher limit.");
 		}
 
-		if(dayTripSearch.getNumParticipants()<1) {
+		if(daytripSearch.getNumParticipants()<1) {
 			throw new IllegalArgumentException("Error: You must search for a minimum of one seat.");
 		}
 
-		if(dayTripSearch.getNumParticipants()==null) {
+		if(daytripSearch.getNumParticipants()<0) {
 			throw new IllegalArgumentException("Error: You have not specified how many seats you would like.");
 		}
 
@@ -130,18 +132,18 @@ public class SearchEngine {
 		
 		return daytripResults;
 	}
-
+/*
 	public static ArrayList<HotelAbstract> HotelSearch(HotelSearchCriteria hotelSearch) {
 
 
-		if(hotelSearch.startTime.compareTo(hotelSearch.endTime) > 0) {
+		if(hotelSearch.getStartTime().compareTo(hotelSearch.getEndTime()) > 0) {
 			throw new IllegalArgumentException("Error: The trip can not end before it starts");
 
 		}
 		else {
 			Calendar depTime = Calendar.getInstance();
 			Calendar today = Calendar.getInstance();
-			depTime.setTime(daytripSearch.getStartTime());
+			depTime.setTime(hotelSearch.getStartTime());
 			today.setTime(today.getTime());
 
 			if (depTime.get(Calendar.YEAR) < today.get(Calendar.YEAR) || 
@@ -172,6 +174,6 @@ public class SearchEngine {
 		ArrayList<HotelAbstract> HotelResults = HotelManager.searchWithAddress(hotelSearch.getPriceRange(), null, null, hotelSearch.getLocation(), null);
 		
 		return HotelResults;
-	}
+	}*/
 	
 }

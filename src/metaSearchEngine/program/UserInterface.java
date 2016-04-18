@@ -23,6 +23,7 @@ import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Window;
 
 import javax.swing.UIManager;
@@ -52,6 +53,7 @@ import javax.swing.ListSelectionModel;
 import com.toedter.calendar.JDayChooser;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -1218,6 +1220,11 @@ public class UserInterface {
 		DayTripBookSeatLabel.setBounds(420+numPartAv*18, 144, 92, 14);
 		DaytripBooking.add(DayTripBookSeatLabel);
 		
+		JLabel lblNumSeats = new JLabel("Number of seats to book:");
+		lblNumSeats.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblNumSeats.setBounds(400, 116, 177, 17);
+		DaytripBooking.add(lblNumSeats);
+		
 		final JSlider DaytripBookSeats = new JSlider();
 		DaytripBookSeats.setPaintLabels(true);
 		DaytripBookSeats.addChangeListener(new ChangeListener() {
@@ -1235,18 +1242,70 @@ public class UserInterface {
 		DaytripBookSeats.setBounds(400, 144, numPartAv*18, 50);
 		DaytripBooking.add(DaytripBookSeats);
 		
-		JLabel lblNumSeats = new JLabel("Number of seats to book:");
-		lblNumSeats.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblNumSeats.setBounds(400, 116, 177, 17);
-		DaytripBooking.add(lblNumSeats);
+		List<Package> userPackages = userLoggedIn.getTrip();
+		String[] packagesNames = new String[userPackages.size()+1];
+		packagesNames[0] = "New Package";
+		for (int i=0; i<userPackages.size(); i++) {
+			packagesNames[i+1] = userPackages.get(i).packageName;
+		}
+		
+		final JComboBox<String> addToPackage = new JComboBox<String>();
+		addToPackage.setEditable(true);
+		addToPackage.setModel(new DefaultComboBoxModel<String>(packagesNames));
+		addToPackage.setBounds(410,219, 240, 22);
+		DaytripBooking.add(addToPackage);
 				
 		JButton btnBookTrip = new JButton("Book");
 		btnBookTrip.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//DaytripBooking bookedTrip = new DaytripBooking(daytripToBook);
+				final DaytripBooking bookedTrip = new DaytripBooking(daytripToBook);
+				bookedTrip.setNumParticipants(DaytripBookSeats.getValue());//Integer.parseInt(DayTripBookSeatLabel.getText()));
+				String packageName = (String) addToPackage.getSelectedItem();
+				if (packageName == "New Package") {				
+					final JFrame choosePackageName = new JFrame();
+					
+					choosePackageName.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					choosePackageName.setBounds(100, 100, 339, 158);
+					JPanel contentPane = new JPanel();
+					contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+					choosePackageName.setContentPane(contentPane);
+					contentPane.setLayout(null);
+					
+					JLabel lblNewPackage = new JLabel("Enter a new package name:");
+					lblNewPackage.setFont(new Font("Tahoma", Font.PLAIN, 14));
+					lblNewPackage.setBounds(70, 13, 176, 23);
+					contentPane.add(lblNewPackage);
+					
+					final JTextField txtNewPackageName = new JTextField("New Package");
+					txtNewPackageName.setBounds(39, 42, 250, 22);
+					contentPane.add(txtNewPackageName);
+					txtNewPackageName.setColumns(10);
+					
+					JButton btnOk = new JButton("OK");
+					btnOk.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							String newPackageName = txtNewPackageName.getText();
+							Package newPackage = new Package(bookedTrip,newPackageName);
+							userLoggedIn.addTrip(newPackage);
+							choosePackageName.dispose();
+							try {
+								userLoggedIn = db.editUser(userLoggedIn, null, null, null, null, null, userLoggedIn.getTrip());
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							displayPackages();
+						}
+					});
+					btnOk.setBounds(108, 77, 97, 25);
+					contentPane.add(btnOk);
+					
+					choosePackageName.setVisible(true);
+				}
+				
 				//Booking booking = bookedTrip;
 				//booking.getInfo();
-				displayPackages();
+				//displayPackages();
 			}
 		});
 		btnBookTrip.setBackground(Color.GREEN);
@@ -2601,6 +2660,170 @@ public class UserInterface {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//HERE WE ARE BOOKING!
+			}
+		});
+		
+		// Hotel booking
+		JPanel HotelBooking = new JPanel();
+		BookingDisplay.add(HotelBooking, "name_87352490186403");
+		HotelBooking.setLayout(null);
+		
+		JLabel lblHotelBooking = new JLabel("Hotel Booking");
+		lblHotelBooking.setFont(new Font("Tahoma", Font.BOLD, 28));
+		lblHotelBooking.setBounds(420, 11, 226, 34);
+		HotelBooking.add(lblHotelBooking);
+		
+		JLabel lblHotelInformation = new JLabel("Hotel Information");
+		lblHotelInformation.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblHotelInformation.setBounds(120, 116, 155, 22);
+		HotelBooking.add(lblHotelInformation);
+		
+		JLabel label_5 = new JLabel("Name:");
+		label_5.setFont(new Font("Tahoma", Font.BOLD, 11));
+		label_5.setBounds(114, 174, 35, 14);
+		HotelBooking.add(label_5);
+		
+		JLabel HotelBookingNameInfo = new JLabel("HERE COMES getHotel().getName();");
+		HotelBookingNameInfo.setBounds(159, 174, 375, 14);
+		HotelBooking.add(HotelBookingNameInfo);
+		
+		JLabel label_11 = new JLabel("Price:");
+		label_11.setFont(new Font("Tahoma", Font.BOLD, 11));
+		label_11.setBounds(118, 246, 31, 14);
+		HotelBooking.add(label_11);
+		
+		JLabel label_12 = new JLabel("HERE COMES getPrice();");
+		label_12.setBounds(159, 246, 375, 14);
+		HotelBooking.add(label_12);
+		
+		JLabel HotelBookingDealerNameInfo = new JLabel("HERE COMES getDealerInfo()[0];");
+		HotelBookingDealerNameInfo.setBounds(157, 377, 375, 14);
+		HotelBooking.add(HotelBookingDealerNameInfo);
+		
+		JLabel label_16 = new JLabel("Dealer Name:");
+		label_16.setFont(new Font("Tahoma", Font.BOLD, 11));
+		label_16.setBounds(74, 377, 75, 14);
+		HotelBooking.add(label_16);
+		
+		JLabel HotelBookingDealerPhoneInfo = new JLabel("HERE COMES getDealerInfo()[1];");
+		HotelBookingDealerPhoneInfo.setBounds(159, 402, 375, 14);
+		HotelBooking.add(HotelBookingDealerPhoneInfo);
+		
+		JLabel label_18 = new JLabel("Dealer Phone:");
+		label_18.setFont(new Font("Tahoma", Font.BOLD, 11));
+		label_18.setBounds(71, 402, 78, 14);
+		HotelBooking.add(label_18);
+		
+		JLabel HotelBookingDealerEmailInfo = new JLabel("HERE COMES getDealerInfo()[2];");
+		HotelBookingDealerEmailInfo.setBounds(159, 427, 375, 14);
+		HotelBooking.add(HotelBookingDealerEmailInfo);
+		
+		JLabel label_20 = new JLabel("Dealer Email:");
+		label_20.setFont(new Font("Tahoma", Font.BOLD, 11));
+		label_20.setBounds(76, 427, 73, 14);
+		HotelBooking.add(label_20);
+		
+		JButton button = new JButton("Book");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//HERE WE ARE BOOKING!
+			}
+		});
+		button.setBackground(Color.GREEN);
+		button.setBounds(834, 443, 91, 23);
+		HotelBooking.add(button);
+		
+		JButton button_1 = new JButton("Cancel");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//HERE WE ARE CANCELLING!
+			}
+		});
+		button_1.setBackground(Color.RED);
+		button_1.setBounds(958, 443, 91, 23);
+		HotelBooking.add(button_1);
+		
+		JLabel lblAddress = new JLabel("Address:");
+		lblAddress.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblAddress.setBounds(100, 199, 49, 14);
+		HotelBooking.add(lblAddress);
+		
+		JLabel HotelBookingAddressInfo = new JLabel("HERE COMES address string..");
+		HotelBookingAddressInfo.setBounds(159, 199, 375, 14);
+		HotelBooking.add(HotelBookingAddressInfo);
+		
+		JLabel lblStars = new JLabel("Stars");
+		lblStars.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblStars.setBounds(119, 224, 30, 14);
+		HotelBooking.add(lblStars);
+		
+		JLabel HotelBookingStarsInfo = new JLabel("HERE COMES getHotel().getStars();");
+		HotelBookingStarsInfo.setBounds(159, 221, 375, 14);
+		HotelBooking.add(HotelBookingStarsInfo);
+		
+		JLabel lblNumberOfBeds = new JLabel("Number of beds:");
+		lblNumberOfBeds.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblNumberOfBeds.setBounds(58, 271, 91, 14);
+		HotelBooking.add(lblNumberOfBeds);
+		
+		JLabel HotelBookingNumBedsInfo = new JLabel("HERE COMES getBeds();");
+		HotelBookingNumBedsInfo.setBounds(159, 271, 375, 14);
+		HotelBooking.add(HotelBookingNumBedsInfo);
+		
+		JLabel lblNumberOfBedrooms = new JLabel("Number of bedrooms:");
+		lblNumberOfBedrooms.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblNumberOfBedrooms.setBounds(28, 296, 121, 14);
+		HotelBooking.add(lblNumberOfBedrooms);
+		
+		JLabel HotelBookingNumBedroomsInfo = new JLabel("HERE COMES getBedrooms();");
+		HotelBookingNumBedroomsInfo.setBounds(159, 296, 375, 14);
+		HotelBooking.add(HotelBookingNumBedroomsInfo);
+		
+		JLabel lblArea = new JLabel("Area:");
+		lblArea.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblArea.setBounds(119, 321, 30, 14);
+		HotelBooking.add(lblArea);
+		
+		JLabel HotelBookingAreaInfo = new JLabel("HERE COMES getArea();");
+		HotelBookingAreaInfo.setBounds(159, 321, 375, 14);
+		HotelBooking.add(HotelBookingAreaInfo);
+		
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.getCalendarButton().addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				//HERE THE FROM DATE IS BEING CHANGED
+			}
+		});
+		dateChooser.getCalendarButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		dateChooser.setBounds(661, 116, 195, 20);
+		HotelBooking.add(dateChooser);
+		
+		JDateChooser dateChooser_1 = new JDateChooser();
+		dateChooser_1.getCalendarButton().addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				//HERE WE ARE CHOOSING THE TO DATE
+			}
+		});
+		dateChooser_1.setBounds(661, 163, 195, 20);
+		HotelBooking.add(dateChooser_1);
+		
+		JLabel lblDateFrom = new JLabel("Date From");
+		lblDateFrom.setBounds(596, 116, 50, 14);
+		HotelBooking.add(lblDateFrom);
+		
+		JLabel lblDateTo = new JLabel("Date To");
+		lblDateTo.setBounds(608, 163, 38, 14);
+		HotelBooking.add(lblDateTo);
+		
+		JLabel HotelBookingDateAvail = new JLabel("");
+		HotelBookingDateAvail.setBounds(661, 199, 174, 14);
+		HotelBooking.add(HotelBookingDateAvail);
+		btnEditProfile_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// displayEditUser(User userToEdit);
 			}
 		});
 	}

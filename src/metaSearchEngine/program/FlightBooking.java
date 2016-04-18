@@ -85,19 +85,22 @@ public class FlightBooking extends Booking {
 	}
 
 	// Constructor:
-	public FlightBooking(FlightAbstract flightSearchResult, int nrSeats, User buyer){
+	public FlightBooking(FlightAbstract flightSearchResult){
 		verifyFlightInfo(flightSearchResult);
 		
-		this.customer = buyer;		
+		//this.customer = buyer;		
 		this.flight = flightSearchResult;	
+		/*
 		this.seatNr = new String[nrSeats];
 		for (int i=0; i<nrSeats; i++) {
 			this.seatNr[i] = flightSearchResult.get_seatNr()[i];
-		}
-		this.availableSeats = flightSearchResult.get_seatNr();
-		this.luggage = 0;
-		this.flightMeal = false;
+		}*/
+		//this.availableSeats = flightSearchResult.get_seatNr();
+		//this.luggage = 0;
+		//this.flightMeal = false;
 		this.price = flightSearchResult.get_price();
+		this.dealerInfo = flightSearchResult.get_dealerInfo();
+		this.f = this;
 	}
 
 	// Usage: seatNr = setSeat(seat)
@@ -142,13 +145,14 @@ public class FlightBooking extends Booking {
 		mockFlightBook flightBooked = new mockFlightBook();
 		flightBooked.FlightBook(this);
 		
-		getInfo();
+		//getInfo();
 		
 		return flightBooked;
 	}
 
 	// Usage: getInfo()
 	// 
+	/*
 	@Override
 	public void getInfo() {
 		// We want to call a function (?) to display a window containing the information
@@ -163,5 +167,5 @@ public class FlightBooking extends Booking {
 		if(flightMeal==false) System.out.println("You have not ordered a meal in this flight");
 		else System.out.println("You have ordered a meal in this flight");
 		//System.out.println("Some more information....");
-	}
+	}*/
 }

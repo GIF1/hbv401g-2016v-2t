@@ -11,7 +11,7 @@ public class User implements UserClass {
 	private String username;
 	private String email;
 	private int age = -1;
-	private List<Package> packages;
+	private List<Package> packages = null;
 	private boolean admin = false;
 	
 	public User(int newId, String username, String email, boolean admin) {
@@ -122,18 +122,18 @@ public class User implements UserClass {
 	}
 	
 	void deleteTrip(Package some_trip){
-		packages.remove(some_trip); 
+		this.packages.remove(some_trip); 
 	}
 
 	void addTrip(Package some_trip) {
-		packages.add(some_trip);
+		this.packages.add(some_trip);
 	}
 	
 	// Usage: trip = getTrip();
 	// Before: Nothing
 	// After: the variable trip contains a list of packages the user has planed to booked.
 	public List<Package> getTrip() {
-		return packages;
+		return this.packages;
 	}
 	
 	// Usage: age = getAge();

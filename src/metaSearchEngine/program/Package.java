@@ -7,9 +7,13 @@ import java.util.*;
 public class Package implements Serializable {
 
 	protected List <Booking> Trip = new ArrayList<Booking>();
+	protected String packageName;
 	
-	public Package() {
-		
+	// Constructor
+	// A new package is made with new booking.
+	public Package(Booking new_booking, String packageName) {
+		this.Trip.add(new_booking);
+		this.packageName = packageName;
 	}
 
 	// Usage: addToTrip(new_booking)
