@@ -40,10 +40,13 @@ public class User implements UserClass {
 	// Usage: setAge(newAge);
 	// Before: newAge is an integer
 	// After: if newAge is a legal age (according to the verifyAge method, the user age attribute is now newAge
-	public void setAge(int newAge){
+	public void setAge(Integer newAge){
 		if(verifyAge(newAge)) {
 			this.age = newAge;
-		} else {
+		} else if (newAge == -1) {
+			this.age = newAge;
+		}
+		else {
 			throw new IllegalArgumentException("Error: Invalid age for user. ");
 		}	
 	}
