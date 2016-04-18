@@ -1078,7 +1078,7 @@ public class UserInterface {
 		scrollPaneDaytrip.setViewportView(tabDaytripResults);
 	}
 	
-	private void displayDaytripBooking(DaytripAbstract daytripToBook) {	
+	private void displayDaytripBooking(final DaytripAbstract daytripToBook) {	
 		JPanel Booking = new JPanel();
 		CardContainer.add(Booking, "Booking");
 		Booking.setLayout(null);
@@ -1243,7 +1243,10 @@ public class UserInterface {
 		JButton btnBookTrip = new JButton("Book");
 		btnBookTrip.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//HERE WE ARE BOOKING!
+				//DaytripBooking bookedTrip = new DaytripBooking(daytripToBook);
+				//Booking booking = bookedTrip;
+				//booking.getInfo();
+				displayPackages();
 			}
 		});
 		btnBookTrip.setBackground(Color.GREEN);
@@ -1501,6 +1504,78 @@ public class UserInterface {
 		});
 		editUserCancel.setBounds(621, 406, 116, 23);
 		EditUser.add(editUserCancel);
+	}
+	
+	private void displayPackages() {		
+		JPanel Package = new JPanel();
+		CardContainer.add(Package, "Package");
+		Package.setLayout(null);
+		mainLayout.show(CardContainer, "Package");
+		
+		JButton btn = new JButton("Log out");
+		btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// userLoggedIn = null;
+				// displayLogin();
+			}
+		});
+		btn.setBounds(1013, 13, 97, 25);
+		Package.add(btn);
+		
+		JLabel IbIUserLoggedIn3 = new JLabel("User logged in");
+		IbIUserLoggedIn3.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		IbIUserLoggedIn3.setBounds(785, 13, 97, 22);
+		Package.add(IbIUserLoggedIn3);
+		
+		JButton btnEditProfile1 = new JButton("Edit Profile");
+		btnEditProfile1.setSize(97, 25);
+		btnEditProfile1.setLocation(906, 13);
+		btnEditProfile1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// displayEditProfile(User userToEdit)	
+			}
+		});
+		Package.add(btnEditProfile1);
+		
+		JLabel lblPackage = new JLabel("Package");
+		lblPackage.setFont(new Font("Tahoma", Font.BOLD, 28));
+		lblPackage.setBounds(460, 30, 202, 34);
+		Package.add(lblPackage);
+		
+		JButton btnEdit = new JButton("Edit");
+		btnEdit.setToolTipText("Edit Selected Booking");
+		btnEdit.setBounds(34, 150, 89, 23);
+		Package.add(btnEdit);
+		
+		JButton btnCancel = new JButton("Cancel");
+		btnCancel.setToolTipText("Cancel Selected Booking");
+		btnCancel.setBounds(34, 200, 89, 23);
+		Package.add(btnCancel);
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.setToolTipText("Return to Booking");
+		btnBack.setBounds(34, 250, 89, 23);
+		Package.add(btnBack);
+		
+		JButton btnNewButton_2 = new JButton("Confirm");
+		btnNewButton_2.setToolTipText("Confirm Booking");
+		btnNewButton_2.setBounds(34, 300, 89, 23);
+		Package.add(btnNewButton_2);
+		
+		JScrollPane scrollPanePackage = new JScrollPane();
+		scrollPanePackage.setBounds(142, 89, 783, 403);
+		Package.add(scrollPanePackage);
+		
+		final JTable tbPackage = new JTable();
+		tbPackage.setModel(new DefaultTableModel(
+			new Object[][] {
+				{"null", "null", "null", "null"},
+			},
+			new String[] {
+				"Customer", "Dealer Info", "Price", "Booking Type"
+			}
+		));
+		scrollPanePackage.setViewportView(tbPackage);
 	}
 }
 
@@ -2449,6 +2524,80 @@ public class UserInterface {
 		});
 		editUserCancel.setBounds(621, 406, 116, 23);
 		EditUser.add(editUserCancel);
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//HERE WE ARE BOOKING!
+			}
+		});
+		
+		JPanel Package = new JPanel();
+		CardContainer.add(Package, "name_3722287572018");
+		Package.setLayout(null);
+		
+		JButton btn = new JButton("Log out");
+		btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// userLoggedIn = null;
+				// displayLogin();
+			}
+		});
+		btn.setBounds(1013, 13, 97, 25);
+		Package.add(btn);
+		
+		JLabel IbIUserLoggedIn3 = new JLabel("User logged in");
+		IbIUserLoggedIn3.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		IbIUserLoggedIn3.setBounds(785, 13, 97, 22);
+		Package.add(IbIUserLoggedIn3);
+		
+		JButton btnEditProfile1 = new JButton("Edit Profile");
+		btnEditProfile1.setSize(97, 25);
+		btnEditProfile1.setLocation(906, 13);
+		btnEditProfile1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// displayEditProfile(User userToEdit)	
+			}
+		});
+		Package.add(btnEditProfile1);
+		
+		JLabel lblPackage = new JLabel("Package");
+		lblPackage.setFont(new Font("Tahoma", Font.BOLD, 28));
+		lblPackage.setBounds(460, 30, 202, 34);
+		Package.add(lblPackage);
+		
+		JButton btnEdit = new JButton("Edit");
+		btnEdit.setToolTipText("Edit Selected Booking");
+		btnEdit.setBounds(34, 150, 89, 23);
+		Package.add(btnEdit);
+		
+		JButton btnCancel = new JButton("Cancel");
+		btnCancel.setToolTipText("Cancel Selected Booking");
+		btnCancel.setBounds(34, 200, 89, 23);
+		Package.add(btnCancel);
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.setToolTipText("Return to Booking");
+		btnBack.setBounds(34, 250, 89, 23);
+		Package.add(btnBack);
+		
+		JButton btnNewButton_2 = new JButton("Confirm");
+		btnNewButton_2.setToolTipText("Confirm Booking");
+		btnNewButton_2.setBounds(34, 300, 89, 23);
+		Package.add(btnNewButton_2);
+		
+		JScrollPane scrollPanePackage = new JScrollPane();
+		scrollPanePackage.setBounds(142, 89, 783, 403);
+		Package.add(scrollPanePackage);
+		
+		tbPackage = new JTable();
+		tbPackage.setModel(new DefaultTableModel(
+			new Object[][] {
+				{"null", "null", "null", "null"},
+			},
+			new String[] {
+				"Customer", "Dealer Info", "Price", "Booking Type"
+			}
+		));
+		scrollPanePackage.setViewportView(tbPackage);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//HERE WE ARE BOOKING!
