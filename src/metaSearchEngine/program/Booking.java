@@ -1,8 +1,10 @@
 package metaSearchEngine.program;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Booking {
+@SuppressWarnings("serial")
+public class Booking implements Serializable {
 	// Define attributes of classes
 	protected User customer;
 	protected String[] dealerInfo;

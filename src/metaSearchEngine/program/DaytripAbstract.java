@@ -1,8 +1,9 @@
 package metaSearchEngine.program;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public abstract class DaytripAbstract {
+public abstract class DaytripAbstract implements Serializable {
 	
 	private Date startTime;
 	private Date endTime;

@@ -171,7 +171,7 @@ public class SearchEngine {
 
 		// Structure of the searchWithAddress method of the HotelManager class: 
 		// HotelManager.searchWithAddress(priceRange: int[] maxStars:int, street:String,  city:String, zipCode:String)
-		ArrayList<HotelAbstract> HotelResults = HotelManager.searchWithAddress(hotelSearch.getPriceRange(), null, null, hotelSearch.getLocation(), null);
+		ArrayList<HotelAbstract> HotelResults = HotelManager.searchWithAddress(hotelSearch.getPriceRange(), hotelSearch.getLocation());
 		
 		return HotelResults;
 	}*/

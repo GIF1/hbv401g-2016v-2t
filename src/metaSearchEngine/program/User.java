@@ -10,7 +10,7 @@ public class User implements UserClass {
 	private final int id;
 	private String username;
 	private String email;
-	private int age = -1;
+	private Integer age;
 	private List<Package> packages = null;
 	private boolean admin = false;
 	

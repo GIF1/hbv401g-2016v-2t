@@ -115,7 +115,6 @@ public class UserInterface {
 	//JPanel Booking = new JPanel();
 	//CardLayout bookingLayout = new CardLayout();
 	// Card container for displaying different 
-	// 
 	JPanel BookingDisplay = new JPanel();
 	CardLayout bookingDispLayout = new CardLayout();
 	
@@ -1574,14 +1573,14 @@ public class UserInterface {
 		JButton btn = new JButton("Log out");
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				// userLoggedIn = null;
-				// displayLogin();
+				userLoggedIn = null;
+				displayLogin();
 			}
 		});
 		btn.setBounds(1013, 13, 97, 25);
 		Package.add(btn);
 		
-		JLabel IbIUserLoggedIn3 = new JLabel("User logged in");
+		JLabel IbIUserLoggedIn3 = new JLabel(userLoggedIn.getUsername(), SwingConstants.RIGHT);
 		IbIUserLoggedIn3.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		IbIUserLoggedIn3.setBounds(785, 13, 97, 22);
 		Package.add(IbIUserLoggedIn3);
@@ -1591,7 +1590,7 @@ public class UserInterface {
 		btnEditProfile1.setLocation(906, 13);
 		btnEditProfile1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// displayEditProfile(User userToEdit)	
+				displayEditProfile();
 			}
 		});
 		Package.add(btnEditProfile1);
