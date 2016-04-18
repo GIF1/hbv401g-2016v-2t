@@ -10,7 +10,7 @@ public class User implements UserClass {
 	private final int id;
 	private String username;
 	private String email;
-	private Integer age;
+	private Integer age = -1;
 	private List<Package> packages = null;
 	private boolean admin = false;
 	
@@ -143,7 +143,7 @@ public class User implements UserClass {
 	// Usage: age = getAge();
 	// Before: Nothing
 	// After: the variable age contains an integer representing the users age.
-	public int getAge() {
+	public Integer getAge() {
 		return this.age;
 	}
 
