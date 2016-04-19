@@ -1,8 +1,9 @@
 package metaSearchEngine.program;
 
+import java.io.Serializable;
 import java.util.*;
 
-public abstract class FlightAbstract {
+public abstract class FlightAbstract implements Serializable {
 	private String flightNr;
 	private Date departureTime;
 	private String departureLoc;

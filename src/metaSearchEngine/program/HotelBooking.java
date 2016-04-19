@@ -1,46 +1,40 @@
 package metaSearchEngine.program;
 
+import java.util.Date;
+
 public class HotelBooking extends Booking {
 
-	private HotelAbstract hotel;
-	private int nrOfNights;
-	private String roomType;
-	private int nrOfMeals;
+	private HotelAbstract room;
+	private Date CheckInDate;
+	private Date CheckOutDate;
 
-	public HotelBooking(HotelAbstract hotelSearchResult, int nights, String type, int meals){
-		this.hotel = hotelSearchResult;
-		this.nrOfNights = nights;
-		this.roomType = type;
-		this.nrOfMeals = meals;
+	// Constructor
+	public HotelBooking(HotelAbstract roomSearchResult){
+		this.room = roomSearchResult;
+		this.CheckInDate = roomSearchResult.getStartTime();
+		this.CheckOutDate = roomSearchResult.getEndTime();
+		this.price = roomSearchResult.getPrice();
+		this.dealerInfo = roomSearchResult.getDealerInfo();
+		this.h = this;
 	}
 
-	// Usage: roomType = setRoom(newRoom);
-	// Before: roomType is a string, can be the empty string. Can only take value of roomType available. 
-	// After: The value of roomType has been changed to newRoom
-	public void setRoom(String newRoom) {
-		if(newRoom=="Single" || newRoom=="Double" || newRoom=="Multi") this.roomType = newRoom;
-		else throw new IllegalArgumentException("Error: Invalid roomtype. Please select Single, Double or Multi");
-		
-	}
 
-	// Usage: nrOfMeals = changeMeal(meals_wanted);
-	// Before: nrOfMeals is an integer specifying the nr of meals pr day the customer wants to eat at the hotel. 0 <= x < 5
-	// After: nrOfMeals has been changed to meals_wanted
-	public void changeMeal(int meals_wanted) {
-		if(-1 < meals_wanted && meals_wanted < 5) this.nrOfMeals = meals_wanted;
-		else throw new IllegalArgumentException("Error: The number of meals specified is not available. Please select a number between 0 and 4. ");
-	}
+	// Usage: reservedDates = reserveRoom(my_reserveDate)
+	// Before: The roomtype is available on my_reserveDate as otherwise
+	// it would not have been part of the search results.
+	// After: my_reserveDate has been added to the list of reserved dates in reserveDates
+	/*
+	package void reserveRoom(Date my_reserveDate) {
+		reservedDates.add(my_reserveDate);
+	}*/
+	public void setCheckInDate(Date CheckInDate) {this.CheckInDate = CheckInDate;}
+	public void setCheckOutDate(Date CheckOutDate) {this.CheckOutDate = CheckOutDate;}
+	
+	public HotelAbstract getRoom() {return this.room;}
 
-	// Usage: nrOfNights = set_nrOfNights(nights_wanted);
-	// Before: nrOfNights is an integer, specifying how many nights the customer intends to stay.
-	// After: nrOfNights has been changed to nights_wanted
-	public void set_nrOfNights(int nights_wanted) {
-		if(nights_wanted < 0) throw new IllegalArgumentException("Error: You must book at least one whole night");
-		this.nrOfNights = nights_wanted;
-	}
-
+	/*
 	@Override
 	public void getInfo() {
 		System.out.println("Figure out a cool way to print the hotelInfo");
-	}
+	}*/
 }

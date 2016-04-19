@@ -83,8 +83,6 @@ import javax.swing.JPasswordField;
 public class UserInterface {
 
 	private JFrame frmMetaSearchEngine;
-	private JTextField txtHigherPriceBound;
-	private JComboBox<String> txtHotelLoc;
 	
 	private JTable tabFlightResults;
 	private JTable tabDaytripResults;
@@ -586,7 +584,7 @@ public class UserInterface {
 		label.setBounds(205, 313, 49, 16);
 		FlightSearch.add(label);
 		
-		txtHigherPriceBound = new JTextField();
+		final JTextField txtHigherPriceBound = new JTextField();
 		txtHigherPriceBound.setBounds(251, 310, 101, 22);
 		FlightSearch.add(txtHigherPriceBound);
 		txtHigherPriceBound.setColumns(10);
@@ -823,14 +821,14 @@ public class UserInterface {
 		lblHotelSearch.setBounds(140, 13, 109, 22);
 		HotelSearch.add(lblHotelSearch);
 		
-		txtHotelLoc = new JComboBox<String>();
+		final JComboBox<String> txtHotelLoc = new JComboBox<String>();
 		txtHotelLoc.setModel(new DefaultComboBoxModel<String>(new String[] {"Reykjavík", "Akureyri"}));
 		AutoCompletion.enable(txtHotelLoc);
 		txtHotelLoc.setEditable(true);
 		txtHotelLoc.setBounds(112, 53, 240, 22);
 		HotelSearch.add(txtHotelLoc);
 		
-		JDateChooser dateCheckin = new JDateChooser();
+		final JDateChooser dateCheckin = new JDateChooser();
 		dateCheckin.setBounds(12, 120, 150, 22);
 		HotelSearch.add(dateCheckin);
 		
@@ -844,9 +842,29 @@ public class UserInterface {
 		lblCheckOut.setBounds(201, 95, 71, 16);
 		HotelSearch.add(lblCheckOut);
 		
-		JDateChooser dateCheckOut = new JDateChooser();
+		final JDateChooser dateCheckOut = new JDateChooser();
 		dateCheckOut.setBounds(201, 120, 150, 22);
 		HotelSearch.add(dateCheckOut);
+		
+		JLabel lblPriceRange = new JLabel("Price Range:");
+		lblPriceRange.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblPriceRange.setBounds(12, 171, 100, 18);
+		HotelSearch.add(lblPriceRange);
+		
+		final JTextField txtLowerPriceBound = new JTextField();
+		txtLowerPriceBound.setBounds(112, 170, 100, 22);
+		HotelSearch.add(txtLowerPriceBound);
+		txtLowerPriceBound.setColumns(10);
+		
+		JLabel label = new JLabel("-");
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setBounds(205, 173, 49, 16);
+		HotelSearch.add(label);
+		
+		final JTextField txtHigherPriceBound = new JTextField();
+		txtHigherPriceBound.setBounds(251, 170, 101, 22);
+		HotelSearch.add(txtHigherPriceBound);
+		txtHigherPriceBound.setColumns(10);
 		
 		JButton btnSearchHotel = new JButton("Search");
 		btnSearchHotel.addActionListener(new ActionListener() {
@@ -854,11 +872,345 @@ public class UserInterface {
 				// check if data is acceptable
 				// if acceptable create HotelSearchCriteria
 				// Search for hotels and call result display
+				HotelSearchCriteria newHotelSearch = new HotelSearchCriteria();
+				newHotelSearch.setStartTime(dateCheckin.getDate());
+				newHotelSearch.setEndTime(dateCheckOut.getDate());
+				newHotelSearch.setLocation((String) txtHotelLoc.getSelectedItem());
+				int lowerBound = 0;
+				int higherBound = 9999999;
+				if (!(txtLowerPriceBound.getText().equals(""))) {
+					lowerBound = Integer.parseInt(txtLowerPriceBound.getText());
+				}
+				if (!(txtHigherPriceBound.getText().equals(""))) {
+					higherBound = Integer.parseInt(txtHigherPriceBound.getText());
+				}
+				newHotelSearch.setPriceRange(new int[]{lowerBound,higherBound});
+				
+				List<HotelAbstract> hotelResults = null;
+				try {
+					hotelResults = SearchEngine.HotelSearch(newHotelSearch);
+				} catch (IllegalArgumentException ex){
+					System.out.println("Bla");
+				}
+				
+				if (hotelResults == null) {
+					System.out.println("Illegal criteria");
+				} else if (hotelResults.size() == 0) {
+					System.out.println("Unfortunately no flights were found");
+				} else if (hotelResults.size() > 0) {
+					// Display list of results
+					displayHotelResults(hotelResults);
+				}
 			}
 		});
 		btnSearchHotel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnSearchHotel.setBounds(109, 200, 185, 38);
+		btnSearchHotel.setBounds(109, 210, 185, 38);
 		HotelSearch.add(btnSearchHotel);
+	}
+	
+	private void displayHotelResults(final List<HotelAbstract> hotelResults) {
+		JScrollPane scrollPaneHotel = new JScrollPane();
+		SearchResults.add(scrollPaneHotel, "HotelResults");
+		resultLayout.show(SearchResults,"HotelResults");
+		
+		final JTable tabHotelResults = new JTable();
+		tabHotelResults.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				tabHotelResults.clearSelection();
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row = tabHotelResults.rowAtPoint(e.getPoint());
+				displayHotelBooking(hotelResults.get(row));
+			}
+		});
+		tabHotelResults.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				int row = tabHotelResults.rowAtPoint(e.getPoint());
+				if (row > -1) {
+					tabHotelResults.clearSelection();
+					tabHotelResults.setRowSelectionInterval(row,row);
+				}
+			}
+		});
+		
+		Object[][] rooms = new Object[hotelResults.size()][7];
+		for (int i=0; i<hotelResults.size(); i++) {
+			HotelAbstract hotel = hotelResults.get(i);
+			rooms[i][0] = hotel.getDealerInfo()[0];
+			rooms[i][1] = hotel.getLocation();
+			rooms[i][2] = df.format(hotel.getStartTime());
+			rooms[i][3] = df.format(hotel.getEndTime());
+			rooms[i][4] = hotel.getPrice();
+		}
+		String[] columns = new String[] {
+				"Hotel", "Location", "Free from", "Free to", "Price"
+		};
+		
+		tabHotelResults.setSurrendersFocusOnKeystroke(true);
+		tabHotelResults.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tabHotelResults.setModel(new DefaultTableModel(rooms,columns));
+		
+		scrollPaneHotel.setViewportView(tabHotelResults);
+	}
+	
+	private void displayHotelBooking(final HotelAbstract hotelToBook) {
+		JPanel Booking = new JPanel();
+		CardContainer.add(Booking, "Booking");
+		Booking.setLayout(null);
+		mainLayout.show(CardContainer, "Booking");
+		
+		JButton btnLogOut = new JButton("Log out");
+		btnLogOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				userLoggedIn = null;
+				displayLogin();
+			}
+		});
+		btnLogOut.setBounds(1013, 13, 97, 25);
+		Booking.add(btnLogOut);
+		
+		JLabel lblUserLoggedIn2 = new JLabel(userLoggedIn.getUsername(), SwingConstants.RIGHT);
+		lblUserLoggedIn2.setBounds(785, 13, 97, 22);
+		Booking.add(lblUserLoggedIn2);
+		lblUserLoggedIn2.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		JButton btnEditProfile = new JButton("Edit Profile");
+		btnEditProfile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				displayEditProfile();
+			}
+		});
+		btnEditProfile.setBounds(906, 13, 97, 25);
+		Booking.add(btnEditProfile);
+		
+		BookingDisplay = new JPanel();
+		BookingDisplay.setBounds(0, 60, 1110, 503);
+		Booking.add(BookingDisplay);
+		BookingDisplay.setLayout(bookingDispLayout);
+		
+		JPanel HotelBooking = new JPanel();
+		BookingDisplay.add(HotelBooking, "HotelBooking");
+		HotelBooking.setLayout(null);
+		bookingDispLayout.show(BookingDisplay, "HotelBooking");
+		
+		JLabel lblHotelBooking = new JLabel("Hotel Booking");
+		lblHotelBooking.setFont(new Font("Tahoma", Font.BOLD, 28));
+		lblHotelBooking.setBounds(420, 11, 226, 34);
+		HotelBooking.add(lblHotelBooking);
+		
+		JLabel lblHotelInformation = new JLabel("Hotel Information");
+		lblHotelInformation.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblHotelInformation.setBounds(120, 116, 155, 22);
+		HotelBooking.add(lblHotelInformation);
+		
+		JLabel label_5 = new JLabel("Name:");
+		label_5.setFont(new Font("Tahoma", Font.BOLD, 11));
+		label_5.setBounds(114, 174, 35, 14);
+		HotelBooking.add(label_5);
+		
+		JLabel HotelBookingNameInfo = new JLabel(hotelToBook.getDealerInfo()[0]);
+		HotelBookingNameInfo.setBounds(159, 174, 375, 14);
+		HotelBooking.add(HotelBookingNameInfo);
+		
+		JLabel label_11 = new JLabel("Price:");
+		label_11.setFont(new Font("Tahoma", Font.BOLD, 11));
+		label_11.setBounds(118, 246, 31, 14);
+		HotelBooking.add(label_11);
+		
+		JLabel label_12 = new JLabel(String.valueOf(hotelToBook.getPrice()));
+		label_12.setBounds(159, 246, 375, 14);
+		HotelBooking.add(label_12);
+		
+		JLabel HotelBookingDealerNameInfo = new JLabel(hotelToBook.getDealerInfo()[0]);
+		HotelBookingDealerNameInfo.setBounds(157, 377, 375, 14);
+		HotelBooking.add(HotelBookingDealerNameInfo);
+		
+		JLabel label_16 = new JLabel("Dealer Name:");
+		label_16.setFont(new Font("Tahoma", Font.BOLD, 11));
+		label_16.setBounds(74, 377, 75, 14);
+		HotelBooking.add(label_16);
+		
+		JLabel HotelBookingDealerPhoneInfo = new JLabel(hotelToBook.getDealerInfo()[1]);
+		HotelBookingDealerPhoneInfo.setBounds(159, 402, 375, 14);
+		HotelBooking.add(HotelBookingDealerPhoneInfo);
+		
+		JLabel label_18 = new JLabel("Dealer Phone:");
+		label_18.setFont(new Font("Tahoma", Font.BOLD, 11));
+		label_18.setBounds(71, 402, 78, 14);
+		HotelBooking.add(label_18);
+		
+		JLabel HotelBookingDealerEmailInfo = new JLabel(hotelToBook.getDealerInfo()[2]);
+		HotelBookingDealerEmailInfo.setBounds(159, 427, 375, 14);
+		HotelBooking.add(HotelBookingDealerEmailInfo);
+		
+		JLabel label_20 = new JLabel("Dealer Email:");
+		label_20.setFont(new Font("Tahoma", Font.BOLD, 11));
+		label_20.setBounds(76, 427, 73, 14);
+		HotelBooking.add(label_20);
+		
+		JLabel lblAddress = new JLabel("Address:");
+		lblAddress.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblAddress.setBounds(100, 199, 49, 14);
+		HotelBooking.add(lblAddress);
+		
+		JLabel HotelBookingAddressInfo = new JLabel("HERE COMES address string..");
+		HotelBookingAddressInfo.setBounds(159, 199, 375, 14);
+		HotelBooking.add(HotelBookingAddressInfo);
+		
+		JLabel lblStars = new JLabel("Stars");
+		lblStars.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblStars.setBounds(119, 224, 30, 14);
+		HotelBooking.add(lblStars);
+		
+		JLabel HotelBookingStarsInfo = new JLabel("HERE COMES getHotel().getStars();");
+		HotelBookingStarsInfo.setBounds(159, 221, 375, 14);
+		HotelBooking.add(HotelBookingStarsInfo);
+		
+		JLabel lblNumberOfBeds = new JLabel("Number of beds:");
+		lblNumberOfBeds.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblNumberOfBeds.setBounds(58, 271, 91, 14);
+		HotelBooking.add(lblNumberOfBeds);
+		
+		JLabel HotelBookingNumBedsInfo = new JLabel(String.valueOf(hotelToBook.getBeds()));
+		HotelBookingNumBedsInfo.setBounds(159, 271, 375, 14);
+		HotelBooking.add(HotelBookingNumBedsInfo);
+		
+		JLabel lblNumberOfBedrooms = new JLabel("Number of bedrooms:");
+		lblNumberOfBedrooms.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblNumberOfBedrooms.setBounds(28, 296, 121, 14);
+		HotelBooking.add(lblNumberOfBedrooms);
+		
+		JLabel HotelBookingNumBedroomsInfo = new JLabel(String.valueOf(hotelToBook.getBedrooms()));
+		HotelBookingNumBedroomsInfo.setBounds(159, 296, 375, 14);
+		HotelBooking.add(HotelBookingNumBedroomsInfo);
+		
+		JLabel lblArea = new JLabel("Area:");
+		lblArea.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblArea.setBounds(119, 321, 30, 14);
+		HotelBooking.add(lblArea);
+		
+		JLabel HotelBookingAreaInfo = new JLabel(String.valueOf(hotelToBook.getArea()));
+		HotelBookingAreaInfo.setBounds(159, 321, 375, 14);
+		HotelBooking.add(HotelBookingAreaInfo);
+		
+		final JDateChooser dateChooserCheckIn = new JDateChooser();
+		dateChooserCheckIn.setMinSelectableDate(hotelToBook.getStartTime());
+		dateChooserCheckIn.setMaxSelectableDate(hotelToBook.getEndTime());
+		dateChooserCheckIn.setBounds(661, 116, 195, 20);
+		HotelBooking.add(dateChooserCheckIn);
+		
+		final JDateChooser dateChooserCheckOut = new JDateChooser();
+		dateChooserCheckOut.setMinSelectableDate(hotelToBook.getStartTime());
+		dateChooserCheckOut.setMaxSelectableDate(hotelToBook.getEndTime());
+		dateChooserCheckOut.setBounds(661, 163, 195, 20);
+		HotelBooking.add(dateChooserCheckOut);
+		
+		JLabel lblDateFrom = new JLabel("Date From");
+		lblDateFrom.setBounds(585, 116, 80, 14);
+		HotelBooking.add(lblDateFrom);
+		
+		JLabel lblDateTo = new JLabel("Date To");
+		lblDateTo.setBounds(590, 163, 75, 14);
+		HotelBooking.add(lblDateTo);
+		
+		JLabel HotelBookingDateAvail = new JLabel("");
+		HotelBookingDateAvail.setBounds(661, 199, 0, 0);
+		HotelBooking.add(HotelBookingDateAvail);
+		
+		List<Package> userPackages = userLoggedIn.getTrip();
+		String[] packagesNames = new String[userPackages.size()+1];
+		packagesNames[0] = "New Package";
+		for (int i=0; i<userPackages.size(); i++) {
+			packagesNames[i+1] = userPackages.get(i).packageName;
+		}
+		
+		JLabel lblPackage = new JLabel("Add booking to package:");
+		lblPackage.setBounds(510,200,300,22);
+		HotelBooking.add(lblPackage);
+		
+		final JComboBox<String> addToPackage = new JComboBox<String>();
+		addToPackage.setEditable(true);
+		addToPackage.setModel(new DefaultComboBoxModel<String>(packagesNames));
+		addToPackage.setBounds(510,219, 240, 22);
+		HotelBooking.add(addToPackage);
+		
+		JButton button = new JButton("Book");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//HERE WE ARE BOOKING!
+				final HotelBooking bookedRoom = new HotelBooking(hotelToBook);
+				bookedRoom.setCheckInDate(dateChooserCheckIn.getDate());
+				bookedRoom.setCheckOutDate(dateChooserCheckOut.getDate());
+				final int packageIndex = addToPackage.getSelectedIndex();
+				if (packageIndex == 0) {				
+					final JFrame choosePackageName = new JFrame();
+					
+					choosePackageName.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					choosePackageName.setBounds(100, 100, 339, 158);
+					JPanel contentPane = new JPanel();
+					contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+					choosePackageName.setContentPane(contentPane);
+					contentPane.setLayout(null);
+					
+					JLabel lblNewPackage = new JLabel("Enter a new package name:");
+					lblNewPackage.setFont(new Font("Tahoma", Font.PLAIN, 14));
+					lblNewPackage.setBounds(70, 13, 176, 23);
+					contentPane.add(lblNewPackage);
+					
+					final JTextField txtNewPackageName = new JTextField("New Package");
+					txtNewPackageName.setBounds(39, 42, 250, 22);
+					contentPane.add(txtNewPackageName);
+					txtNewPackageName.setColumns(10);
+					
+					JButton btnOk = new JButton("OK");
+					btnOk.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							String newPackageName = txtNewPackageName.getText();
+							Package newPackage = new Package(bookedRoom,newPackageName);
+							userLoggedIn.addTrip(newPackage);
+							choosePackageName.dispose();
+							try {
+								userLoggedIn = db.editUser(userLoggedIn, null, null, null, null, null, userLoggedIn.getTrip());
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							displayPackages(userLoggedIn.getTrip().size()-1);
+						}
+					});
+					btnOk.setBounds(108, 77, 97, 25);
+					contentPane.add(btnOk);
+					
+					choosePackageName.setVisible(true);
+				} else {
+					userLoggedIn.addBookingToTrip(bookedRoom, packageIndex-1);
+					try {
+						userLoggedIn = db.editUser(userLoggedIn, null, null, null, null, null, userLoggedIn.getTrip());
+					} catch (SQLException ex) {
+						// TODO Auto-generated catch block
+						ex.printStackTrace();
+					}
+					displayPackages(packageIndex - 1);
+				}
+			}
+		});
+		button.setBackground(Color.GREEN);
+		button.setBounds(834, 443, 91, 23);
+		HotelBooking.add(button);
+		
+		JButton btnCancelBooking = new JButton("Cancel");
+		btnCancelBooking.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//HERE WE ARE CANCELLING!
+				displayHomeScreen();
+			}
+		});
+		btnCancelBooking.setBackground(Color.RED);
+		btnCancelBooking.setBounds(958, 443, 91, 23);
+		HotelBooking.add(btnCancelBooking);
 	}
 	
 	private void displayDaytripSC() {
@@ -1040,9 +1392,6 @@ public class UserInterface {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int row = tabDaytripResults.rowAtPoint(e.getPoint());
-				//User userLoggedIn = new User(1,"Gunnar","gif1@hi.is",false);
-				//FlightBooking flightToBook = new FlightBooking(flightResults.get(row),1,userLoggedIn);
-				//System.out.println(flightResults.get(3).get_depLoc());
 				displayDaytripBooking(daytripResults.get(row));
 			}
 		});
@@ -1293,7 +1642,7 @@ public class UserInterface {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							displayPackages(packageIndex);
+							displayPackages(userLoggedIn.getTrip().size()-1);
 						}
 					});
 					btnOk.setBounds(108, 77, 97, 25);
@@ -1301,14 +1650,14 @@ public class UserInterface {
 					
 					choosePackageName.setVisible(true);
 				} else {
-					userLoggedIn.addBookingToTrip(bookedTrip, packageIndex);
+					userLoggedIn.addBookingToTrip(bookedTrip, packageIndex-1);
 					try {
 						userLoggedIn = db.editUser(userLoggedIn, null, null, null, null, null, userLoggedIn.getTrip());
 					} catch (SQLException ex) {
 						// TODO Auto-generated catch block
 						ex.printStackTrace();
 					}
-					displayPackages(packageIndex);
+					displayPackages(packageIndex - 1);
 				}
 				
 				//Booking booking = bookedTrip;
@@ -1330,6 +1679,165 @@ public class UserInterface {
 		btnCancelBooking.setBackground(Color.RED);
 		btnCancelBooking.setBounds(599, 467, 91, 23);
 		DaytripBooking.add(btnCancelBooking);
+	}
+	
+	
+	// Usage: displayPackages(packageIndex)
+	// Before: packageIndex is the index for the package we want to display
+	//			the package instance can be sought with userLoggedIn.getTrip().get(packageIndex)
+	// After: The bookings in the chosen package is displayed in a table where each booking can
+	//			be chosen and edited/deleted/confirmed
+	private void displayPackages(final int packageIndex) {		
+		final Package chosenPackage = userLoggedIn.getTrip().get(packageIndex);
+		
+		JPanel Package = new JPanel();
+		CardContainer.add(Package, "Package");
+		Package.setLayout(null);
+		mainLayout.show(CardContainer, "Package");
+		
+		JButton btn = new JButton("Log out");
+		btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				userLoggedIn = null;
+				displayLogin();
+			}
+		});
+		btn.setBounds(1013, 13, 97, 25);
+		Package.add(btn);
+		
+		JLabel IbIUserLoggedIn3 = new JLabel(userLoggedIn.getUsername(), SwingConstants.RIGHT);
+		IbIUserLoggedIn3.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		IbIUserLoggedIn3.setBounds(785, 13, 97, 22);
+		Package.add(IbIUserLoggedIn3);
+		
+		JButton btnEditProfile1 = new JButton("Edit Profile");
+		btnEditProfile1.setSize(97, 25);
+		btnEditProfile1.setLocation(906, 13);
+		btnEditProfile1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				displayEditProfile();
+			}
+		});
+		Package.add(btnEditProfile1);
+		
+		JLabel lblPackage = new JLabel("Package");
+		lblPackage.setFont(new Font("Tahoma", Font.BOLD, 28));
+		lblPackage.setBounds(460, 30, 202, 34);
+		Package.add(lblPackage);
+		
+		JScrollPane scrollPanePackage = new JScrollPane();
+		scrollPanePackage.setBounds(142, 89, 783, 403);
+		Package.add(scrollPanePackage);
+		
+		List<Booking> bookingsList = chosenPackage.Trip;
+		Object[][] bookings = new Object[bookingsList.size()][4];
+		for (int i=0; i<chosenPackage.Trip.size(); i++) {
+			Booking booking = bookingsList.get(i);
+			bookings[i][0] = userLoggedIn.getUsername();
+			bookings[i][1] = booking.getDealerInfo()[0];
+			bookings[i][2] = booking.getPrice();
+			if (booking.f != null) {
+				bookings[i][3] = "Flight";
+			} else if (booking.d != null) {
+				bookings[i][3] = "Day trip";
+			} else if (booking.h != null) {
+				bookings[i][3] = "Hotel room";
+			}
+		}
+		String[] columns = new String[] {
+				"Customer", "Dealer Info", "Price", "Booking Type"
+		};
+		
+		final JTable tbPackage = new JTable();
+		tbPackage.setModel(new DefaultTableModel(bookings,columns));
+		scrollPanePackage.setViewportView(tbPackage);
+		
+		JButton btnEdit = new JButton("Edit");
+		btnEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int rowSelected = tbPackage.getSelectedRow();
+				if (rowSelected == -1) {
+					System.out.println("No row selected");
+				} else {
+					Booking thisBooking = chosenPackage.Trip.get(rowSelected);
+					if (thisBooking.f != null) {
+						chosenPackage.removeFromTrip(thisBooking);
+						FlightBooking flightBook = thisBooking.f;
+						displayFlightBooking(flightBook.getFlight());
+					} else if (thisBooking.d != null) {
+						chosenPackage.removeFromTrip(thisBooking);
+						DaytripBooking daytripBook = thisBooking.d;
+						displayDaytripBooking(daytripBook.getDayTrip());
+					} else if (thisBooking.h != null) {
+						chosenPackage.removeFromTrip(thisBooking);
+						HotelBooking hotelBook = thisBooking.h;
+						displayHotelBooking(hotelBook.getRoom());
+					} else {
+						throw new IllegalArgumentException("Error: This booking does not reference any of the abstract classes!");
+					}
+				}
+			}
+		});
+		btnEdit.setToolTipText("Edit Selected Booking");
+		btnEdit.setBounds(34, 150, 89, 23);
+		Package.add(btnEdit);
+		
+		JButton btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int rowSelected = tbPackage.getSelectedRow();
+				if (rowSelected == -1) {
+					System.out.println("No row selected");
+				} else {
+					Booking thisBooking = chosenPackage.Trip.get(rowSelected);
+					chosenPackage.removeFromTrip(thisBooking);
+					displayPackages(packageIndex);
+				}
+			}
+		});
+		btnCancel.setToolTipText("Cancel Selected Booking");
+		btnCancel.setBounds(34, 200, 89, 23);
+		Package.add(btnCancel);
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				displayHomeScreen();
+			}
+		});
+		btnBack.setToolTipText("Return to Booking");
+		btnBack.setBounds(34, 250, 89, 23);
+		Package.add(btnBack);
+		
+		JButton btnNewButton_2 = new JButton("Confirm");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int rowSelected = tbPackage.getSelectedRow();
+				if (rowSelected == -1) {
+					System.out.println("No row selected");
+				} else {
+					Booking thisBooking = chosenPackage.Trip.get(rowSelected);
+					if (thisBooking.f != null) {
+						FlightBooking flightBook = thisBooking.f;
+						System.out.println("Callin flight booking");
+						// Call their booking function with flightBook
+					} else if (thisBooking.d != null) {
+						DaytripBooking daytripBook = thisBooking.d;
+						System.out.println("Callin daytrip booking");
+						// Call their booking function with daytripBook
+					} else if (thisBooking.h != null) {
+						HotelBooking hotelBook = thisBooking.h;
+						System.out.println("Callin hotel booking");
+						// Call their booking function with hotelBook
+					} else {
+						throw new IllegalArgumentException("Error: This booking does not reference any of the abstract classes!");
+					}
+				}
+			}
+		});
+		btnNewButton_2.setToolTipText("Confirm Booking");
+		btnNewButton_2.setBounds(34, 300, 89, 23);
+		Package.add(btnNewButton_2);
 	}
 	
 	private void displayEditProfile() {
@@ -1385,6 +1893,8 @@ public class UserInterface {
 		editUserAge.setBounds(537, 331, 200, 20);
 		if (userLoggedIn.getAge()>=0) {
 			editUserAge.setText(Integer.toString(userLoggedIn.getAge()));
+		} else {
+			editUserAge.setText("20");
 		}
 		EditUser.add(editUserAge);
 		
@@ -1571,116 +2081,6 @@ public class UserInterface {
 		});
 		editUserCancel.setBounds(621, 406, 116, 23);
 		EditUser.add(editUserCancel);
-	}
-	
-	private void displayPackages(int packageIndex) {		
-		Package chosenPackage = userLoggedIn.getTrip().get(packageIndex);
-		
-		JPanel Package = new JPanel();
-		CardContainer.add(Package, "Package");
-		Package.setLayout(null);
-		mainLayout.show(CardContainer, "Package");
-		
-		JButton btn = new JButton("Log out");
-		btn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				userLoggedIn = null;
-				displayLogin();
-			}
-		});
-		btn.setBounds(1013, 13, 97, 25);
-		Package.add(btn);
-		
-		JLabel IbIUserLoggedIn3 = new JLabel(userLoggedIn.getUsername(), SwingConstants.RIGHT);
-		IbIUserLoggedIn3.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		IbIUserLoggedIn3.setBounds(785, 13, 97, 22);
-		Package.add(IbIUserLoggedIn3);
-		
-		JButton btnEditProfile1 = new JButton("Edit Profile");
-		btnEditProfile1.setSize(97, 25);
-		btnEditProfile1.setLocation(906, 13);
-		btnEditProfile1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				displayEditProfile();
-			}
-		});
-		Package.add(btnEditProfile1);
-		
-		JLabel lblPackage = new JLabel("Package");
-		lblPackage.setFont(new Font("Tahoma", Font.BOLD, 28));
-		lblPackage.setBounds(460, 30, 202, 34);
-		Package.add(lblPackage);
-		
-		JButton btnEdit = new JButton("Edit");
-		btnEdit.setToolTipText("Edit Selected Booking");
-		btnEdit.setBounds(34, 150, 89, 23);
-		Package.add(btnEdit);
-		
-		JButton btnCancel = new JButton("Cancel");
-		btnCancel.setToolTipText("Cancel Selected Booking");
-		btnCancel.setBounds(34, 200, 89, 23);
-		Package.add(btnCancel);
-		
-		JButton btnBack = new JButton("Back");
-		btnBack.setToolTipText("Return to Booking");
-		btnBack.setBounds(34, 250, 89, 23);
-		Package.add(btnBack);
-		
-		JButton btnNewButton_2 = new JButton("Confirm");
-		btnNewButton_2.setToolTipText("Confirm Booking");
-		btnNewButton_2.setBounds(34, 300, 89, 23);
-		Package.add(btnNewButton_2);
-		
-		
-		/*
-		Object[][] daytrips = new Object[daytripResults.size()][6];
-		for (int i=0; i<daytripResults.size(); i++) {
-			DaytripAbstract daytrip = daytripResults.get(i);
-			daytrips[i][0] = daytrip.getDealerInfo()[0];
-			daytrips[i][1] = daytrip.getCategory();
-			daytrips[i][2] = daytrip.getLocation();
-			daytrips[i][3] = df.format(daytrip.getStartTime());
-			daytrips[i][4] = df.format(daytrip.getEndTime());
-			daytrips[i][5] = daytrip.getPrice();
-		}
-		String[] columns = new String[] {
-				"Organizer", "Type", "Location", "Go time", "Return time", "Price"
-		};
-		
-		tabDaytripResults.setSurrendersFocusOnKeystroke(true);
-		tabDaytripResults.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tabDaytripResults.setModel(new DefaultTableModel(daytrips,columns));
-		
-		scrollPaneDaytrip.setViewportView(tabDaytripResults);*/
-		
-		
-		
-		JScrollPane scrollPanePackage = new JScrollPane();
-		scrollPanePackage.setBounds(142, 89, 783, 403);
-		Package.add(scrollPanePackage);
-		
-		List<Booking> bookingsList = chosenPackage.Trip;
-		Object[][] bookings = new Object[bookingsList.size()][4];
-		for (int i=0; i<chosenPackage.Trip.size(); i++) {
-			Booking booking = bookingsList.get(i);
-			bookings[i][0] = userLoggedIn.getUsername();
-			bookings[i][1] = booking.getDealerInfo()[0];
-			bookings[i][2] = booking.getPrice();
-			if (booking.f != null) {
-				bookings[i][3] = "Flight";
-			} else if (booking.d != null) {
-				bookings[i][3] = "Day trip";
-			} else if (booking.h != null) {
-				bookings[i][3] = "Hotel room";
-			}
-		}
-		String[] columns = new String[] {
-				"Customer", "Dealer Info", "Price", "Booking Type"
-		};
-		
-		final JTable tbPackage = new JTable();
-		tbPackage.setModel(new DefaultTableModel(bookings,columns));
-		scrollPanePackage.setViewportView(tbPackage);
 	}
 }
 

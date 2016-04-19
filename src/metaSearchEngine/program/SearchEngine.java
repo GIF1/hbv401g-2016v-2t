@@ -1,10 +1,12 @@
 package metaSearchEngine.program;
 
-//import metaSearchEngine.mockobjects.*;
+import metaSearchEngine.mockobjects.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+//import hotel.HotelSearch;
 
 import metaSearchEngine.mockobjects.*;
 
@@ -132,7 +134,7 @@ public class SearchEngine {
 		
 		return daytripResults;
 	}
-/*
+
 	public static ArrayList<HotelAbstract> HotelSearch(HotelSearchCriteria hotelSearch) {
 
 
@@ -171,9 +173,10 @@ public class SearchEngine {
 
 		// Structure of the searchWithAddress method of the HotelManager class: 
 		// HotelManager.searchWithAddress(priceRange: int[] maxStars:int, street:String,  city:String, zipCode:String)
-		ArrayList<HotelAbstract> HotelResults = HotelManager.searchWithAddress(hotelSearch.getPriceRange(), hotelSearch.getLocation());
+		ArrayList<HotelAbstract> HotelResults = HotelManager.searchWithAddress(hotelSearch.getPriceRange(), 0, hotelSearch.getLocation(), 
+				hotelSearch.getStartTime(), hotelSearch.getEndTime());
 		
 		return HotelResults;
-	}*/
+	}
 	
 }

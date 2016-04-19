@@ -16,6 +16,7 @@ public class DaytripBooking extends Booking {
 	public void setNumParticipants(int numParticipants) {this.numParticipants = numParticipants;}
 	
 	public int getNumParticipants() {return this.numParticipants;}
+	public DaytripAbstract getDayTrip() {return this.daytrip;}
 	/*
 	@Override
 	public void getInfo() {

@@ -1,13 +1,13 @@
 
 package metaSearchEngine.program;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public abstract class HotelAbstract {
+public abstract class HotelAbstract implements Serializable {
 
 	private Date startTime;
 	private Date endTime;
-	private int[] priceRange;
 	private String location;
 	private String[] dealerInfo;
 
@@ -16,10 +16,9 @@ public abstract class HotelAbstract {
 	private int numOfBeds;
 	private int numOfBedrooms;
 
-	public HotelAbstract(Date startTime, Date endTime, int[] priceRange, String location, String[] dealerInfo, int price, int area, int numOfBeds, int numOfBedrooms) {
+	public HotelAbstract(Date startTime, Date endTime, String location, String[] dealerInfo, int price, int area, int numOfBeds, int numOfBedrooms) {
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.priceRange = priceRange;
 		this.location = location;
 		this.dealerInfo = dealerInfo;
 		this.price = price;
@@ -31,8 +30,7 @@ public abstract class HotelAbstract {
 	//Getter
 	public Date getStartTime() {return this.startTime;}
 	public Date getEndTime() {return this.endTime;}
-	public int[] getPriceRange() {return this.priceRange;}
-	public String getLocation() {return this.Location; }
+	public String getLocation() {return this.location; }
 	public String[] getDealerInfo() {return dealerInfo;}
 	
 	// getters
@@ -45,15 +43,14 @@ public abstract class HotelAbstract {
 	}
 
 	public int getBeds(){
-		return this.beds;
+		return this.numOfBeds;
 	}
 
 	public int getBedrooms(){
-		return this.bedrooms;
+		return this.numOfBedrooms;
 	}
 
 	//Setter
-	void setPriceRange(int[] priceRange) {this.priceRange = priceRange;}
-	void setLocation (String Loc) {this.Location = Loc; }
+	void setLocation (String Loc) {this.location = Loc; }
 	void setDealerInfo(String[] dealerInfo) {this.dealerInfo = dealerInfo;}
 }

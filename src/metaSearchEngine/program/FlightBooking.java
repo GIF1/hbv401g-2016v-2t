@@ -12,7 +12,7 @@ public class FlightBooking extends Booking {
 	private FlightAbstract flight;
 	private String[] seatNr;
 	private String[] availableSeats;
-	public int luggage;
+	private int luggage;
 	private boolean flightMeal;
 	//private Date departureTime;
 	//private String departureLoc;
@@ -27,15 +27,6 @@ public class FlightBooking extends Booking {
 		else if (!flightNumber.matches("^([A-Z][A-Z]|[A-Z][0-9]|[0-9][A-Z])[A-Z]?[0-9]{1,4}[A-Z]?$")) {
 			throw new IllegalArgumentException("Error: Flight number has incorrect format.");
 		}
-		
-		/*
-		Date depTime = flight.get_depTime();
-		if(depTime==null) throw new IllegalArgumentException("Error: Departure time is missing.");
-		else if(depTime.length()!=19) throw new IllegalArgumentException("Error: Departure time of wrong length");
-		// Note: It is still possible to set invalid departure time. 31st of febuary for example. Refine regexp
-		else if(!depTime.matches("^2[01][0-9][0-9]-(0[1-9]|1[0-2])-([0-2][0-9]|3[01]) ([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
-			throw new IllegalArgumentException("Error: Departure time on uncorrect format. ");
-		}*/
 	
 		String depLoc = flightSearchResult.get_depLoc();
 		if(depLoc==null) {
@@ -88,16 +79,7 @@ public class FlightBooking extends Booking {
 	public FlightBooking(FlightAbstract flightSearchResult){
 		verifyFlightInfo(flightSearchResult);
 		
-		//this.customer = buyer;		
 		this.flight = flightSearchResult;	
-		/*
-		this.seatNr = new String[nrSeats];
-		for (int i=0; i<nrSeats; i++) {
-			this.seatNr[i] = flightSearchResult.get_seatNr()[i];
-		}*/
-		//this.availableSeats = flightSearchResult.get_seatNr();
-		//this.luggage = 0;
-		//this.flightMeal = false;
 		this.price = flightSearchResult.get_price();
 		this.dealerInfo = flightSearchResult.get_dealerInfo();
 		this.f = this;
@@ -132,15 +114,11 @@ public class FlightBooking extends Booking {
 	public void setFlightMeal(boolean flightfood) {
 		this.flightMeal = flightfood;
 	}
-
-	// Usage: writeReview("some review text");
-	// Before: 
-	// After: The new review text has been added to the list of reviews
-	void writeReview(String new_review) {
-		this.review.add(new_review);
-		// Still need to implement review submission. Not a high priority user story.
-	}
 	
+	public FlightAbstract getFlight() {return this.flight;}
+
+	
+	/*
 	public mockFlightBook bookFlight() {
 		mockFlightBook flightBooked = new mockFlightBook();
 		flightBooked.FlightBook(this);
@@ -148,24 +126,5 @@ public class FlightBooking extends Booking {
 		//getInfo();
 		
 		return flightBooked;
-	}
-
-	// Usage: getInfo()
-	// 
-	/*
-	@Override
-	public void getInfo() {
-		// We want to call a function (?) to display a window containing the information
-		// about the FlightBooking?? 
-		// For now I will just print the information to the console.
-		System.out.println("Welcome " + customer + "!");
-		System.out.println("This is your booking information");
-		System.out.println("Your have booked seat " + seatNr[0] + " on flight " + flight.get_flightNr());
-		System.out.println("The price of this booking is " + String.valueOf(price) + " ISK");
-		System.out.println("You will be departing for " + flight.get_arrivLoc() + " from " + flight.get_depLoc() + " at " + flight.get_depTime());
-		System.out.println("You have selected to bring " + String.valueOf(luggage) + " bags");
-		if(flightMeal==false) System.out.println("You have not ordered a meal in this flight");
-		else System.out.println("You have ordered a meal in this flight");
-		//System.out.println("Some more information....");
 	}*/
 }
