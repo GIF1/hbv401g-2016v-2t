@@ -31,6 +31,11 @@ public class Database {
     password = pass;
   }
 
+  /*
+  Usage: c = db.connect();
+  Pre: db is an instance of the Database class.
+  Post: c is an object of type Connection, which resembles a connection to the database defined in db.
+  */
   Connection connect() {
     Connection c = null;
     try {
@@ -46,6 +51,12 @@ public class Database {
       return c;
   }
   
+  /*
+  Usage: res = db.query(c,sql);
+  Pre: db is an instance of the Database class, c is a database connection, sql is a valid SQL SELECT query.
+  Post: res is a list<list<String>> variable with the first list resembling the rows in the SQL result and the second list
+  contaning the data in each column of the SQL query results.
+  */
   List<List<String>> query(Connection c, PreparedStatement q) {
     List<List<String>> result = new ArrayList<>();
     
@@ -75,7 +86,13 @@ public class Database {
 
     return result;
   }
-
+  
+  /*
+  Usage: db.update(opt, c, sql);
+  Pre: db is an instance of the Database class, opt is a String variable, either "Update" og "Insert", case insensitive,
+  		sql is a valid insert or update statement.
+  Post: The database has been updated according to the SQL statement or an error is returned.
+  */
   void update(String opt, Connection c, PreparedStatement q) throws SQLException{
     if (opt.equals("insert") | opt.equals("Insert"))
     {
@@ -109,6 +126,12 @@ public class Database {
   
   
   //User related database functions
+  
+  /*
+  Usage: user = login(Username, Password);
+  Pre: Username and Password are string resembling the users username and password.
+  Post: if the login was successful the user is an object of class User else an error is returned.
+  */
   @SuppressWarnings({ "unchecked" })
 	public User login(String username, String password) throws EmptySQLreturnException {
 	  	Database db = this; 
@@ -214,6 +237,14 @@ public class Database {
 		return user;	
 	}
 	
+  	/*
+  	Usage: user = createUser(User,Pass,Email,Admin,Age);
+  	Pre: User, pass, email are strings resembling the users desired username, password and email respectively.
+  	Admin is a boolean variable resembling whether the user is an admin or not.
+  	Age is an integer representing the users age, this variable can be left as null.  
+  	Post: user is an object of type User with the information put into the createUser function.
+  	The information has also been put into the database, else an error is returned.
+  	*/
 	public User createUser(String newUsername, String newPassword, String newEmail, boolean newAdmin, Integer newAge) throws EmptySQLreturnException, SQLException  {
 		Database db = this;
 		Connection c = db.connect();
@@ -291,6 +322,17 @@ public class Database {
 		return user;
 	}
 	
+	/*
+	  Usage: newUser = editUser(user, Username, Pass, Email, Admin, Age, Packages);
+	  Pre: user is an object of type user, representing the user that should be changed.
+	  The Username, Pass and Email are string variables representing the new username, email and password for user repectively.
+	  Admin is a boolean variable representing the new value for the admin attribute of the user, representing whether the user is an admin or not.
+	  Age is an integer variable representing the users new age.
+	  Packages is a list of variables of type Package, representing the updated trip packages the user has booked.
+	  All variables exept user can optionally be left as null.
+	  Post: newUser er now an updated version of user with the new values assigned as input arguements to the editUser method.
+	  The users information in the database has also been updated, else an error is returned.
+	  */
 	public User editUser(User user, String newUsername, String newPassword, String newEmail, Boolean newAdmin, Integer newAge, List<Package> newPackages) throws SQLException {
 		Database db = this;
 		Connection c = db.connect();

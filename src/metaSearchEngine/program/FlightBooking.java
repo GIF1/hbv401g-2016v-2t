@@ -1,24 +1,20 @@
 package metaSearchEngine.program;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-//import java.util.Date;
 
 import metaSearchEngine.mockobjects.mockFlightBook;
 
+@SuppressWarnings("serial")
 public class FlightBooking extends Booking {
 
-	// Define attributes of the class
+	//Attributes
 	private FlightAbstract flight;
 	private String[] seatNr;
 	private String[] availableSeats;
 	private int luggage;
 	private boolean flightMeal;
-	//private Date departureTime;
-	//private String departureLoc;
-	//private String arrivalLoc;
-	//private String flightNr;
 
+	//Verifiers
 	public void verifyFlightInfo(FlightAbstract flightSearchResult) {
 		if(flightSearchResult==null) throw new IllegalArgumentException("Error: Search result class contains no value. ");
 		
@@ -85,9 +81,13 @@ public class FlightBooking extends Booking {
 		this.f = this;
 	}
 
-	// Usage: seatNr = setSeat(seat)
-	// Before: seatNr is a String[] containing strings on the form [0-9][0-9][A-F]
-	// After: The array seatNr has been updated with new Seat number strings. 
+	//Setters
+	/*
+	 * Usage: FlightBooking.setSeat(Seats);
+	 * Pre: Seats is a String[] variable containing the seats the customer whishes to book.
+	 * Post: The seatNr attribute of the FlightBooking object has been updated,
+	 * if Seats contains seats which are not available an error is returned.
+	 */
 	public void setSeat(String[] seats)
 	{
 		for (int i=0; i<seats.length; i++) {
@@ -99,32 +99,25 @@ public class FlightBooking extends Booking {
 		this.seatNr = seats;
 	}
 
-	// Notkun: luggage = setLuggage(luggage)
-	// Fyrir: luggage er heiltala, m� vera n�ll. Engin efri m�rk.
-	// Eftir: luggage breytar hefur veri� uppf�r� � samr�mi vi� inntak. 
+	
 	public void setLuggage(int nr_of_bags) {
 		if(nr_of_bags < 0) {
-			throw new IllegalArgumentException("Please select a positive integer for the number of bags requested");
+			throw new IllegalArgumentException("Please select a positive integer for the number of bags requested");/*
+	 * Usage: FlightBooking.setLuggage(numBags);
+	 * Pre: numBags > 0 is an int representing the number of bags a customers wishes to bring onboads the flight.
+	 * Post: The luggage attribute of FlightBooking has been updated accordingly ot numBags.
+	 */
 		} else {
 			this.luggage = nr_of_bags;
 		}
 	}
 
-	// Notkun: flightMeal = setFlightMeal
+
 	public void setFlightMeal(boolean flightfood) {
 		this.flightMeal = flightfood;
 	}
 	
+	//Getters
 	public FlightAbstract getFlight() {return this.flight;}
 
-	
-	/*
-	public mockFlightBook bookFlight() {
-		mockFlightBook flightBooked = new mockFlightBook();
-		flightBooked.FlightBook(this);
-		
-		//getInfo();
-		
-		return flightBooked;
-	}*/
 }

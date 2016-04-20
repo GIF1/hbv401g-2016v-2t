@@ -6,11 +6,11 @@ import java.util.*;
 @SuppressWarnings("serial")
 public class Package implements Serializable {
 
+	//Attributes
 	protected List <Booking> Trip = new ArrayList<Booking>();
 	protected String packageName;
 	
 	// Constructor
-	// A new package is made with new booking.
 	public Package(Booking new_booking, String packageName) {
 		this.Trip.add(new_booking);
 		this.packageName = packageName;
@@ -37,7 +37,6 @@ public class Package implements Serializable {
 	public void updateTrip(Booking old_booking, Booking changed_booking) {
 		
 	}
-
 	
 	public List <Booking> payTrip() {
 		List <Booking> flightBookings = new ArrayList<Booking>();
@@ -56,33 +55,5 @@ public class Package implements Serializable {
 			}
 		}
 		return flightBookings;
-	}
-	
-	public void printReceipt() {
-
-		/* For extracting the information I forsee a loop similar to this one:
-		for (int i = 0; i < Trip.size(); i++){
-			Booking tmpbook = Trip.get(i);
-			int totalTripPrice = totalTripPrice + tmpbook.price;
-			
-		}
-		and then the values can be typecast to a String, which can then be concatenated in writing of the document
-		String totalPrice = String.valueOf(totalTripPrice);
-		*/
-
-		// Figure out how to print information to pdf documents. This works for text documents.
-	       try {
-		    String text = "Afhverju heita tveir hÃ³pameÃ°limir Gunnar? Er allur frumleiki horfinn Ãºr heiminum? \nNei mÃ©r er bara spurn.";
-		    BufferedWriter out = new BufferedWriter(new FileWriter("MyTrip.txt"));
-		    out.write(text);
-		    out.close();
-		}
-		catch (IOException e)
-		{
-		    System.out.println("Exception ");       
-		}
-
-		return ;
-	}
-
+	} 
 }

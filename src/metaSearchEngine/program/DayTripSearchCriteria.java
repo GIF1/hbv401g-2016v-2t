@@ -16,7 +16,7 @@ public class DayTripSearchCriteria {
 	private int numParticipants;
 	private String category;
 	
-	// Methods
+	//Setters
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -45,6 +45,7 @@ public class DayTripSearchCriteria {
 		this.category = category;
 	}
 	
+	//Getters
 	public String getName() {
 		return name;
 	}
@@ -72,5 +73,4 @@ public class DayTripSearchCriteria {
 	public String getCategory() {
 		return category;
 	}
-	
 }

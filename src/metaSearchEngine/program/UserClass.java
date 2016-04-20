@@ -5,6 +5,8 @@ package metaSearchEngine.program;
 // various travel services. 
 
 public interface UserClass {
+	//GETTERS
+	
 	// Usage: username = getUsername();
 	// Before: Nothing
 	// After: Returns the string username containing the username
@@ -19,7 +21,8 @@ public interface UserClass {
 	// Before: Nothing
 	// After: Returns the integer id, containing the users id.
 	int getId();
-
+	
+	//SETTERS
 
 	// Usage: username = changeUserName(newUserName);
 	// Before: Both username and newUserName are Strings

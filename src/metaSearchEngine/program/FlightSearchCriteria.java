@@ -17,7 +17,7 @@ public class FlightSearchCriteria {
 	private boolean overLay;
 	private boolean returnTrip;
 	
-	// Methods
+	//Setters
 	public void setDepartureTime(Date depTime) {
 		this.departureTime = depTime;
 	}
@@ -49,7 +49,8 @@ public class FlightSearchCriteria {
 	public void setReturnTrip(boolean returnTrip) {
 		this.returnTrip = returnTrip;
 	}
-
+	
+	//Getters
 	public Date getDepartureTime() {
 		return departureTime;
 	}

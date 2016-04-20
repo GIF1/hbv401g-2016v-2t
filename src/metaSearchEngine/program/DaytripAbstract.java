@@ -5,6 +5,7 @@ import java.util.Date;
 
 public abstract class DaytripAbstract implements Serializable {
 	
+	//Attributes
 	private Date startTime;
 	private Date endTime;
 	private String location;
@@ -15,6 +16,7 @@ public abstract class DaytripAbstract implements Serializable {
 	private String name;
 	private int IndivID;
 	
+	//Constructer
 	public DaytripAbstract(Date startTime, Date endTime, String loc, int price, int numPar, String cat, String[] dealerInfo, String name) {
 		this.startTime = startTime;
 		this.endTime = endTime;
@@ -26,6 +28,7 @@ public abstract class DaytripAbstract implements Serializable {
 		this.name = name;
 	}
 	
+	//Getters
 	public Date getStartTime() {return startTime;}
 	public Date getEndTime() {return endTime;}
 	public String getLocation() {return location;}
@@ -36,6 +39,7 @@ public abstract class DaytripAbstract implements Serializable {
 	public String getName() {return name;}
 	public int getIndivID() {return IndivID;}
 	
+	//Setters
 	void setStartTime(Date startTime) {this.startTime = startTime;}
 	void setEndTime(Date endTime) {this.endTime = endTime;}
 	void setLocation(String location) {this.location = location;}

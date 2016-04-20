@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 public abstract class FlightAbstract implements Serializable {
+	//Attributes
 	private String flightNr;
 	private Date departureTime;
 	private String departureLoc;
@@ -13,6 +14,7 @@ public abstract class FlightAbstract implements Serializable {
 	private String[] seatNr;
 	private String[] dealerInfo;
 
+	//Constructor
 	public FlightAbstract(String flightNr, Date departureTime, String departureLoc, Date arrivalTime, 
 			String arrivalLoc, int price, String[] dealerInfo) {
 		this.flightNr = flightNr;
@@ -24,8 +26,10 @@ public abstract class FlightAbstract implements Serializable {
 		this.dealerInfo = dealerInfo;
 	}
 
-	// Get methods for all the attributes
+	//Setters
 	public void set_seatNr(String[] seatNr) {this.seatNr =seatNr; }
+	
+	//Getters
 	public int get_price() {return price; }
 	public Date get_depTime() { return departureTime; }
 	public String get_depLoc() { return departureLoc; }

@@ -5,8 +5,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class User implements UserClass {
-	// Data invariant:
-	//
+
+	//Attributes
 	private final int id;
 	private String username;
 	private String email;
@@ -14,6 +14,7 @@ public class User implements UserClass {
 	private List<Package> packages = null;
 	private boolean admin = false;
 	
+	//Constructor
 	public User(int newId, String username, String email, boolean admin) {
 		if (verifyId(newId)) {
 			this.id = newId;
@@ -26,6 +27,9 @@ public class User implements UserClass {
 		this.admin = admin;
 	}
 	
+	
+	//VERIFIERS
+	
 	// Usage: x = verifyId(id);
 	// Before: id is an integer
 	// After: if id is a legal id, x is true. Else x is false.
@@ -36,6 +40,50 @@ public class User implements UserClass {
 				return false;
 			}	
 		}
+	
+
+	// Usage: x = verifyAge(age);
+	// Before: age is an integer
+	// After: if age is a legal age, x is true. Else x is false.
+	public static boolean verifyAge(int age){
+		if(age < 13 || age > 110) {
+			return false;
+		} else {
+			return true;
+		}	
+	}
+	
+	// Usage: x = verifyUsername(username);
+	// Before: username is a string
+	// After: if username is a legal username, x is true. Else x is false.
+	public static boolean verifyUsername(String username) {
+		String userPattern = "^[a-zA-Z]{1}[a-zA-Z0-9]{2,19}";
+		
+		if (username.matches(userPattern)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+
+	// Usage: x = verifyEmail(Email);
+	// Before: Email is a string
+	// After: if Email is a legal email, x is true. Else x is false.
+	public static boolean verifyEmail(String email) {
+		String emailString = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
+		
+		Pattern emailPattern = Pattern.compile(emailString, Pattern.CASE_INSENSITIVE);
+		Matcher matcher = emailPattern.matcher(email);
+		
+		if (matcher.find()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	//SETTERS
 	
 	// Usage: setAge(newAge);
 	// Before: newAge is an integer
@@ -58,32 +106,8 @@ public class User implements UserClass {
 		this.admin = newAdmin;
 	}
 	
-	// Usage: x = verifyAge(age);
-	// Before: age is an integer
-	// After: if age is a legal age, x is true. Else x is false.
-	public static boolean verifyAge(int age){
-		if(age < 13 || age > 110) {
-			return false;
-		} else {
-			return true;
-		}	
-	}
-	
 	public void setPackages(List<Package> packages){
 		this.packages=packages;
-	}
-	
-	// Usage: x = verifyUsername(username);
-	// Before: username is a string
-	// After: if username is a legal username, x is true. Else x is false.
-	public static boolean verifyUsername(String username) {
-		String userPattern = "^[a-zA-Z]{1}[a-zA-Z0-9]{2,19}";
-		
-		if (username.matches(userPattern)) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 	
 	// Usage: setUsername(newUsername);
@@ -94,22 +118,6 @@ public class User implements UserClass {
 			this.username = newUserName;
 		} else {
 			throw new IllegalArgumentException("Error: Username not of legal format.");
-		}
-	}
-	
-	// Usage: x = verifyEmail(Email);
-	// Before: Email is a string
-	// After: if Email is a legal email, x is true. Else x is false.
-	public static boolean verifyEmail(String email) {
-		String emailString = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
-		
-		Pattern emailPattern = Pattern.compile(emailString, Pattern.CASE_INSENSITIVE);
-		Matcher matcher = emailPattern.matcher(email);
-		
-		if (matcher.find()) {
-			return true;
-		} else {
-			return false;
 		}
 	}
 	
@@ -124,17 +132,7 @@ public class User implements UserClass {
 		}
 	}
 	
-	void deleteTrip(Package some_trip){
-		this.packages.remove(some_trip); 
-	}
-
-	void addTrip(Package some_trip) {
-		this.packages.add(some_trip);
-	}
-	
-	void addBookingToTrip(Booking some_booking, int packageNr) {
-		this.packages.get(packageNr).addToTrip(some_booking);
-	}
+	// GETTERS
 	
 	// Usage: trip = getTrip();
 	// Before: Nothing
@@ -181,4 +179,29 @@ public class User implements UserClass {
 		return this.id;
 	}
 	
+	//MISC
+	
+	/* Usage: user.deleteTrip(trip)
+	 * Pre: trip is an instance of class Package
+	 * Post: if trip is in the user list attribute packages, trip has been removed
+	 */
+	void deleteTrip(Package trip){
+		this.packages.remove(trip); 
+	}
+	
+	/* Usage: user.addTrip(trip)
+	 * Pre: trip is an instance of class Package
+	 * Post: trip has been added to the user list attribute packages
+	 */
+	void addTrip(Package trip) {
+		this.packages.add(trip);
+	}
+	
+	/* Usage: user.addBookingToTrip(booking,packageNr)
+	 * Pre: booking is a Booking object and packageNr is an integer.
+	 * Post: booking has been added package number packageNr in the user list attribute packages
+	 */
+	void addBookingToTrip(Booking some_booking, int packageNr) {
+		this.packages.get(packageNr).addToTrip(some_booking);
+	}
 }
